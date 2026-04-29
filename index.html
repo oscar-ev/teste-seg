@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab BruteForce – UMC Redes</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #0a0c10;
+      --surface:   #111318;
+      --border:    #1e2130;
+      --red:       #ef4444;
+      --red-dim:   #7f1d1d;
+      --green:     #22c55e;
+      --green-dim: #14532d;
+      --blue:      #3b82f6;
+      --blue-dim:  #1e3a5f;
+      --yellow:    #eab308;
+      --text:      #e2e8f0;
+      --muted:     #64748b;
+      --code-bg:   #080a0e;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Scanline overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.012) 2px,
+        rgba(255,255,255,0.012) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 24px;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 100%);
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(239,68,68,0.12) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 32px;
+      animation: pulse-border 2s infinite;
+    }
+
+    @keyframes pulse-border {
+      0%, 100% { border-color: rgba(239,68,68,0.3); }
+      50%       { border-color: rgba(239,68,68,0.7); }
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 .red  { color: var(--red); }
+    .hero h1 .blue { color: var(--blue); }
+
+    .hero-sub {
+      font-size: clamp(15px, 2vw, 18px);
+      color: var(--muted);
+      max-width: 580px;
+      margin-bottom: 48px;
+    }
+
+    .hero-cards {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 56px;
+    }
+
+    .phase-card {
+      padding: 16px 24px;
+      border-radius: 10px;
+      border: 1px solid;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .phase-card.red   { background: rgba(239,68,68,0.08);  border-color: rgba(239,68,68,0.3);  color: var(--red); }
+    .phase-card.blue  { background: rgba(59,130,246,0.08); border-color: rgba(59,130,246,0.3); color: var(--blue); }
+    .phase-card.green { background: rgba(34,197,94,0.08);  border-color: rgba(34,197,94,0.3);  color: var(--green); }
+
+    .scroll-hint {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(6px); }
+    }
+
+    /* ── Layout ── */
+    .container { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Seções ── */
+    section { padding: 80px 0; }
+    section + section { border-top: 1px solid var(--border); }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 32px;
+      line-height: 1.2;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      margin-top: 32px;
+    }
+
+    p { color: #94a3b8; margin-bottom: 16px; font-size: 15px; }
+
+    /* ── Warning Box ── */
+    .warning {
+      background: rgba(239,68,68,0.07);
+      border: 1px solid rgba(239,68,68,0.25);
+      border-left: 4px solid var(--red);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-bottom: 32px;
+    }
+    .warning strong { color: var(--red); display: block; margin-bottom: 6px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+    .warning p { color: #fca5a5; margin: 0; font-size: 14px; }
+
+    /* ── Info Box ── */
+    .info-box {
+      background: rgba(59,130,246,0.07);
+      border: 1px solid rgba(59,130,246,0.25);
+      border-left: 4px solid var(--blue);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .info-box strong { color: var(--blue); display: block; margin-bottom: 8px; font-size: 13px; }
+    .info-box p, .info-box li { color: #93c5fd; font-size: 14px; margin: 0 0 4px 0; }
+    .info-box ul { padding-left: 20px; }
+
+    .success-box {
+      background: rgba(34,197,94,0.07);
+      border: 1px solid rgba(34,197,94,0.25);
+      border-left: 4px solid var(--green);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .success-box strong { color: var(--green); display: block; margin-bottom: 8px; font-size: 13px; }
+    .success-box p, .success-box li { color: #86efac; font-size: 14px; margin: 0 0 4px 0; }
+    .success-box ul { padding-left: 20px; }
+
+    /* ── Code Block ── */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 16px 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: #0d0f14;
+      border-bottom: 1px solid var(--border);
+    }
+    .code-dots { display: flex; gap: 6px; }
+    .code-dots span {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .code-dots span:nth-child(1) { background: #ef4444; }
+    .code-dots span:nth-child(2) { background: #eab308; }
+    .code-dots span:nth-child(3) { background: #22c55e; }
+    .code-title { font-size: 11px; color: var(--muted); }
+    .copy-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { color: var(--text); border-color: var(--muted); }
+    .copy-btn.copied { color: var(--green); border-color: var(--green); }
+    pre {
+      padding: 20px;
+      font-size: 13px;
+      line-height: 1.8;
+      overflow-x: auto;
+      color: #a5f3a0;
+    }
+    .cmd  { color: #60a5fa; }
+    .flag { color: #f9a8d4; }
+    .arg  { color: #fde68a; }
+    .cmt  { color: #4b5563; font-style: italic; }
+    .out  { color: #6b7280; }
+
+    /* ── Steps ── */
+    .steps { counter-reset: step; }
+    .step {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 24px;
+      align-items: flex-start;
+    }
+    .step-num {
+      counter-increment: step;
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--blue);
+      margin-top: 2px;
+    }
+    .step-body { flex: 1; }
+    .step-body p { margin-bottom: 8px; }
+
+    /* ── Tool Cards ── */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      transition: border-color 0.2s, transform 0.2s;
+      cursor: default;
+    }
+    .tool-card:hover { border-color: #2d3554; transform: translateY(-2px); }
+    .tool-card .icon { font-size: 28px; margin-bottom: 12px; display: block; }
+    .tool-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .tool-card p  { font-size: 13px; color: var(--muted); margin: 0; }
+    .tool-card .tag {
+      display: inline-block;
+      margin-top: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .tag.red   { background: rgba(239,68,68,0.15);  color: var(--red); }
+    .tag.blue  { background: rgba(59,130,246,0.15); color: var(--blue); }
+    .tag.both  { background: rgba(234,179,8,0.15);  color: var(--yellow); }
+
+    /* ── Fase banners ── */
+    .phase-banner {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 24px 28px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+    }
+    .phase-banner.red-phase  { background: linear-gradient(135deg, rgba(239,68,68,0.12), rgba(127,29,29,0.05)); border: 1px solid rgba(239,68,68,0.25); }
+    .phase-banner.blue-phase { background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(30,58,95,0.05)); border: 1px solid rgba(59,130,246,0.25); }
+    .phase-banner .ph-icon { font-size: 40px; }
+    .phase-banner h3 { font-size: 20px; margin: 0 0 4px; }
+    .phase-banner p  { margin: 0; font-size: 14px; }
+    .phase-banner.red-phase  h3 { color: var(--red); }
+    .phase-banner.blue-phase h3 { color: var(--blue); }
+
+    /* ── Tabela de parâmetros ── */
+    .param-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      margin: 16px 0;
+    }
+    .param-table th {
+      background: #0d0f14;
+      padding: 10px 14px;
+      text-align: left;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .param-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .param-table td:first-child { color: var(--red); white-space: nowrap; }
+    .param-table td:last-child  { color: #94a3b8; }
+    .param-table tr:last-child td { border-bottom: none; }
+
+    /* ── Nav lateral ── */
+    .sticky-nav {
+      position: fixed;
+      left: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 100;
+    }
+    .nav-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: all 0.3s;
+      cursor: pointer;
+      position: relative;
+    }
+    .nav-dot:hover, .nav-dot.active { background: var(--blue); transform: scale(1.4); }
+    .nav-dot::after {
+      content: attr(data-label);
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .nav-dot:hover::after { opacity: 1; }
+
+    /* ── Progress bar ── */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      background: var(--red);
+      z-index: 1000;
+      transition: width 0.1s;
+    }
+
+    /* ── Checklist ── */
+    .checklist { list-style: none; }
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: #94a3b8;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .check-box {
+      width: 20px; height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      font-size: 12px;
+    }
+    .check-box.checked { background: var(--green); border-color: var(--green); color: #000; }
+    .checklist li.done { color: #4b5563; text-decoration: line-through; }
+
+    /* ── Status Monitor ── */
+    .monitor {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .monitor h4 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--green);
+      margin-bottom: 20px;
+    }
+    .monitor-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+    .monitor-row:last-child { border-bottom: none; }
+    .monitor-label { color: var(--muted); }
+    .monitor-value { color: var(--text); }
+    .toggle-btn {
+      background: none;
+      border: 1px solid;
+      border-radius: 6px;
+      padding: 4px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .toggle-btn.off { border-color: var(--red);   color: var(--red); }
+    .toggle-btn.on  { border-color: var(--green); color: var(--green); }
+    .toggle-btn:hover { opacity: 0.8; }
+
+    .connect-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      margin-bottom: 16px;
+    }
+    .dot-live { width: 8px; height: 8px; border-radius: 50%; background: var(--red); }
+    .dot-live.online { background: var(--green); animation: blink 1.5s infinite; }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 24px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── Responsivo ── */
+    @media (max-width: 768px) {
+      .sticky-nav { display: none; }
+      .tools-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Progress bar -->
+  <div class="progress-bar" id="progress"></div>
+
+  <!-- Nav lateral -->
+  <nav class="sticky-nav" id="sidenav">
+    <div class="nav-dot" data-label="Início"      onclick="scrollTo('hero')"></div>
+    <div class="nav-dot" data-label="Ambiente"    onclick="scrollTo('ambiente')"></div>
+    <div class="nav-dot" data-label="Ferramentas" onclick="scrollTo('ferramentas')"></div>
+    <div class="nav-dot" data-label="Red Team"    onclick="scrollTo('redteam')"></div>
+    <div class="nav-dot" data-label="Blue Team"   onclick="scrollTo('blueteam')"></div>
+    <div class="nav-dot" data-label="Painel"      onclick="scrollTo('painel')"></div>
+    <div class="nav-dot" data-label="Checklist"   onclick="scrollTo('checklist')"></div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="badge">⚠ ambiente controlado • uso educacional</div>
+    <h1>
+      <span class="red">Brute</span><span class="blue">Force</span><br>Lab
+    </h1>
+    <p class="hero-sub">
+      Laboratório de segurança ofensiva e defensiva — ataque e defesa de força bruta em aplicações web.<br>
+      UMC · Curso Técnico em Redes de Computadores · 2º Ano
+    </p>
+    <div class="hero-cards">
+      <div class="phase-card red">⚔ Fase 1 · Red Team</div>
+      <div class="phase-card blue">🛡 Fase 2 · Blue Team</div>
+      <div class="phase-card green">6 ferramentas</div>
+    </div>
+    <div class="scroll-hint">↓ role para começar</div>
+  </section>
+
+  <!-- ── AMBIENTE ── -->
+  <section id="ambiente">
+    <div class="container">
+      <div class="section-label">// 01 · Preparação</div>
+      <h2>Configurando o Ambiente</h2>
+
+      <div class="warning">
+        <strong>⚠ Aviso Ético</strong>
+        <p>Esta atividade é realizada em ambiente isolado (Docker local). É proibido usar estas técnicas em sistemas reais sem autorização explícita. Isso é crime previsto na <strong>Lei 12.737/2012</strong>.</p>
+      </div>
+
+      <h3>Pré-requisitos — verifique antes de começar</h3>
+      <div class="tools-grid" style="margin-top:16px">
+        <div class="tool-card">
+          <span class="icon">🐳</span>
+          <h4>Docker</h4>
+          <p>Container da aplicação alvo</p>
+          <div class="code-block" style="margin-top:12px">
+            <pre style="padding:10px 14px;font-size:12px">docker --version</pre>
+          </div>
+        </div>
+        <div class="tool-card">
+          <span class="icon">🔧</span>
+          <h4>Docker Compose</h4>
+          <p>Orquestração do ambiente</p>
+          <div class="code-block" style="margin-top:12px">
+            <pre style="padding:10px 14px;font-size:12px">docker compose version</pre>
+          </div>
+        </div>
+        <div class="tool-card">
+          <span class="icon">📡</span>
+          <h4>Hydra / Medusa / ffuf</h4>
+          <p>Ferramentas de bruteforce</p>
+          <div class="code-block" style="margin-top:12px">
+            <pre style="padding:10px 14px;font-size:12px">sudo apt install hydra medusa ffuf</pre>
+          </div>
+        </div>
+        <div class="tool-card">
+          <span class="icon">🦈</span>
+          <h4>Wireshark</h4>
+          <p>Análise de pacotes de rede</p>
+          <div class="code-block" style="margin-top:12px">
+            <pre style="padding:10px 14px;font-size:12px">sudo apt install wireshark</pre>
+          </div>
+        </div>
+      </div>
+
+      <h3>Iniciando o Container</h3>
+      <div class="steps" style="margin-top:16px">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body">
+            <p>Clone o repositório da atividade:</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-dots"><span></span><span></span><span></span></div>
+                <span class="code-title">terminal</span>
+                <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              </div>
+              <pre><span class="cmd">git</span> <span class="arg">clone</span> https://github.com/SEU_USUARIO/lab-bruteforce.git
+<span class="cmd">cd</span> lab-bruteforce</pre>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body">
+            <p>Suba o container em segundo plano:</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-dots"><span></span><span></span><span></span></div>
+                <span class="code-title">terminal</span>
+                <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              </div>
+              <pre><span class="cmd">docker</span> compose up <span class="flag">-d</span></pre>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body">
+            <p>Verifique se o container está ativo:</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-dots"><span></span><span></span><span></span></div>
+                <span class="code-title">terminal</span>
+                <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              </div>
+              <pre><span class="cmd">docker</span> ps
+<span class="out"># Esperado: app-brute   0.0.0.0:3000->3000/tcp</span></pre>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body">
+            <p>Acesse a aplicação no navegador:</p>
+            <div class="info-box">
+              <strong>📌 URL da aplicação</strong>
+              <p><a href="http://localhost:3000" target="_blank" style="color:#60a5fa;">http://localhost:3000</a></p>
+              <p>Usuário alvo: <code style="color:#fde68a">admin</code> — você precisa descobrir a senha!</p>
+              <p>Wordlist: <code style="color:#fde68a">/usr/share/wordlists/rockyou.txt</code></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FERRAMENTAS ── -->
+  <section id="ferramentas">
+    <div class="container">
+      <div class="section-label">// 02 · Arsenal</div>
+      <h2>Ferramentas da Atividade</h2>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <span class="icon">💻</span>
+          <h4>curl</h4>
+          <p>Reconhecimento manual do comportamento da aplicação antes de atacar.</p>
+          <span class="tag red">Red Team</span>
+        </div>
+        <div class="tool-card">
+          <span class="icon">🔱</span>
+          <h4>Hydra</h4>
+          <p>Bruteforce paralelo contra formulários HTTP POST. Ferramenta principal do ataque.</p>
+          <span class="tag red">Red Team</span>
+        </div>
+        <div class="tool-card">
+          <span class="icon">🐍</span>
+          <h4>Medusa</h4>
+          <p>Alternativa ao Hydra com foco em paralelismo e múltiplos protocolos.</p>
+          <span class="tag red">Red Team</span>
+        </div>
+        <div class="tool-card">
+          <span class="icon">🔍</span>
+          <h4>Burp Suite</h4>
+          <p>Intercepção de tráfego e ataque via módulo Intruder. Análise visual das respostas.</p>
+          <span class="tag red">Red Team</span>
+        </div>
+        <div class="tool-card">
+          <span class="icon">⚡</span>
+          <h4>ffuf</h4>
+          <p>Fuzzing ultrarrápido para web. Comparação de velocidade com Hydra.</p>
+          <span class="tag red">Red Team</span>
+        </div>
+        <div class="tool-card">
+          <span class="icon">🦈</span>
+          <h4>Wireshark</h4>
+          <p>Captura e análise do tráfego gerado pelos ataques em tempo real.</p>
+          <span class="tag both">Ambos</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── RED TEAM ── -->
+  <section id="redteam">
+    <div class="container">
+      <div class="section-label">// 03 · Ataque</div>
+      <h2>Fase 1 — Red Team</h2>
+
+      <div class="phase-banner red-phase">
+        <div class="ph-icon">⚔️</div>
+        <div>
+          <h3>Você é o atacante</h3>
+          <p>Use as ferramentas abaixo em ordem. Cada uma revela algo diferente sobre a vulnerabilidade.</p>
+        </div>
+      </div>
+
+      <!-- curl -->
+      <h3>1. Reconhecimento com curl</h3>
+      <p>Antes de qualquer ataque, entenda como a aplicação responde. Isso define o <em>fail string</em> — a string que indica login falho.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-title">curl — teste de login inválido</span>
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+        </div>
+        <pre><span class="cmd">curl</span> <span class="flag">-s -X POST</span> http://localhost:3000/login \
+  <span class="flag">-d</span> <span class="arg">'username=admin&password=senhaerrada'</span> \
+  <span class="flag">-w</span> <span class="arg">'\nHTTP Status: %{http_code}\n'</span></pre>
+      </div>
+      <div class="info-box">
+        <strong>O que observar:</strong>
+        <ul>
+          <li>Qual texto aparece quando a senha é errada? (ex: "Credenciais inválidas.")</li>
+          <li>Qual o status HTTP? (401 = não autorizado)</li>
+          <li>Anote o texto exato — ele será o <code>F_STRING</code> do Hydra</li>
+        </ul>
+      </div>
+
+      <!-- Hydra -->
+      <h3>2. Ataque com Hydra</h3>
+      <p>Substitua <code>FAIL_STRING</code> pelo texto de erro que você anotou na etapa anterior.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-title">hydra — bruteforce HTTP POST</span>
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+        </div>
+        <pre><span class="cmd">hydra</span> \
+  <span class="flag">-l</span> <span class="arg">admin</span> \
+  <span class="flag">-P</span> <span class="arg">/usr/share/wordlists/rockyou.txt</span> \
+  localhost \
+  http-post-form <span class="arg">'/login:username=^USER^&password=^PASS^:FAIL_STRING'</span> \
+  <span class="flag">-t</span> <span class="arg">4</span> <span class="flag">-V -f</span></pre>
+      </div>
+      <table class="param-table">
+        <tr><th>Parâmetro</th><th>Significado</th></tr>
+        <tr><td>-l admin</td><td>Usuário fixo a testar</td></tr>
+        <tr><td>-P rockyou.txt</td><td>Wordlist de senhas</td></tr>
+        <tr><td>^USER^ ^PASS^</td><td>Placeholders substituídos pelo Hydra a cada tentativa</td></tr>
+        <tr><td>FAIL_STRING</td><td>Texto que indica login FALHO (usado para detectar sucesso por exclusão)</td></tr>
+        <tr><td>-t 4</td><td>4 threads paralelas</td></tr>
+        <tr><td>-V</td><td>Verbose: mostra cada tentativa</td></tr>
+        <tr><td>-f</td><td>Para ao encontrar a primeira senha válida</td></tr>
+      </table>
+
+      <!-- Medusa -->
+      <h3>3. Comparativo com Medusa</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-title">medusa — bruteforce HTTP</span>
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+        </div>
+        <pre><span class="cmd">medusa</span> \
+  <span class="flag">-h</span> localhost \
+  <span class="flag">-u</span> <span class="arg">admin</span> \
+  <span class="flag">-P</span> <span class="arg">/usr/share/wordlists/rockyou.txt</span> \
+  <span class="flag">-M</span> web-form \
+  <span class="flag">-m</span> <span class="arg">'FORM:/login:username=^USER^&password=^PASS^:FAIL_STRING'</span> \
+  <span class="flag">-t</span> <span class="arg">2</span> <span class="flag">-v 6 -f</span></pre>
+      </div>
+
+      <!-- Burp Suite -->
+      <h3>4. Burp Suite — Intruder</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body"><p>Abra o Burp Suite → <strong>Proxy → Intercept ON</strong></p></div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body"><p>Configure o navegador: proxy manual <code>127.0.0.1:8080</code></p></div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body"><p>Faça um login qualquer → a requisição será capturada → <strong>Action → Send to Intruder</strong></p></div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body">
+            <p>Na aba <strong>Positions</strong>, selecione o valor da senha e clique em <strong>Add §</strong>:</p>
+            <div class="code-block">
+              <pre>username=admin&password=<span style="color:var(--red)">§senha§</span></pre>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body"><p>Em <strong>Payloads</strong> → Simple list → carregue as primeiras 200 linhas do rockyou.txt → <strong>Start Attack</strong></p></div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body">
+            <p>Ordene pela coluna <strong>Length</strong> — a senha correta terá comprimento diferente das demais.</p>
+            <div class="success-box">
+              <strong>✓ Dica</strong>
+              <p>Quando o login é bem-sucedido, o servidor retorna uma resposta maior (com mais dados) ou redireciona — isso muda o tamanho (Length) da resposta HTTP.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ffuf -->
+      <h3>5. ffuf — Fuzzing rápido</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-title">ffuf — web fuzzer</span>
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+        </div>
+        <pre><span class="cmd">ffuf</span> \
+  <span class="flag">-w</span> <span class="arg">/usr/share/wordlists/rockyou.txt:FUZZ</span> \
+  <span class="flag">-u</span> http://localhost:3000/login \
+  <span class="flag">-X</span> POST \
+  <span class="flag">-d</span> <span class="arg">'username=admin&password=FUZZ'</span> \
+  <span class="flag">-H</span> <span class="arg">'Content-Type: application/x-www-form-urlencoded'</span> \
+  <span class="flag">-fr</span> <span class="arg">'FAIL_STRING'</span> \
+  <span class="flag">-t</span> <span class="arg">10</span> <span class="flag">-mc all</span></pre>
+      </div>
+
+      <!-- Wireshark -->
+      <h3>6. Wireshark — captura do tráfego</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body"><p>Abra o Wireshark → selecione interface <strong>loopback (lo)</strong></p></div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body">
+            <p>Aplique o filtro:</p>
+            <div class="code-block">
+              <pre>tcp.port == 3000 && http</pre>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body"><p>Execute o Hydra por 30 segundos enquanto observa os pacotes. Você consegue ver as senhas testadas em texto claro?</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BLUE TEAM ── -->
+  <section id="blueteam">
+    <div class="container">
+      <div class="section-label">// 04 · Defesa</div>
+      <h2>Fase 2 — Blue Team</h2>
+
+      <div class="phase-banner blue-phase">
+        <div class="ph-icon">🛡️</div>
+        <div>
+          <h3>Você é o defensor</h3>
+          <p>Analise os logs, identifique o ataque e ative as contramedidas uma a uma. Depois, tente atacar novamente.</p>
+        </div>
+      </div>
+
+      <!-- Logs -->
+      <h3>1. Análise dos Logs</h3>
+      <p>O container registra todos os acessos em <code>/app/logs/access.log</code>, mapeado para <code>./logs/</code> no host.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-title">analisando logs do container</span>
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+        </div>
+        <pre><span class="cmt"># Visualizar logs em tempo real</span>
+<span class="cmd">docker</span> logs app-brute <span class="flag">--tail 100 --follow</span>
+
+<span class="cmt"># Contar tentativas POST /login por IP</span>
+<span class="cmd">grep</span> <span class="arg">'POST /login'</span> ./logs/access.log \
+  | <span class="cmd">awk</span> <span class="arg">'{print $1}'</span> \
+  | <span class="cmd">sort</span> | <span class="cmd">uniq -c</span> | <span class="cmd">sort -rn</span>
+
+<span class="cmt"># Ver User-Agents usados</span>
+<span class="cmd">grep</span> <span class="arg">'POST /login'</span> ./logs/access.log \
+  | <span class="cmd">awk -F'"'</span> <span class="arg">'{print $6}'</span> | <span class="cmd">sort -u</span></pre>
+      </div>
+
+      <!-- Rate Limiting -->
+      <h3>2. Ativando Rate Limiting</h3>
+      <p>Limite o número de requisições por IP em uma janela de tempo.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-title">ativar rate limiting via API</span>
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+        </div>
+        <pre><span class="cmt"># Ativar (máximo 20 req/minuto por IP)</span>
+<span class="cmd">curl</span> <span class="flag">-X POST</span> http://localhost:3000/config \
+  <span class="flag">-d</span> <span class="arg">'feature=rateLimit&value=true'</span>
+
+<span class="cmt"># Ajustar para apenas 5 req/minuto (mais restritivo)</span>
+<span class="cmd">curl</span> <span class="flag">-X POST</span> http://localhost:3000/config \
+  <span class="flag">-d</span> <span class="arg">'feature=maxReqs&value=5'</span>
+
+<span class="cmt"># Verificar configuração atual</span>
+<span class="cmd">curl</span> http://localhost:3000/status</pre>
+      </div>
+      <div class="info-box">
+        <strong>💡 Teste:</strong>
+        <p>Rode o Hydra novamente após ativar o rate limiting. Ele vai começar a receber erros <code>429 Too Many Requests</code>. O ataque ainda funciona? Por quê?</p>
+      </div>
+
+      <!-- Lockout -->
+      <h3>3. Ativando Account Lockout</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-title">ativar lockout de conta</span>
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+        </div>
+        <pre><span class="cmt"># Ativar (bloqueia após 5 falhas por 5 minutos)</span>
+<span class="cmd">curl</span> <span class="flag">-X POST</span> http://localhost:3000/config \
+  <span class="flag">-d</span> <span class="arg">'feature=lockout&value=true'</span>
+
+<span class="cmt"># Testar manualmente (6 tentativas seguidas)</span>
+<span class="cmd">for</span> i in 1 2 3 4 5 6; do
+  <span class="cmd">curl</span> <span class="flag">-s -X POST</span> http://localhost:3000/login \
+    <span class="flag">-d</span> <span class="arg">"username=admin&password=errada_$i"</span> \
+    <span class="flag">-w</span> <span class="arg">"Tentativa $i: HTTP %{http_code}\n"</span>
+<span class="cmd">done</span></pre>
+      </div>
+      <div class="warning" style="border-left-color:var(--yellow); background:rgba(234,179,8,0.07); border-color:rgba(234,179,8,0.25)">
+        <strong style="color:var(--yellow)">⚠ Tradeoff importante</strong>
+        <p style="color:#fde68a">O lockout pode ser usado em ataques de negação de serviço (DoS) — um atacante pode bloquear contas legítimas de propósito. Discuta como mitigar isso.</p>
+      </div>
+
+      <!-- Fail2Ban -->
+      <h3>4. Configurando Fail2Ban</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-title">fail2ban — bloqueio automático de IP</span>
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+        </div>
+        <pre><span class="cmt"># Criar filtro para a aplicação</span>
+<span class="cmd">sudo nano</span> /etc/fail2ban/filter.d/app-brute.conf
+
+<span class="out">[Definition]
+failregex = ^&lt;HOST&gt; .* POST /login .* 401
+ignoreregex =</span>
+
+<span class="cmt"># Criar jail</span>
+<span class="cmd">sudo nano</span> /etc/fail2ban/jail.d/app-brute.conf
+
+<span class="out">[app-brute]
+enabled  = true
+filter   = app-brute
+logpath  = /home/aluno/lab-bruteforce/logs/access.log
+maxretry = 10
+bantime  = 600
+findtime = 60</span>
+
+<span class="cmt"># Reiniciar e verificar</span>
+<span class="cmd">sudo</span> systemctl restart fail2ban
+<span class="cmd">fail2ban-client</span> status app-brute</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAINEL AO VIVO ── -->
+  <section id="painel">
+    <div class="container">
+      <div class="section-label">// 05 · Monitoramento</div>
+      <h2>Painel de Controle — Blue Team</h2>
+      <p>Este painel se conecta à aplicação rodando em <code>localhost:3000</code> e permite controlar as defesas em tempo real.</p>
+
+      <div class="connect-status">
+        <div class="dot-live" id="liveDot"></div>
+        <span id="liveStatus">verificando conexão...</span>
+      </div>
+
+      <div class="monitor">
+        <h4>$ app-brute · status das defesas</h4>
+        <div class="monitor-row">
+          <span class="monitor-label">Rate Limiting</span>
+          <div style="display:flex;gap:12px;align-items:center">
+            <span class="monitor-value" id="rl-status">—</span>
+            <button class="toggle-btn off" id="rl-btn" onclick="toggleDefense('rateLimit')">ativar</button>
+          </div>
+        </div>
+        <div class="monitor-row">
+          <span class="monitor-label">Account Lockout</span>
+          <div style="display:flex;gap:12px;align-items:center">
+            <span class="monitor-value" id="lo-status">—</span>
+            <button class="toggle-btn off" id="lo-btn" onclick="toggleDefense('lockout')">ativar</button>
+          </div>
+        </div>
+        <div class="monitor-row">
+          <span class="monitor-label">Contas bloqueadas</span>
+          <span class="monitor-value" id="locked-users">—</span>
+        </div>
+        <div class="monitor-row">
+          <span class="monitor-label">Ações</span>
+          <div style="display:flex;gap:8px">
+            <button class="toggle-btn" style="border-color:var(--muted);color:var(--muted)" onclick="refreshStatus()">↻ atualizar</button>
+            <button class="toggle-btn" style="border-color:var(--red);color:var(--red)" onclick="resetState()">⟳ resetar estado</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>Como funciona</strong>
+        <p>O painel usa fetch() para chamar a API da aplicação em <code>localhost:3000</code>. Funciona apenas com o container rodando. Se aparecer erro, verifique com <code>docker ps</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CHECKLIST ── -->
+  <section id="checklist">
+    <div class="container">
+      <div class="section-label">// 06 · Conclusão</div>
+      <h2>Checklist de Progresso</h2>
+      <p>Marque cada etapa conforme você conclui. O progresso é salvo localmente no navegador.</p>
+
+      <ul class="checklist" id="checklistEl">
+        <li data-id="0"><div class="check-box" onclick="toggleCheck(0)"></div>Ambiente Docker iniciado e aplicação acessível em localhost:3000</li>
+        <li data-id="1"><div class="check-box" onclick="toggleCheck(1)"></div>Reconhecimento com curl: identifiquei o fail_string da aplicação</li>
+        <li data-id="2"><div class="check-box" onclick="toggleCheck(2)"></div>Hydra executado com sucesso: senha encontrada</li>
+        <li data-id="3"><div class="check-box" onclick="toggleCheck(3)"></div>Medusa executado e comparado com Hydra</li>
+        <li data-id="4"><div class="check-box" onclick="toggleCheck(4)"></div>Burp Suite Intruder configurado e ataque executado</li>
+        <li data-id="5"><div class="check-box" onclick="toggleCheck(5)"></div>ffuf executado e velocidade comparada</li>
+        <li data-id="6"><div class="check-box" onclick="toggleCheck(6)"></div>Wireshark: tráfego do ataque capturado e analisado</li>
+        <li data-id="7"><div class="check-box" onclick="toggleCheck(7)"></div>Logs do container analisados: padrão de ataque identificado</li>
+        <li data-id="8"><div class="check-box" onclick="toggleCheck(8)"></div>Rate Limiting ativado e testado com Hydra</li>
+        <li data-id="9"><div class="check-box" onclick="toggleCheck(9)"></div>Account Lockout ativado e testado</li>
+        <li data-id="10"><div class="check-box" onclick="toggleCheck(10)"></div>Fail2Ban configurado e bloqueio de IP verificado</li>
+        <li data-id="11"><div class="check-box" onclick="toggleCheck(11)"></div>Todas as questões de reflexão respondidas na folha de atividade</li>
+      </ul>
+
+      <div style="margin-top:32px; font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--muted)">
+        Progresso: <span id="progressText" style="color:var(--green)">0 / 12</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>UMC — Universidade de Mogi das Cruzes &nbsp;|&nbsp; Curso Técnico em Redes de Computadores</p>
+    <p style="margin-top:8px; color:#374151">Lab BruteForce · Uso estritamente educacional</p>
+  </footer>
+
+  <script>
+    // ── Progress bar ──
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('progress').style.width = pct + '%';
+    });
+
+    // ── Nav ──
+    function scrollTo(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ── Copy ──
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      navigator.clipboard.writeText(pre.innerText).then(() => {
+        btn.textContent = '✓ copiado';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'copiar'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    // ── Checklist ──
+    const checks = JSON.parse(localStorage.getItem('lab-checks') || '{}');
+    function renderChecklist() {
+      document.querySelectorAll('#checklistEl li').forEach(li => {
+        const id = +li.dataset.id;
+        const box = li.querySelector('.check-box');
+        if (checks[id]) { box.classList.add('checked'); box.textContent = '✓'; li.classList.add('done'); }
+        else             { box.classList.remove('checked'); box.textContent = ''; li.classList.remove('done'); }
+      });
+      const done = Object.values(checks).filter(Boolean).length;
+      document.getElementById('progressText').textContent = `${done} / 12`;
+    }
+    function toggleCheck(id) {
+      checks[id] = !checks[id];
+      localStorage.setItem('lab-checks', JSON.stringify(checks));
+      renderChecklist();
+    }
+    renderChecklist();
+
+    // ── Painel ──
+    let currentConfig = {};
+
+    async function refreshStatus() {
+      try {
+        const r = await fetch('http://localhost:3000/status', { signal: AbortSignal.timeout(2000) });
+        const d = await r.json();
+        currentConfig = d.config;
+
+        document.getElementById('liveDot').classList.add('online');
+        document.getElementById('liveStatus').textContent = 'conectado · localhost:3000';
+
+        const rlOn = d.config.rateLimit.enabled;
+        document.getElementById('rl-status').textContent = rlOn ? '✓ ativo' : '✗ inativo';
+        document.getElementById('rl-status').style.color  = rlOn ? 'var(--green)' : 'var(--red)';
+        const rlBtn = document.getElementById('rl-btn');
+        rlBtn.textContent  = rlOn ? 'desativar' : 'ativar';
+        rlBtn.className    = 'toggle-btn ' + (rlOn ? 'on' : 'off');
+
+        const loOn = d.config.lockout.enabled;
+        document.getElementById('lo-status').textContent = loOn ? '✓ ativo' : '✗ inativo';
+        document.getElementById('lo-status').style.color  = loOn ? 'var(--green)' : 'var(--red)';
+        const loBtn = document.getElementById('lo-btn');
+        loBtn.textContent = loOn ? 'desativar' : 'ativar';
+        loBtn.className   = 'toggle-btn ' + (loOn ? 'on' : 'off');
+
+        const locked = d.lockedUsers || [];
+        document.getElementById('locked-users').textContent =
+          locked.length ? locked.join(', ') : 'nenhuma';
+      } catch {
+        document.getElementById('liveDot').classList.remove('online');
+        document.getElementById('liveStatus').textContent = 'container offline · rode: docker compose up -d';
+      }
+    }
+
+    async function toggleDefense(feature) {
+      const current = feature === 'rateLimit'
+        ? currentConfig?.rateLimit?.enabled
+        : currentConfig?.lockout?.enabled;
+      try {
+        await fetch('http://localhost:3000/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `feature=${feature}&value=${!current}`
+        });
+        refreshStatus();
+      } catch { alert('Container offline. Inicie com: docker compose up -d'); }
+    }
+
+    async function resetState() {
+      try {
+        await fetch('http://localhost:3000/reset', { method: 'POST' });
+        refreshStatus();
+      } catch { alert('Container offline.'); }
+    }
+
+    refreshStatus();
+    setInterval(refreshStatus, 5000);
+  </script>
+</body>
+</html>
