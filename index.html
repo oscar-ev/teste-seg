@@ -7,1170 +7,1170 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:        #0a0c10;
-      --surface:   #111318;
-      --border:    #1e2130;
-      --red:       #ef4444;
-      --red-dim:   #7f1d1d;
-      --green:     #22c55e;
-      --green-dim: #14532d;
-      --blue:      #3b82f6;
-      --blue-dim:  #1e3a5f;
-      --yellow:    #eab308;
-      --text:      #e2e8f0;
-      --muted:     #64748b;
-      --code-bg:   #080a0e;
+      --bg:#0a0c10; --surface:#111318; --border:#1e2130;
+      --red:#ef4444; --green:#22c55e; --blue:#3b82f6; --yellow:#eab308;
+      --text:#e2e8f0; --muted:#64748b; --code-bg:#080a0e;
     }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;line-height:1.7;overflow-x:hidden}
+    body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,.01) 2px,rgba(255,255,255,.01) 4px);pointer-events:none;z-index:9999}
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    /* Hero */
+    .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 24px;overflow:hidden}
+    .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(59,130,246,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.06) 1px,transparent 1px);background-size:40px 40px;mask-image:radial-gradient(ellipse 80% 60% at 50% 50%,black 30%,transparent 100%)}
+    .hero-glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(239,68,68,.1) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+    .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:999px;padding:6px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--red);text-transform:uppercase;letter-spacing:2px;margin-bottom:32px;animation:pb 2s infinite}
+    @keyframes pb{0%,100%{border-color:rgba(239,68,68,.3)}50%{border-color:rgba(239,68,68,.7)}}
+    .hero h1{font-size:clamp(40px,7vw,80px);font-weight:800;letter-spacing:-2px;line-height:1.05;margin-bottom:20px}
+    .hero h1 .r{color:var(--red)} .hero h1 .b{color:var(--blue)}
+    .hero-sub{font-size:16px;color:var(--muted);max-width:560px;margin-bottom:48px}
+    .pills{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:56px}
+    .pill{padding:10px 20px;border-radius:999px;border:1px solid;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+    .pill.r{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3);color:var(--red)}
+    .pill.b{background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.3);color:var(--blue)}
+    .pill.g{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.3);color:var(--green)}
+    .scroll-hint{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);animation:bounce 2s infinite}
+    @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 
-    html { scroll-behavior: smooth; }
+    /* Layout */
+    .container{max-width:860px;margin:0 auto;padding:0 24px}
+    section{padding:80px 0;border-top:1px solid var(--border)}
+    .sec-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:3px;color:var(--muted);margin-bottom:10px}
+    h2{font-size:clamp(26px,4vw,40px);font-weight:800;letter-spacing:-1px;margin-bottom:28px;line-height:1.2}
+    h3{font-size:20px;font-weight:700;margin:44px 0 12px;color:var(--text)}
+    p{color:#94a3b8;font-size:15px;margin-bottom:14px}
+    p strong{color:var(--text)}
+    code{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--yellow);background:rgba(234,179,8,.08);padding:2px 6px;border-radius:4px}
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Syne', sans-serif;
-      line-height: 1.7;
-      overflow-x: hidden;
-    }
+    /* Boxes */
+    .box{border-radius:10px;padding:18px 22px;margin:16px 0;border:1px solid}
+    .box-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+    .box p,.box li{font-size:14px;margin-bottom:5px}
+    .box ul,.box ol{padding-left:20px}
+    .box.warn{background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.2);border-left:4px solid var(--red)}
+    .box.warn .box-title{color:var(--red)} .box.warn p,.box.warn li{color:#fca5a5}
+    .box.info{background:rgba(59,130,246,.06);border-color:rgba(59,130,246,.2);border-left:4px solid var(--blue)}
+    .box.info .box-title{color:var(--blue)} .box.info p,.box.info li{color:#93c5fd}
+    .box.ok{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.2);border-left:4px solid var(--green)}
+    .box.ok .box-title{color:var(--green)} .box.ok p,.box.ok li{color:#86efac}
+    .box.yellow{background:rgba(234,179,8,.06);border-color:rgba(234,179,8,.2);border-left:4px solid var(--yellow)}
+    .box.yellow .box-title{color:var(--yellow)} .box.yellow p,.box.yellow li{color:#fde68a}
+    .box.dark{background:var(--code-bg);border-color:var(--border)}
+    .box.dark p,.box.dark li,.box.dark .box-title{color:#94a3b8}
 
-    /* ── Scanline overlay ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(255,255,255,0.012) 2px,
-        rgba(255,255,255,0.012) 4px
-      );
-      pointer-events: none;
-      z-index: 9999;
-    }
+    /* Código */
+    .cb{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:14px 0;font-family:'JetBrains Mono',monospace}
+    .ch{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;background:#0d0f14;border-bottom:1px solid var(--border)}
+    .dots{display:flex;gap:5px}
+    .dots span{width:10px;height:10px;border-radius:50%}
+    .dots span:nth-child(1){background:#ef4444} .dots span:nth-child(2){background:#eab308} .dots span:nth-child(3){background:#22c55e}
+    .ct{font-size:11px;color:var(--muted)}
+    .cpb{background:none;border:1px solid var(--border);color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 10px;border-radius:4px;cursor:pointer;transition:all .2s}
+    .cpb:hover{color:var(--text);border-color:var(--muted)} .cpb.copied{color:var(--green);border-color:var(--green)}
+    pre{padding:18px 20px;font-size:13px;line-height:1.9;overflow-x:auto;color:#a5f3a0}
+    .c{color:#60a5fa} .f{color:#f9a8d4} .a{color:#fde68a} .cm{color:#4b5563;font-style:italic} .o{color:#6b7280} .hi{color:#fff;font-weight:700}
 
-    /* ── Hero ── */
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 60px 24px;
-      overflow: hidden;
-    }
+    /* Steps */
+    .steps{counter-reset:s;list-style:none}
+    .si{counter-increment:s;display:flex;gap:20px;margin-bottom:36px;align-items:flex-start}
+    .sn{flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--surface);border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--blue);margin-top:2px}
+    .sb{flex:1}
+    .sb>p:first-child{color:var(--text);font-weight:700;font-size:16px;margin-bottom:8px}
 
-    .hero-grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(59,130,246,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(59,130,246,0.06) 1px, transparent 1px);
-      background-size: 40px 40px;
-      mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 100%);
-    }
+    /* Output */
+    .out-block{background:#050608;border:1px solid #1a1e2a;border-radius:8px;padding:14px 18px;margin:10px 0}
+    .out-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+    .out-label::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green)}
+    .out-block pre{padding:0;font-size:12px;color:#6b7280;line-height:1.7}
+    .out-block .hit{color:#22c55e;font-weight:700}
 
-    .hero-glow {
-      position: absolute;
-      width: 600px; height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(239,68,68,0.12) 0%, transparent 70%);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
+    /* Param table */
+    .pt{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+    .pt th{background:#0d0f14;padding:10px 14px;text-align:left;color:var(--muted);border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:1px}
+    .pt td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+    .pt tr:last-child td{border-bottom:none}
+    .pt td:first-child{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--red);white-space:nowrap}
+    .pt td:last-child{color:#94a3b8}
+    .pt tr:nth-child(even) td{background:rgba(255,255,255,.02)}
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(239,68,68,0.1);
-      border: 1px solid rgba(239,68,68,0.3);
-      border-radius: 999px;
-      padding: 6px 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--red);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 32px;
-      animation: pulse-border 2s infinite;
-    }
+    /* Phase banner */
+    .pb2{display:flex;align-items:center;gap:20px;padding:22px 28px;border-radius:12px;margin-bottom:36px}
+    .pb2.rp{background:linear-gradient(135deg,rgba(239,68,68,.1),transparent);border:1px solid rgba(239,68,68,.25)}
+    .pb2.bp{background:linear-gradient(135deg,rgba(59,130,246,.1),transparent);border:1px solid rgba(59,130,246,.25)}
+    .pb2 .ic{font-size:40px;flex-shrink:0}
+    .pb2 h3{font-size:20px;margin:0 0 4px}
+    .pb2 p{margin:0;font-size:14px}
+    .pb2.rp h3{color:var(--red)} .pb2.bp h3{color:var(--blue)}
 
-    @keyframes pulse-border {
-      0%, 100% { border-color: rgba(239,68,68,0.3); }
-      50%       { border-color: rgba(239,68,68,0.7); }
-    }
+    /* Tool divider */
+    .tdiv{display:flex;align-items:center;gap:16px;margin:52px 0 28px}
+    .tbadge{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 18px;white-space:nowrap}
+    .tbadge .ti{font-size:22px}
+    .tbadge .tn{font-weight:700;font-size:16px}
+    .tbadge .tt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
+    .tdiv hr{flex:1;border:none;border-top:1px solid var(--border)}
 
-    .hero h1 {
-      font-size: clamp(36px, 6vw, 72px);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -2px;
-      margin-bottom: 20px;
-    }
+    /* Tool index */
+    .tidx{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin:24px 0 40px}
+    .tic{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;text-decoration:none;transition:border-color .2s}
+    .tic:hover{border-color:#2d3554}
+    .tic.tr{border-left:3px solid var(--red)} .tic.tb{border-left:3px solid var(--blue)} .tic.ty{border-left:3px solid var(--yellow)}
+    .tic .tii{font-size:22px}
+    .tic h5{font-size:14px;font-weight:700;color:var(--text);margin:0 0 2px}
+    .tic span{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace}
 
-    .hero h1 .red  { color: var(--red); }
-    .hero h1 .blue { color: var(--blue); }
+    /* Nav */
+    .snav{position:fixed;left:20px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:100}
+    .nd{width:8px;height:8px;border-radius:50%;background:var(--border);cursor:pointer;position:relative;transition:all .3s}
+    .nd:hover,.nd.active{background:var(--blue);transform:scale(1.5)}
+    .nd::after{content:attr(data-label);position:absolute;left:16px;top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
+    .nd:hover::after{opacity:1}
 
-    .hero-sub {
-      font-size: clamp(15px, 2vw, 18px);
-      color: var(--muted);
-      max-width: 580px;
-      margin-bottom: 48px;
-    }
+    /* Misc */
+    .pbar{position:fixed;top:0;left:0;height:2px;background:var(--red);z-index:1000;transition:width .1s}
 
-    .hero-cards {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 56px;
-    }
+    /* Checklist */
+    .cl{list-style:none}
+    .cl li{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);font-size:14px;color:#94a3b8}
+    .cl li:last-child{border-bottom:none}
+    .ck{width:22px;height:22px;border:2px solid var(--border);border-radius:5px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:13px;margin-top:1px}
+    .ck.on{background:var(--green);border-color:var(--green);color:#000}
+    .cl li.done{color:#374151;text-decoration:line-through}
 
-    .phase-card {
-      padding: 16px 24px;
-      border-radius: 10px;
-      border: 1px solid;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-    .phase-card.red   { background: rgba(239,68,68,0.08);  border-color: rgba(239,68,68,0.3);  color: var(--red); }
-    .phase-card.blue  { background: rgba(59,130,246,0.08); border-color: rgba(59,130,246,0.3); color: var(--blue); }
-    .phase-card.green { background: rgba(34,197,94,0.08);  border-color: rgba(34,197,94,0.3);  color: var(--green); }
+    /* Monitor */
+    .mon{background:var(--code-bg);border:1px solid var(--border);border-radius:12px;padding:24px;margin:24px 0}
+    .mon-t{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green);margin-bottom:20px}
+    .mr{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:13px}
+    .mr:last-child{border-bottom:none}
+    .ml{color:var(--muted)} .mv{color:var(--text)}
+    .tbtn{background:none;border:1px solid;border-radius:6px;padding:4px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;transition:all .2s}
+    .tbtn.off{border-color:var(--red);color:var(--red)} .tbtn.on{border-color:var(--green);color:var(--green)}
+    .dlive{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;margin-right:6px}
+    .dlive.on{background:var(--green);animation:blink 1.5s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
-    .scroll-hint {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--muted);
-      animation: bounce 2s infinite;
-    }
-    @keyframes bounce {
-      0%,100% { transform: translateY(0); }
-      50%      { transform: translateY(6px); }
-    }
-
-    /* ── Layout ── */
-    .container { max-width: 920px; margin: 0 auto; padding: 0 24px; }
-
-    /* ── Seções ── */
-    section { padding: 80px 0; }
-    section + section { border-top: 1px solid var(--border); }
-
-    .section-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      color: var(--muted);
-      margin-bottom: 12px;
-    }
-
-    h2 {
-      font-size: clamp(24px, 4vw, 36px);
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin-bottom: 32px;
-      line-height: 1.2;
-    }
-
-    h3 {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      margin-top: 32px;
-    }
-
-    p { color: #94a3b8; margin-bottom: 16px; font-size: 15px; }
-
-    /* ── Warning Box ── */
-    .warning {
-      background: rgba(239,68,68,0.07);
-      border: 1px solid rgba(239,68,68,0.25);
-      border-left: 4px solid var(--red);
-      border-radius: 8px;
-      padding: 20px 24px;
-      margin-bottom: 32px;
-    }
-    .warning strong { color: var(--red); display: block; margin-bottom: 6px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
-    .warning p { color: #fca5a5; margin: 0; font-size: 14px; }
-
-    /* ── Info Box ── */
-    .info-box {
-      background: rgba(59,130,246,0.07);
-      border: 1px solid rgba(59,130,246,0.25);
-      border-left: 4px solid var(--blue);
-      border-radius: 8px;
-      padding: 20px 24px;
-      margin: 20px 0;
-    }
-    .info-box strong { color: var(--blue); display: block; margin-bottom: 8px; font-size: 13px; }
-    .info-box p, .info-box li { color: #93c5fd; font-size: 14px; margin: 0 0 4px 0; }
-    .info-box ul { padding-left: 20px; }
-
-    .success-box {
-      background: rgba(34,197,94,0.07);
-      border: 1px solid rgba(34,197,94,0.25);
-      border-left: 4px solid var(--green);
-      border-radius: 8px;
-      padding: 20px 24px;
-      margin: 20px 0;
-    }
-    .success-box strong { color: var(--green); display: block; margin-bottom: 8px; font-size: 13px; }
-    .success-box p, .success-box li { color: #86efac; font-size: 14px; margin: 0 0 4px 0; }
-    .success-box ul { padding-left: 20px; }
-
-    /* ── Code Block ── */
-    .code-block {
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 16px 0;
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .code-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 16px;
-      background: #0d0f14;
-      border-bottom: 1px solid var(--border);
-    }
-    .code-dots { display: flex; gap: 6px; }
-    .code-dots span {
-      width: 10px; height: 10px; border-radius: 50%;
-    }
-    .code-dots span:nth-child(1) { background: #ef4444; }
-    .code-dots span:nth-child(2) { background: #eab308; }
-    .code-dots span:nth-child(3) { background: #22c55e; }
-    .code-title { font-size: 11px; color: var(--muted); }
-    .copy-btn {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      padding: 3px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .copy-btn:hover { color: var(--text); border-color: var(--muted); }
-    .copy-btn.copied { color: var(--green); border-color: var(--green); }
-    pre {
-      padding: 20px;
-      font-size: 13px;
-      line-height: 1.8;
-      overflow-x: auto;
-      color: #a5f3a0;
-    }
-    .cmd  { color: #60a5fa; }
-    .flag { color: #f9a8d4; }
-    .arg  { color: #fde68a; }
-    .cmt  { color: #4b5563; font-style: italic; }
-    .out  { color: #6b7280; }
-
-    /* ── Steps ── */
-    .steps { counter-reset: step; }
-    .step {
-      display: flex;
-      gap: 20px;
-      margin-bottom: 24px;
-      align-items: flex-start;
-    }
-    .step-num {
-      counter-increment: step;
-      flex-shrink: 0;
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--blue);
-      margin-top: 2px;
-    }
-    .step-body { flex: 1; }
-    .step-body p { margin-bottom: 8px; }
-
-    /* ── Tool Cards ── */
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-    .tool-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      transition: border-color 0.2s, transform 0.2s;
-      cursor: default;
-    }
-    .tool-card:hover { border-color: #2d3554; transform: translateY(-2px); }
-    .tool-card .icon { font-size: 28px; margin-bottom: 12px; display: block; }
-    .tool-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
-    .tool-card p  { font-size: 13px; color: var(--muted); margin: 0; }
-    .tool-card .tag {
-      display: inline-block;
-      margin-top: 10px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      padding: 2px 8px;
-      border-radius: 4px;
-      text-transform: uppercase;
-    }
-    .tag.red   { background: rgba(239,68,68,0.15);  color: var(--red); }
-    .tag.blue  { background: rgba(59,130,246,0.15); color: var(--blue); }
-    .tag.both  { background: rgba(234,179,8,0.15);  color: var(--yellow); }
-
-    /* ── Fase banners ── */
-    .phase-banner {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding: 24px 28px;
-      border-radius: 12px;
-      margin-bottom: 40px;
-    }
-    .phase-banner.red-phase  { background: linear-gradient(135deg, rgba(239,68,68,0.12), rgba(127,29,29,0.05)); border: 1px solid rgba(239,68,68,0.25); }
-    .phase-banner.blue-phase { background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(30,58,95,0.05)); border: 1px solid rgba(59,130,246,0.25); }
-    .phase-banner .ph-icon { font-size: 40px; }
-    .phase-banner h3 { font-size: 20px; margin: 0 0 4px; }
-    .phase-banner p  { margin: 0; font-size: 14px; }
-    .phase-banner.red-phase  h3 { color: var(--red); }
-    .phase-banner.blue-phase h3 { color: var(--blue); }
-
-    /* ── Tabela de parâmetros ── */
-    .param-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      margin: 16px 0;
-    }
-    .param-table th {
-      background: #0d0f14;
-      padding: 10px 14px;
-      text-align: left;
-      color: var(--muted);
-      border-bottom: 1px solid var(--border);
-      font-weight: 600;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .param-table td {
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--border);
-      vertical-align: top;
-    }
-    .param-table td:first-child { color: var(--red); white-space: nowrap; }
-    .param-table td:last-child  { color: #94a3b8; }
-    .param-table tr:last-child td { border-bottom: none; }
-
-    /* ── Nav lateral ── */
-    .sticky-nav {
-      position: fixed;
-      left: 24px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 100;
-    }
-    .nav-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--border);
-      transition: all 0.3s;
-      cursor: pointer;
-      position: relative;
-    }
-    .nav-dot:hover, .nav-dot.active { background: var(--blue); transform: scale(1.4); }
-    .nav-dot::after {
-      content: attr(data-label);
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-    }
-    .nav-dot:hover::after { opacity: 1; }
-
-    /* ── Progress bar ── */
-    .progress-bar {
-      position: fixed;
-      top: 0; left: 0;
-      height: 2px;
-      background: var(--red);
-      z-index: 1000;
-      transition: width 0.1s;
-    }
-
-    /* ── Checklist ── */
-    .checklist { list-style: none; }
-    .checklist li {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 14px;
-      color: #94a3b8;
-    }
-    .checklist li:last-child { border-bottom: none; }
-    .check-box {
-      width: 20px; height: 20px;
-      border: 2px solid var(--border);
-      border-radius: 4px;
-      cursor: pointer;
-      flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
-      font-size: 12px;
-    }
-    .check-box.checked { background: var(--green); border-color: var(--green); color: #000; }
-    .checklist li.done { color: #4b5563; text-decoration: line-through; }
-
-    /* ── Status Monitor ── */
-    .monitor {
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      margin: 24px 0;
-    }
-    .monitor h4 {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      color: var(--green);
-      margin-bottom: 20px;
-    }
-    .monitor-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-    }
-    .monitor-row:last-child { border-bottom: none; }
-    .monitor-label { color: var(--muted); }
-    .monitor-value { color: var(--text); }
-    .toggle-btn {
-      background: none;
-      border: 1px solid;
-      border-radius: 6px;
-      padding: 4px 14px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .toggle-btn.off { border-color: var(--red);   color: var(--red); }
-    .toggle-btn.on  { border-color: var(--green); color: var(--green); }
-    .toggle-btn:hover { opacity: 0.8; }
-
-    .connect-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      margin-bottom: 16px;
-    }
-    .dot-live { width: 8px; height: 8px; border-radius: 50%; background: var(--red); }
-    .dot-live.online { background: var(--green); animation: blink 1.5s infinite; }
-    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-    /* ── Footer ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 40px 24px;
-      text-align: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    /* ── Responsivo ── */
-    @media (max-width: 768px) {
-      .sticky-nav { display: none; }
-      .tools-grid { grid-template-columns: 1fr; }
-    }
+    @media(max-width:768px){.snav{display:none}}
+    footer{border-top:1px solid var(--border);padding:40px 24px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
   </style>
 </head>
 <body>
 
-  <!-- Progress bar -->
-  <div class="progress-bar" id="progress"></div>
+<div class="pbar" id="pbar"></div>
 
-  <!-- Nav lateral -->
-  <nav class="sticky-nav" id="sidenav">
-    <div class="nav-dot" data-label="Início"      onclick="scrollTo('hero')"></div>
-    <div class="nav-dot" data-label="Ambiente"    onclick="scrollTo('ambiente')"></div>
-    <div class="nav-dot" data-label="Ferramentas" onclick="scrollTo('ferramentas')"></div>
-    <div class="nav-dot" data-label="Red Team"    onclick="scrollTo('redteam')"></div>
-    <div class="nav-dot" data-label="Blue Team"   onclick="scrollTo('blueteam')"></div>
-    <div class="nav-dot" data-label="Painel"      onclick="scrollTo('painel')"></div>
-    <div class="nav-dot" data-label="Checklist"   onclick="scrollTo('checklist')"></div>
-  </nav>
+<nav class="snav">
+  <div class="nd" data-label="Início"      onclick="goTo('hero')"></div>
+  <div class="nd" data-label="Ambiente"    onclick="goTo('s-amb')"></div>
+  <div class="nd" data-label="Red Team"    onclick="goTo('s-red')"></div>
+  <div class="nd" data-label="curl"        onclick="goTo('t-curl')"></div>
+  <div class="nd" data-label="Hydra"       onclick="goTo('t-hydra')"></div>
+  <div class="nd" data-label="Medusa"      onclick="goTo('t-medusa')"></div>
+  <div class="nd" data-label="Burp Suite"  onclick="goTo('t-burp')"></div>
+  <div class="nd" data-label="ffuf"        onclick="goTo('t-ffuf')"></div>
+  <div class="nd" data-label="Wireshark"   onclick="goTo('t-wire')"></div>
+  <div class="nd" data-label="Blue Team"   onclick="goTo('s-blue')"></div>
+  <div class="nd" data-label="Painel"      onclick="goTo('s-painel')"></div>
+  <div class="nd" data-label="Checklist"   onclick="goTo('s-check')"></div>
+</nav>
 
-  <!-- ── HERO ── -->
-  <section class="hero" id="hero">
-    <div class="hero-grid"></div>
-    <div class="hero-glow"></div>
-    <div class="badge">⚠ ambiente controlado • uso educacional</div>
-    <h1>
-      <span class="red">Brute</span><span class="blue">Force</span><br>Lab
-    </h1>
-    <p class="hero-sub">
-      Laboratório de segurança ofensiva e defensiva — ataque e defesa de força bruta em aplicações web.<br>
-      UMC · Curso Técnico em Redes de Computadores · 2º Ano
-    </p>
-    <div class="hero-cards">
-      <div class="phase-card red">⚔ Fase 1 · Red Team</div>
-      <div class="phase-card blue">🛡 Fase 2 · Blue Team</div>
-      <div class="phase-card green">6 ferramentas</div>
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="badge">⚠ ambiente controlado · uso educacional</div>
+  <h1><span class="r">Brute</span><span class="b">Force</span><br>Lab</h1>
+  <p class="hero-sub">Laboratório de segurança ofensiva e defensiva — ataque e defesa de força bruta em aplicações web.<br>UMC · Curso Técnico em Redes de Computadores · 2º Ano</p>
+  <div class="pills">
+    <div class="pill r">⚔ Fase 1 · Red Team</div>
+    <div class="pill b">🛡 Fase 2 · Blue Team</div>
+    <div class="pill g">6 ferramentas</div>
+  </div>
+  <div class="scroll-hint">↓ role para começar</div>
+</section>
+
+<!-- AMBIENTE -->
+<section id="s-amb">
+<div class="container">
+  <div class="sec-label">// 01 · Preparação</div>
+  <h2>Configurando o Ambiente</h2>
+
+  <div class="box warn">
+    <div class="box-title">⚠ Aviso ético — leia antes de começar</div>
+    <p>Esta atividade é realizada em ambiente isolado e controlado (Docker local, na sua própria máquina). É <strong>proibido</strong> usar estas técnicas em sistemas reais sem autorização. Acesso não autorizado a sistemas é crime — <strong>Lei nº 12.737/2012</strong>.</p>
+  </div>
+
+  <h3>Passo 1 — Verificar os pré-requisitos</h3>
+  <p>Abra o terminal (<kbd>Ctrl+Alt+T</kbd>) e execute cada comando abaixo para confirmar que a ferramenta está instalada:</p>
+
+  <ul class="steps">
+    <li class="si">
+      <div class="sn">1</div>
+      <div class="sb">
+        <p>Verificar o Docker</p>
+        <p>O Docker cria e isola o container da aplicação alvo. Sem ele a atividade não funciona.</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">docker</span> --version</pre></div>
+        <div class="out-block"><div class="out-label">saída esperada</div><pre>Docker version 24.0.5, build ced0996</pre></div>
+        <div class="box info"><div class="box-title">💡 Não apareceu a versão?</div>
+        <p>Instale: <code>sudo apt update && sudo apt install docker.io -y</code></p>
+        <p>Adicione seu usuário ao grupo docker (evita usar sudo toda hora):<br><code>sudo usermod -aG docker $USER</code> — feche e reabra o terminal após isso.</p></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">2</div>
+      <div class="sb">
+        <p>Verificar o Docker Compose</p>
+        <p>O Compose lê o arquivo <code>docker-compose.yml</code> e sobe o container com um único comando.</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">docker</span> compose version</pre></div>
+        <div class="out-block"><div class="out-label">saída esperada</div><pre>Docker Compose version v2.20.2</pre></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">3</div>
+      <div class="sb">
+        <p>Instalar as ferramentas de ataque e análise</p>
+        <p>Hydra, Medusa, ffuf, Wireshark e curl — todas de uma vez:</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">sudo</span> apt update
+<span class="c">sudo</span> apt install <span class="f">-y</span> hydra medusa ffuf wireshark curl</pre></div>
+        <div class="box info"><div class="box-title">💡 Janela do Wireshark durante a instalação</div>
+        <p>Vai aparecer uma janela perguntando se usuários não-root podem capturar pacotes. Use as setas para selecionar <strong>Sim</strong> e pressione Enter.</p></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">4</div>
+      <div class="sb">
+        <p>Verificar a wordlist rockyou.txt</p>
+        <p>É a lista de senhas do ataque — contém milhões de senhas reais vazadas em ataques históricos.</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">ls</span> /usr/share/wordlists/rockyou.txt</pre></div>
+        <div class="out-block"><div class="out-label">saída esperada</div><pre>/usr/share/wordlists/rockyou.txt</pre></div>
+        <div class="box info"><div class="box-title">💡 Arquivo não encontrado?</div>
+        <p><code>sudo apt install wordlists -y</code></p>
+        <p><code>sudo gunzip /usr/share/wordlists/rockyou.txt.gz</code></p></div>
+      </div>
+    </li>
+  </ul>
+
+  <h3>Passo 2 — Iniciar o Container da Aplicação Alvo</h3>
+  <p>A aplicação alvo simula um sistema corporativo com página de login. Ela roda isolada na sua máquina, na porta 3000.</p>
+
+  <ul class="steps">
+    <li class="si">
+      <div class="sn">1</div>
+      <div class="sb">
+        <p>Navegue até a pasta do repositório</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">cd</span> ~/lab-bruteforce</pre></div>
+        <div class="box info"><div class="box-title">💡 Ainda não clonou o repositório?</div>
+        <p><code>git clone https://github.com/SEU_USUARIO/lab-bruteforce.git</code></p>
+        <p><code>cd lab-bruteforce</code></p></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">2</div>
+      <div class="sb">
+        <p>Construir a imagem e subir o container</p>
+        <p>Na primeira vez o Docker baixa a imagem base (Node.js) e instala dependências — pode levar 1-2 minutos.</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">docker</span> compose up <span class="f">-d</span>
+<span class="cm"># O -d significa "detached" — roda em segundo plano</span></pre></div>
+        <div class="out-block"><div class="out-label">saída esperada</div><pre>✔ Container app-brute  Started</pre></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">3</div>
+      <div class="sb">
+        <p>Confirmar que o container está ativo</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">docker</span> ps</pre></div>
+        <div class="out-block"><div class="out-label">saída esperada — a coluna PORTS é o que importa</div>
+        <pre>CONTAINER ID   IMAGE      PORTS                    NAMES
+a3f9b1c2       app-alvo   <span class="hit">0.0.0.0:3000->3000/tcp</span>   app-brute</pre></div>
+        <div class="box warn"><div class="box-title">⚠ Não apareceu nada?</div>
+        <p>Veja os erros: <code>docker compose logs</code></p>
+        <p>Porta 3000 em uso: <code>sudo lsof -i :3000</code> para ver qual processo está ocupando.</p></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">4</div>
+      <div class="sb">
+        <p>Acessar a aplicação no navegador</p>
+        <div class="box ok"><div class="box-title">🌐 URL da Aplicação Alvo</div>
+        <p><strong>http://localhost:3000</strong></p>
+        <p>Você verá a tela de login da "CorpNet — Sistema Corporativo Interno".</p>
+        <p>Usuário-alvo: <code>admin</code> — você precisa descobrir a senha!</p>
+        <p>A senha está nas primeiras 200 linhas do rockyou.txt.</p></div>
+      </div>
+    </li>
+  </ul>
+</div>
+</section>
+
+<!-- RED TEAM -->
+<section id="s-red">
+<div class="container">
+  <div class="sec-label">// 02 · Ataque</div>
+  <h2>Fase 1 — Red Team</h2>
+  <div class="pb2 rp">
+    <div class="ic">⚔️</div>
+    <div>
+      <h3>Você é o atacante</h3>
+      <p>Execute as ferramentas na ordem abaixo. Cada uma usa uma abordagem diferente. Anote os resultados — você vai usá-los na Fase 2.</p>
     </div>
-    <div class="scroll-hint">↓ role para começar</div>
-  </section>
+  </div>
+  <div class="tidx">
+    <a class="tic tr" href="#t-curl">    <div class="tii">💻</div><div><h5>curl</h5><span>reconhecimento</span></div></a>
+    <a class="tic tr" href="#t-hydra">   <div class="tii">🔱</div><div><h5>Hydra</h5><span>bruteforce</span></div></a>
+    <a class="tic tr" href="#t-medusa">  <div class="tii">🐍</div><div><h5>Medusa</h5><span>bruteforce</span></div></a>
+    <a class="tic tb" href="#t-burp">    <div class="tii">🔍</div><div><h5>Burp Suite</h5><span>intruder</span></div></a>
+    <a class="tic tr" href="#t-ffuf">    <div class="tii">⚡</div><div><h5>ffuf</h5><span>fuzzing</span></div></a>
+    <a class="tic ty" href="#t-wire">    <div class="tii">🦈</div><div><h5>Wireshark</h5><span>tráfego</span></div></a>
+  </div>
 
-  <!-- ── AMBIENTE ── -->
-  <section id="ambiente">
-    <div class="container">
-      <div class="section-label">// 01 · Preparação</div>
-      <h2>Configurando o Ambiente</h2>
+  <!-- CURL -->
+  <div class="tdiv" id="t-curl">
+    <div class="tbadge"><span class="ti">💻</span><div><div class="tn">curl</div><div class="tt">reconhecimento manual</div></div></div><hr>
+  </div>
+  <p><strong>O que é e por que usar primeiro:</strong> O curl faz requisições HTTP pelo terminal. Antes de qualquer ataque automatizado, precisamos entender como a aplicação responde — qual texto ela retorna quando a senha está errada. Esse texto é chamado de <strong>FAIL_STRING</strong> e todas as ferramentas de bruteforce precisam dele para diferenciar um login falho de um bem-sucedido.</p>
 
-      <div class="warning">
-        <strong>⚠ Aviso Ético</strong>
-        <p>Esta atividade é realizada em ambiente isolado (Docker local). É proibido usar estas técnicas em sistemas reais sem autorização explícita. Isso é crime previsto na <strong>Lei 12.737/2012</strong>.</p>
+  <ul class="steps">
+    <li class="si">
+      <div class="sn">1</div>
+      <div class="sb">
+        <p>Testar com senha errada e observar a resposta</p>
+        <p>Execute o comando abaixo. O <code>-s</code> suprime a barra de progresso, <code>-X POST</code> define o método, <code>-d</code> é o corpo da requisição e <code>-w</code> imprime o status HTTP no final.</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">curl — senha errada</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">curl</span> <span class="f">-s -X POST</span> http://localhost:3000/login \
+  <span class="f">-d</span> <span class="a">'username=admin&password=senhaerrada'</span> \
+  <span class="f">-w</span> <span class="a">'\nStatus HTTP: %{http_code}\n'</span></pre></div>
+        <div class="out-block"><div class="out-label">saída esperada</div>
+        <pre>{"success":false,"message":"<span class="hit">Credenciais inválidas.</span>"}
+Status HTTP: 401</pre></div>
+        <div class="box yellow"><div class="box-title">📌 Anote agora — você vai usar nas próximas ferramentas!</div>
+        <p>O texto <code>Credenciais inválidas.</code> é o seu <strong>FAIL_STRING</strong>.</p>
+        <p>O HTTP <code>401</code> = "não autorizado" — confirma que o login falhou.</p>
+        <p>Nas próximas ferramentas (Hydra, Medusa, ffuf), você vai informar esse texto para que elas saibam identificar quando a senha está errada.</p></div>
       </div>
+    </li>
 
-      <h3>Pré-requisitos — verifique antes de começar</h3>
-      <div class="tools-grid" style="margin-top:16px">
-        <div class="tool-card">
-          <span class="icon">🐳</span>
-          <h4>Docker</h4>
-          <p>Container da aplicação alvo</p>
-          <div class="code-block" style="margin-top:12px">
-            <pre style="padding:10px 14px;font-size:12px">docker --version</pre>
-          </div>
-        </div>
-        <div class="tool-card">
-          <span class="icon">🔧</span>
-          <h4>Docker Compose</h4>
-          <p>Orquestração do ambiente</p>
-          <div class="code-block" style="margin-top:12px">
-            <pre style="padding:10px 14px;font-size:12px">docker compose version</pre>
-          </div>
-        </div>
-        <div class="tool-card">
-          <span class="icon">📡</span>
-          <h4>Hydra / Medusa / ffuf</h4>
-          <p>Ferramentas de bruteforce</p>
-          <div class="code-block" style="margin-top:12px">
-            <pre style="padding:10px 14px;font-size:12px">sudo apt install hydra medusa ffuf</pre>
-          </div>
-        </div>
-        <div class="tool-card">
-          <span class="icon">🦈</span>
-          <h4>Wireshark</h4>
-          <p>Análise de pacotes de rede</p>
-          <div class="code-block" style="margin-top:12px">
-            <pre style="padding:10px 14px;font-size:12px">sudo apt install wireshark</pre>
-          </div>
-        </div>
+    <li class="si">
+      <div class="sn">2</div>
+      <div class="sb">
+        <p>Comparar com a resposta de login correto</p>
+        <p>O professor vai informar a senha para fins de comparação apenas neste momento:</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">curl — senha correta</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">curl</span> <span class="f">-s -X POST</span> http://localhost:3000/login \
+  <span class="f">-d</span> <span class="a">'username=admin&password=SENHA_CORRETA'</span> \
+  <span class="f">-w</span> <span class="a">'\nStatus HTTP: %{http_code}\n'</span></pre></div>
+        <div class="out-block"><div class="out-label">saída quando o login funciona</div>
+        <pre>{"success":true,"message":"Login realizado com sucesso! Bem-vindo, admin."}
+Status HTTP: <span class="hit">200</span></pre></div>
+        <div class="box info"><div class="box-title">💡 O que muda entre falha e sucesso?</div>
+        <p>Status muda de <code>401</code> para <code>200</code>.</p>
+        <p>O corpo da resposta não contém o FAIL_STRING.</p>
+        <p>Essas são as duas formas que as ferramentas de bruteforce usam para detectar que a senha foi encontrada.</p></div>
       </div>
+    </li>
 
-      <h3>Iniciando o Container</h3>
-      <div class="steps" style="margin-top:16px">
-        <div class="step">
-          <div class="step-num"></div>
-          <div class="step-body">
-            <p>Clone o repositório da atividade:</p>
-            <div class="code-block">
-              <div class="code-header">
-                <div class="code-dots"><span></span><span></span><span></span></div>
-                <span class="code-title">terminal</span>
-                <button class="copy-btn" onclick="copyCode(this)">copiar</button>
-              </div>
-              <pre><span class="cmd">git</span> <span class="arg">clone</span> https://github.com/SEU_USUARIO/lab-bruteforce.git
-<span class="cmd">cd</span> lab-bruteforce</pre>
-            </div>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num"></div>
-          <div class="step-body">
-            <p>Suba o container em segundo plano:</p>
-            <div class="code-block">
-              <div class="code-header">
-                <div class="code-dots"><span></span><span></span><span></span></div>
-                <span class="code-title">terminal</span>
-                <button class="copy-btn" onclick="copyCode(this)">copiar</button>
-              </div>
-              <pre><span class="cmd">docker</span> compose up <span class="flag">-d</span></pre>
-            </div>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num"></div>
-          <div class="step-body">
-            <p>Verifique se o container está ativo:</p>
-            <div class="code-block">
-              <div class="code-header">
-                <div class="code-dots"><span></span><span></span><span></span></div>
-                <span class="code-title">terminal</span>
-                <button class="copy-btn" onclick="copyCode(this)">copiar</button>
-              </div>
-              <pre><span class="cmd">docker</span> ps
-<span class="out"># Esperado: app-brute   0.0.0.0:3000->3000/tcp</span></pre>
-            </div>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num"></div>
-          <div class="step-body">
-            <p>Acesse a aplicação no navegador:</p>
-            <div class="info-box">
-              <strong>📌 URL da aplicação</strong>
-              <p><a href="http://localhost:3000" target="_blank" style="color:#60a5fa;">http://localhost:3000</a></p>
-              <p>Usuário alvo: <code style="color:#fde68a">admin</code> — você precisa descobrir a senha!</p>
-              <p>Wordlist: <code style="color:#fde68a">/usr/share/wordlists/rockyou.txt</code></p>
-            </div>
-          </div>
-        </div>
+    <li class="si">
+      <div class="sn">3</div>
+      <div class="sb">
+        <p>Ver os cabeçalhos completos da requisição (opcional — revela tecnologia do servidor)</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">curl — cabeçalhos HTTP</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">curl</span> <span class="f">-v -X POST</span> http://localhost:3000/login \
+  <span class="f">-d</span> <span class="a">'username=admin&password=teste'</span> 2>&1 | grep <span class="f">-E</span> <span class="a">'&lt; |&gt; '</span></pre></div>
+        <div class="out-block"><div class="out-label">parte da saída — &gt; = enviado pelo cliente, &lt; = recebido do servidor</div>
+        <pre>&gt; POST /login HTTP/1.1
+&gt; Content-Type: application/x-www-form-urlencoded
+&lt; HTTP/1.1 401 Unauthorized
+&lt; X-Powered-By: Express</pre></div>
       </div>
-    </div>
-  </section>
+    </li>
+  </ul>
 
-  <!-- ── FERRAMENTAS ── -->
-  <section id="ferramentas">
-    <div class="container">
-      <div class="section-label">// 02 · Arsenal</div>
-      <h2>Ferramentas da Atividade</h2>
-      <div class="tools-grid">
-        <div class="tool-card">
-          <span class="icon">💻</span>
-          <h4>curl</h4>
-          <p>Reconhecimento manual do comportamento da aplicação antes de atacar.</p>
-          <span class="tag red">Red Team</span>
-        </div>
-        <div class="tool-card">
-          <span class="icon">🔱</span>
-          <h4>Hydra</h4>
-          <p>Bruteforce paralelo contra formulários HTTP POST. Ferramenta principal do ataque.</p>
-          <span class="tag red">Red Team</span>
-        </div>
-        <div class="tool-card">
-          <span class="icon">🐍</span>
-          <h4>Medusa</h4>
-          <p>Alternativa ao Hydra com foco em paralelismo e múltiplos protocolos.</p>
-          <span class="tag red">Red Team</span>
-        </div>
-        <div class="tool-card">
-          <span class="icon">🔍</span>
-          <h4>Burp Suite</h4>
-          <p>Intercepção de tráfego e ataque via módulo Intruder. Análise visual das respostas.</p>
-          <span class="tag red">Red Team</span>
-        </div>
-        <div class="tool-card">
-          <span class="icon">⚡</span>
-          <h4>ffuf</h4>
-          <p>Fuzzing ultrarrápido para web. Comparação de velocidade com Hydra.</p>
-          <span class="tag red">Red Team</span>
-        </div>
-        <div class="tool-card">
-          <span class="icon">🦈</span>
-          <h4>Wireshark</h4>
-          <p>Captura e análise do tráfego gerado pelos ataques em tempo real.</p>
-          <span class="tag both">Ambos</span>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- HYDRA -->
+  <div class="tdiv" id="t-hydra">
+    <div class="tbadge"><span class="ti">🔱</span><div><div class="tn">Hydra</div><div class="tt">bruteforce principal</div></div></div><hr>
+  </div>
+  <p><strong>O que é:</strong> Uma das ferramentas de força bruta mais usadas em pentests. Testa automaticamente cada senha da wordlist contra o formulário de login, usando múltiplas conexões paralelas (threads) para ser mais rápido.</p>
 
-  <!-- ── RED TEAM ── -->
-  <section id="redteam">
-    <div class="container">
-      <div class="section-label">// 03 · Ataque</div>
-      <h2>Fase 1 — Red Team</h2>
-
-      <div class="phase-banner red-phase">
-        <div class="ph-icon">⚔️</div>
-        <div>
-          <h3>Você é o atacante</h3>
-          <p>Use as ferramentas abaixo em ordem. Cada uma revela algo diferente sobre a vulnerabilidade.</p>
-        </div>
-      </div>
-
-      <!-- curl -->
-      <h3>1. Reconhecimento com curl</h3>
-      <p>Antes de qualquer ataque, entenda como a aplicação responde. Isso define o <em>fail string</em> — a string que indica login falho.</p>
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-dots"><span></span><span></span><span></span></div>
-          <span class="code-title">curl — teste de login inválido</span>
-          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
-        </div>
-        <pre><span class="cmd">curl</span> <span class="flag">-s -X POST</span> http://localhost:3000/login \
-  <span class="flag">-d</span> <span class="arg">'username=admin&password=senhaerrada'</span> \
-  <span class="flag">-w</span> <span class="arg">'\nHTTP Status: %{http_code}\n'</span></pre>
-      </div>
-      <div class="info-box">
-        <strong>O que observar:</strong>
-        <ul>
-          <li>Qual texto aparece quando a senha é errada? (ex: "Credenciais inválidas.")</li>
-          <li>Qual o status HTTP? (401 = não autorizado)</li>
-          <li>Anote o texto exato — ele será o <code>F_STRING</code> do Hydra</li>
-        </ul>
-      </div>
-
-      <!-- Hydra -->
-      <h3>2. Ataque com Hydra</h3>
-      <p>Substitua <code>FAIL_STRING</code> pelo texto de erro que você anotou na etapa anterior.</p>
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-dots"><span></span><span></span><span></span></div>
-          <span class="code-title">hydra — bruteforce HTTP POST</span>
-          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
-        </div>
-        <pre><span class="cmd">hydra</span> \
-  <span class="flag">-l</span> <span class="arg">admin</span> \
-  <span class="flag">-P</span> <span class="arg">/usr/share/wordlists/rockyou.txt</span> \
+  <ul class="steps">
+    <li class="si">
+      <div class="sn">1</div>
+      <div class="sb">
+        <p>Executar o Hydra contra o login da aplicação</p>
+        <p>Substitua <code>Credenciais inválidas.</code> pelo texto exato que você anotou no passo do curl. Esse é o FAIL_STRING.</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">hydra — ataque HTTP POST</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">hydra</span> \
+  <span class="f">-l</span> <span class="a">admin</span> \
+  <span class="f">-P</span> <span class="a">/usr/share/wordlists/rockyou.txt</span> \
   localhost \
-  http-post-form <span class="arg">'/login:username=^USER^&password=^PASS^:FAIL_STRING'</span> \
-  <span class="flag">-t</span> <span class="arg">4</span> <span class="flag">-V -f</span></pre>
+  http-post-form \
+  <span class="a">'/login:username=^USER^&password=^PASS^:Credenciais inválidas.'</span> \
+  <span class="f">-t 4 -V -f</span></pre></div>
+        <table class="pt">
+          <tr><th>Parâmetro</th><th>O que faz — em detalhe</th></tr>
+          <tr><td>-l admin</td><td>Usuário fixo para testar. Já sabemos que o login é "admin", então fixamos ele e deixamos o Hydra variar só a senha.</td></tr>
+          <tr><td>-P rockyou.txt</td><td>Arquivo com a lista de senhas. O Hydra vai testar cada linha como senha, em sequência.</td></tr>
+          <tr><td>localhost</td><td>Endereço IP ou hostname do alvo. Poderia ser um IP como 192.168.1.10.</td></tr>
+          <tr><td>http-post-form</td><td>Módulo do Hydra para formulários web que usam método POST. Existe também http-get-form para formulários GET.</td></tr>
+          <tr><td>'/login:...:FAIL'</td><td>Três partes separadas por <code>:</code> — (1) path do endpoint, (2) corpo da requisição com placeholders, (3) texto que indica falha.</td></tr>
+          <tr><td>^USER^ / ^PASS^</td><td>Marcadores que o Hydra substitui automaticamente pelo usuário e senha atual a cada tentativa.</td></tr>
+          <tr><td>-t 4</td><td>4 threads paralelas (4 tentativas simultâneas). Aumentar pode acelerar, mas também pode causar erros ou disparar alertas.</td></tr>
+          <tr><td>-V</td><td>Verbose: mostra cada tentativa na tela. Retire para rodar mais rápido sem exibir tudo.</td></tr>
+          <tr><td>-f</td><td>Para imediatamente ao encontrar a primeira senha válida.</td></tr>
+        </table>
       </div>
-      <table class="param-table">
-        <tr><th>Parâmetro</th><th>Significado</th></tr>
-        <tr><td>-l admin</td><td>Usuário fixo a testar</td></tr>
-        <tr><td>-P rockyou.txt</td><td>Wordlist de senhas</td></tr>
-        <tr><td>^USER^ ^PASS^</td><td>Placeholders substituídos pelo Hydra a cada tentativa</td></tr>
-        <tr><td>FAIL_STRING</td><td>Texto que indica login FALHO (usado para detectar sucesso por exclusão)</td></tr>
-        <tr><td>-t 4</td><td>4 threads paralelas</td></tr>
-        <tr><td>-V</td><td>Verbose: mostra cada tentativa</td></tr>
-        <tr><td>-f</td><td>Para ao encontrar a primeira senha válida</td></tr>
-      </table>
+    </li>
 
-      <!-- Medusa -->
-      <h3>3. Comparativo com Medusa</h3>
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-dots"><span></span><span></span><span></span></div>
-          <span class="code-title">medusa — bruteforce HTTP</span>
-          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
-        </div>
-        <pre><span class="cmd">medusa</span> \
-  <span class="flag">-h</span> localhost \
-  <span class="flag">-u</span> <span class="arg">admin</span> \
-  <span class="flag">-P</span> <span class="arg">/usr/share/wordlists/rockyou.txt</span> \
-  <span class="flag">-M</span> web-form \
-  <span class="flag">-m</span> <span class="arg">'FORM:/login:username=^USER^&password=^PASS^:FAIL_STRING'</span> \
-  <span class="flag">-t</span> <span class="arg">2</span> <span class="flag">-v 6 -f</span></pre>
+    <li class="si">
+      <div class="sn">2</div>
+      <div class="sb">
+        <p>Aguardar e identificar o resultado</p>
+        <p>Você verá tentativas passando na tela. Quando a senha for encontrada, o Hydra destaca em verde:</p>
+        <div class="out-block"><div class="out-label">saída quando a senha é encontrada</div>
+        <pre>[80][http-post-form] host: localhost   login: admin   password: <span class="hit">dragon</span>
+1 of 1 target successfully completed, 1 valid password found</pre></div>
+        <div class="box ok"><div class="box-title">✓ O que anotar agora</div>
+        <p>A senha encontrada, o tempo total e a quantidade aproximada de tentativas. Você vai comparar isso com as outras ferramentas.</p></div>
       </div>
+    </li>
 
-      <!-- Burp Suite -->
-      <h3>4. Burp Suite — Intruder</h3>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num"></div>
-          <div class="step-body"><p>Abra o Burp Suite → <strong>Proxy → Intercept ON</strong></p></div>
-        </div>
-        <div class="step">
-          <div class="step-num"></div>
-          <div class="step-body"><p>Configure o navegador: proxy manual <code>127.0.0.1:8080</code></p></div>
-        </div>
-        <div class="step">
-          <div class="step-num"></div>
-          <div class="step-body"><p>Faça um login qualquer → a requisição será capturada → <strong>Action → Send to Intruder</strong></p></div>
-        </div>
-        <div class="step">
-          <div class="step-num"></div>
-          <div class="step-body">
-            <p>Na aba <strong>Positions</strong>, selecione o valor da senha e clique em <strong>Add §</strong>:</p>
-            <div class="code-block">
-              <pre>username=admin&password=<span style="color:var(--red)">§senha§</span></pre>
-            </div>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num"></div>
-          <div class="step-body"><p>Em <strong>Payloads</strong> → Simple list → carregue as primeiras 200 linhas do rockyou.txt → <strong>Start Attack</strong></p></div>
-        </div>
-        <div class="step">
-          <div class="step-num"></div>
-          <div class="step-body">
-            <p>Ordene pela coluna <strong>Length</strong> — a senha correta terá comprimento diferente das demais.</p>
-            <div class="success-box">
-              <strong>✓ Dica</strong>
-              <p>Quando o login é bem-sucedido, o servidor retorna uma resposta maior (com mais dados) ou redireciona — isso muda o tamanho (Length) da resposta HTTP.</p>
-            </div>
-          </div>
-        </div>
+    <li class="si">
+      <div class="sn">3</div>
+      <div class="sb">
+        <p>Experimentar com mais threads para comparar velocidade</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">hydra — 16 threads</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">hydra</span> <span class="f">-l</span> admin <span class="f">-P</span> /usr/share/wordlists/rockyou.txt localhost \
+  http-post-form <span class="a">'/login:username=^USER^&password=^PASS^:Credenciais inválidas.'</span> \
+  <span class="f">-t 16 -f</span> <span class="cm"># sem -V para rodar mais rápido</span></pre></div>
+        <div class="box yellow"><div class="box-title">🤔 Reflexão</div>
+        <p>Ficou mais rápido com 16 threads? Houve erros de conexão? Por que um número muito alto de threads pode ser contraproducente em um ataque real?</p></div>
       </div>
+    </li>
+  </ul>
 
-      <!-- ffuf -->
-      <h3>5. ffuf — Fuzzing rápido</h3>
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-dots"><span></span><span></span><span></span></div>
-          <span class="code-title">ffuf — web fuzzer</span>
-          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
-        </div>
-        <pre><span class="cmd">ffuf</span> \
-  <span class="flag">-w</span> <span class="arg">/usr/share/wordlists/rockyou.txt:FUZZ</span> \
-  <span class="flag">-u</span> http://localhost:3000/login \
-  <span class="flag">-X</span> POST \
-  <span class="flag">-d</span> <span class="arg">'username=admin&password=FUZZ'</span> \
-  <span class="flag">-H</span> <span class="arg">'Content-Type: application/x-www-form-urlencoded'</span> \
-  <span class="flag">-fr</span> <span class="arg">'FAIL_STRING'</span> \
-  <span class="flag">-t</span> <span class="arg">10</span> <span class="flag">-mc all</span></pre>
-      </div>
+  <!-- MEDUSA -->
+  <div class="tdiv" id="t-medusa">
+    <div class="tbadge"><span class="ti">🐍</span><div><div class="tn">Medusa</div><div class="tt">bruteforce alternativo</div></div></div><hr>
+  </div>
+  <p><strong>O que é:</strong> Ferramenta de bruteforce com foco em paralelismo e suporte a dezenas de protocolos. O objetivo aqui é comparar com o Hydra — na prática um profissional de segurança conhece múltiplas ferramentas para o mesmo fim.</p>
 
-      <!-- Wireshark -->
-      <h3>6. Wireshark — captura do tráfego</h3>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num"></div>
-          <div class="step-body"><p>Abra o Wireshark → selecione interface <strong>loopback (lo)</strong></p></div>
-        </div>
-        <div class="step">
-          <div class="step-num"></div>
-          <div class="step-body">
-            <p>Aplique o filtro:</p>
-            <div class="code-block">
-              <pre>tcp.port == 3000 && http</pre>
-            </div>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num"></div>
-          <div class="step-body"><p>Execute o Hydra por 30 segundos enquanto observa os pacotes. Você consegue ver as senhas testadas em texto claro?</p></div>
-        </div>
+  <ul class="steps">
+    <li class="si">
+      <div class="sn">1</div>
+      <div class="sb">
+        <p>Resetar o estado da aplicação antes de testar</p>
+        <p>Isso limpa contadores internos que possam ter sido gerados pelo Hydra:</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">curl</span> <span class="f">-X POST</span> http://localhost:3000/reset</pre></div>
       </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">2</div>
+      <div class="sb">
+        <p>Executar o Medusa</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">medusa — ataque HTTP</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">medusa</span> \
+  <span class="f">-h</span> localhost \
+  <span class="f">-u</span> admin \
+  <span class="f">-P</span> /usr/share/wordlists/rockyou.txt \
+  <span class="f">-M</span> web-form \
+  <span class="f">-m</span> <span class="a">'FORM:/login:username=^USER^&password=^PASS^:Credenciais inválidas.'</span> \
+  <span class="f">-t 2 -v 6 -f</span></pre></div>
+        <table class="pt">
+          <tr><th>Parâmetro</th><th>O que faz</th></tr>
+          <tr><td>-h localhost</td><td>Host alvo</td></tr>
+          <tr><td>-u admin</td><td>Usuário fixo</td></tr>
+          <tr><td>-P rockyou.txt</td><td>Wordlist de senhas</td></tr>
+          <tr><td>-M web-form</td><td>Módulo para formulários web</td></tr>
+          <tr><td>-m 'FORM:...'</td><td>Configuração do módulo: path, parâmetros e fail string. Mesmo conceito do Hydra, sintaxe diferente.</td></tr>
+          <tr><td>-t 2</td><td>2 threads paralelas</td></tr>
+          <tr><td>-v 6</td><td>Nível de verbosidade máximo — mostra tudo</td></tr>
+          <tr><td>-f</td><td>Para ao encontrar a primeira senha válida</td></tr>
+        </table>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">3</div>
+      <div class="sb">
+        <p>Comparar Hydra vs Medusa e preencher a tabela</p>
+        <div class="box dark"><div class="box-title">📋 Tabela de comparação</div>
+        <p>Velocidade percebida (rápido / lento / similar): _______________</p>
+        <p>Facilidade de configurar (1 a 5): Hydra ___ / Medusa ___</p>
+        <p>Clareza da saída (qual foi mais fácil de ler): _______________</p>
+        <p>Ambas encontraram a mesma senha: _______________</p></div>
+      </div>
+    </li>
+  </ul>
+
+  <!-- BURP SUITE -->
+  <div class="tdiv" id="t-burp">
+    <div class="tbadge"><span class="ti">🔍</span><div><div class="tn">Burp Suite</div><div class="tt">intercepção + intruder</div></div></div><hr>
+  </div>
+  <p><strong>O que é:</strong> Suíte completa de segurança web usada por pentesters profissionais. Funciona como um proxy entre o navegador e o servidor — intercepta, exibe e permite modificar cada requisição. O módulo <strong>Intruder</strong> automatiza ataques em requisições capturadas.</p>
+
+  <ul class="steps">
+    <li class="si">
+      <div class="sn">1</div>
+      <div class="sb">
+        <p>Abrir o Burp Suite</p>
+        <p>Ao abrir clique em <strong>"Temporary project"</strong> → <strong>"Use Burp defaults"</strong> → <strong>"Start Burp"</strong>. Aguarde carregar.</p>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">2</div>
+      <div class="sb">
+        <p>Configurar o Firefox para usar o proxy do Burp</p>
+        <p>O Burp escuta na porta 8080 por padrão. Você precisa dizer ao navegador para enviar o tráfego por lá.</p>
+        <p>No Firefox: Menu (≡) → Configurações → busque "proxy" na barra de busca → Configurações de Conexão → marque <strong>"Configuração manual de proxy"</strong>:</p>
+        <div class="box dark"><div class="box-title">⚙ Dados do proxy</div>
+        <p>Proxy HTTP: <code>127.0.0.1</code> &nbsp; Porta: <code>8080</code></p>
+        <p>Marque: <strong>"Usar este proxy para todos os protocolos"</strong></p>
+        <p>Clique OK para salvar.</p></div>
+        <div class="box warn"><div class="box-title">⚠ Lembrete importante</div>
+        <p>Após terminar a atividade no Burp, volte nessa tela e selecione <strong>"Sem proxy"</strong>. Caso contrário o Firefox vai parar de funcionar com a internet normal.</p></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">3</div>
+      <div class="sb">
+        <p>Ativar a interceptação no Burp e capturar o login</p>
+        <p>No Burp Suite → aba <strong>Proxy</strong> → clique em <strong>"Intercept is off"</strong> para ativar (fica escrito "Intercept is on" quando ativo).</p>
+        <p>No Firefox, acesse <strong>http://localhost:3000</strong> e tente fazer login com qualquer credencial (ex: admin / teste). O navegador vai "travar" — é normal, a requisição está segura no Burp.</p>
+        <div class="box info"><div class="box-title">💡 Por que o navegador travou?</div>
+        <p>O Burp segurou a requisição para você analisar. Você precisa clicar em <strong>"Forward"</strong> para liberar e o navegador continua. Isso é útil para modificar dados em tempo real antes de enviar.</p></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">4</div>
+      <div class="sb">
+        <p>Enviar a requisição capturada para o Intruder</p>
+        <p>No painel do Burp, você verá a requisição capturada. Clique com o botão direito nela → <strong>"Send to Intruder"</strong>. Depois clique em <strong>"Forward"</strong> para liberar o navegador.</p>
+        <div class="out-block"><div class="out-label">requisição que você verá no Burp</div>
+        <pre>POST /login HTTP/1.1
+Host: localhost:3000
+Content-Type: application/x-www-form-urlencoded
+
+<span class="hit">username=admin&password=teste</span></pre></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">5</div>
+      <div class="sb">
+        <p>Configurar os Positions no Intruder</p>
+        <p>Vá na aba <strong>Intruder</strong> (topo) → sub-aba <strong>Positions</strong>.</p>
+        <p>Clique em <strong>"Clear §"</strong> para remover todos os marcadores automáticos. Depois selecione com o mouse apenas o valor da senha (o texto <code>teste</code>) e clique em <strong>"Add §"</strong>. O resultado deve ficar assim:</p>
+        <div class="out-block"><div class="out-label">corpo da requisição com marcador correto</div>
+        <pre>username=admin&password=<span class="hit">§teste§</span></pre></div>
+        <div class="box info"><div class="box-title">💡 O que são esses § §?</div>
+        <p>São marcadores de posição. O Intruder vai substituir o que estiver entre eles por cada payload (senha) da lista. É o equivalente ao <code>^PASS^</code> do Hydra.</p>
+        <p>Verifique que o <strong>Attack type</strong> está em <strong>"Sniper"</strong> — é o modo que usa uma wordlist em uma posição.</p></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">6</div>
+      <div class="sb">
+        <p>Carregar a wordlist na aba Payloads</p>
+        <p>Aba <strong>Payloads</strong> → Payload type: <strong>Simple list</strong> → botão <strong>Load...</strong></p>
+        <div class="box info"><div class="box-title">💡 Use uma mini wordlist para o Burp rodar rápido</div>
+        <p>O rockyou.txt completo tem 14 milhões de senhas — o Burp Community (versão gratuita) é mais lento. Crie uma lista menor:</p>
+        <div class="cb" style="margin-top:8px"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">criar mini wordlist com as 200 primeiras senhas</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">head</span> <span class="f">-200</span> /usr/share/wordlists/rockyou.txt <span class="f">></span> /tmp/mini.txt</pre></div>
+        <p>Depois carregue o arquivo <code>/tmp/mini.txt</code> no Burp.</p></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">7</div>
+      <div class="sb">
+        <p>Iniciar o ataque e analisar os resultados</p>
+        <p>Clique em <strong>"Start attack"</strong> (botão no canto superior direito). Uma janela nova vai abrir mostrando cada tentativa com status e tamanho da resposta.</p>
+        <p>Quando o ataque terminar, clique na coluna <strong>"Length"</strong> para ordenar. A linha com tamanho diferente das outras é o login bem-sucedido:</p>
+        <div class="out-block"><div class="out-label">resultado — ordene pela coluna Length para encontrar a senha</div>
+        <pre>Req   Payload     Status  Length
+1     123456      401     42
+2     password    401     42
+3     <span class="hit">dragon      200     68</span>  ← tamanho diferente = login ok!
+4     12345       401     42</pre></div>
+        <div class="box ok"><div class="box-title">✓ Por que o Length é diferente?</div>
+        <p>Login falho → resposta: <code>{"success":false,"message":"Credenciais inválidas."}</code> — sempre o mesmo tamanho (42 bytes).</p>
+        <p>Login ok → resposta: <code>{"success":true,"message":"Login realizado com sucesso! Bem-vindo, admin."}</code> — mensagem maior (68 bytes).</p>
+        <p>Essa diferença de tamanho é a assinatura visual do sucesso no Intruder.</p></div>
+      </div>
+    </li>
+  </ul>
+
+  <!-- FFUF -->
+  <div class="tdiv" id="t-ffuf">
+    <div class="tbadge"><span class="ti">⚡</span><div><div class="tn">ffuf</div><div class="tt">fuzzing ultrarrápido</div></div></div><hr>
+  </div>
+  <p><strong>O que é:</strong> O ffuf (Fuzz Faster U Fool) é uma das ferramentas mais rápidas para fuzzing web. Muito usado para descoberta de diretórios ocultos e parâmetros, mas também eficaz para bruteforce de senhas. O objetivo principal aqui é comparar a velocidade com o Hydra.</p>
+
+  <ul class="steps">
+    <li class="si">
+      <div class="sn">1</div>
+      <div class="sb">
+        <p>Executar o ffuf para bruteforce de senha</p>
+        <p>No ffuf, a wordlist é passada com <code>:FUZZ</code> no final, e o marcador <code>FUZZ</code> é colocado exatamente onde a senha deve ser substituída na requisição.</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">ffuf — bruteforce HTTP POST</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">ffuf</span> \
+  <span class="f">-w</span> <span class="a">/usr/share/wordlists/rockyou.txt:FUZZ</span> \
+  <span class="f">-u</span> http://localhost:3000/login \
+  <span class="f">-X</span> POST \
+  <span class="f">-d</span> <span class="a">'username=admin&password=FUZZ'</span> \
+  <span class="f">-H</span> <span class="a">'Content-Type: application/x-www-form-urlencoded'</span> \
+  <span class="f">-fr</span> <span class="a">'Credenciais inválidas.'</span> \
+  <span class="f">-t 10 -mc all</span></pre></div>
+        <table class="pt">
+          <tr><th>Parâmetro</th><th>O que faz</th></tr>
+          <tr><td>-w arquivo:FUZZ</td><td>Define a wordlist e o nome do marcador. Onde FUZZ aparecer na requisição, será substituído pela senha atual.</td></tr>
+          <tr><td>-u</td><td>URL alvo completa</td></tr>
+          <tr><td>-X POST</td><td>Método HTTP da requisição</td></tr>
+          <tr><td>-d '...FUZZ'</td><td>Corpo da requisição. FUZZ aqui é substituído pela senha a cada tentativa.</td></tr>
+          <tr><td>-H 'Content-Type'</td><td>Cabeçalho HTTP necessário para enviar dados de formulário corretamente.</td></tr>
+          <tr><td>-fr 'texto'</td><td>Filter Regexp — remove da exibição respostas que contenham esse texto. Só aparecem as respostas que NÃO contêm o FAIL_STRING, ou seja: apenas o login bem-sucedido.</td></tr>
+          <tr><td>-t 10</td><td>10 threads paralelas</td></tr>
+          <tr><td>-mc all</td><td>Mostra todos os status codes, sem filtrar nenhum</td></tr>
+        </table>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">2</div>
+      <div class="sb">
+        <p>Observar o relatório de velocidade</p>
+        <p>O ffuf exibe no topo quantas requisições por segundo está fazendo. Compare com o Hydra visualmente.</p>
+        <div class="out-block"><div class="out-label">parte do cabeçalho de execução — observe req/sec</div>
+        <pre>:: Threads          : 10
+:: Matcher          : Response status: all
+:: Filter           : Regexp: Credenciais inválidas.
+<span class="hi">Progress: [200/14344391] :: Job [1/1] :: 843 req/sec ::</span></pre></div>
+        <div class="box yellow"><div class="box-title">🤔 Reflexão</div>
+        <p>O ffuf foi mais rápido que o Hydra? Por quê mais threads não são sempre melhores? O que acontece se o servidor tiver limite de conexões simultâneas?</p></div>
+      </div>
+    </li>
+  </ul>
+
+  <!-- WIRESHARK -->
+  <div class="tdiv" id="t-wire">
+    <div class="tbadge"><span class="ti">🦈</span><div><div class="tn">Wireshark</div><div class="tt">análise de tráfego</div></div></div><hr>
+  </div>
+  <p><strong>O que é:</strong> O Wireshark captura todos os pacotes de rede da interface selecionada e permite inspecionar o conteúdo de cada um. Vamos usá-lo para visualizar o tráfego gerado pelo ataque e entender a diferença crítica entre HTTP e HTTPS.</p>
+
+  <ul class="steps">
+    <li class="si">
+      <div class="sn">1</div>
+      <div class="sb">
+        <p>Abrir o Wireshark e selecionar a interface loopback</p>
+        <p>Ao abrir, você verá uma lista de interfaces de rede com gráficos de atividade. Como a aplicação está no localhost, selecione a interface <strong>lo</strong> (loopback) — ela captura tráfego local.</p>
+        <div class="box info"><div class="box-title">💡 Não achou a interface lo?</div>
+        <p>Tente <strong>Loopback: lo</strong> ou a interface com menor atividade listada no início. Clique duas vezes para começar a capturar.</p></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">2</div>
+      <div class="sb">
+        <p>Aplicar filtro para ver só o tráfego da aplicação</p>
+        <p>Na barra de filtro no topo, digite o filtro abaixo e pressione Enter:</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">filtro Wireshark</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre>tcp.port == 3000 && http</pre></div>
+        <div class="box info"><div class="box-title">💡 O que esse filtro significa</div>
+        <p><code>tcp.port == 3000</code> → só pacotes na porta da nossa aplicação</p>
+        <p><code>http</code> → só pacotes do protocolo HTTP (descarta TCP puro)</p>
+        <p><code>&&</code> → as duas condições precisam ser verdadeiras ao mesmo tempo</p></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">3</div>
+      <div class="sb">
+        <p>Rodar o Hydra em outra janela enquanto observa o Wireshark</p>
+        <p>Abra um segundo terminal e execute o Hydra. Observe o tráfego aparecendo no Wireshark em tempo real:</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">segundo terminal — Hydra</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">hydra</span> <span class="f">-l</span> admin <span class="f">-P</span> /usr/share/wordlists/rockyou.txt localhost \
+  http-post-form <span class="a">'/login:username=^USER^&password=^PASS^:Credenciais inválidas.'</span> \
+  <span class="f">-t 4</span></pre></div>
+        <p>Após 20-30 segundos, pare o Hydra com <kbd>Ctrl+C</kbd> e pare a captura clicando no botão vermelho no Wireshark.</p>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">4</div>
+      <div class="sb">
+        <p>Inspecionar um pacote POST e ler a senha testada</p>
+        <p>Clique em qualquer linha <code>POST /login</code> na lista de pacotes. No painel inferior, expanda <strong>"HTML Form URL Encoded"</strong>. Você consegue ver a senha em texto claro?</p>
+        <div class="out-block"><div class="out-label">conteúdo visível dentro do pacote HTTP</div>
+        <pre>username=admin&<span class="hit">password=dragon</span></pre></div>
+        <div class="box warn"><div class="box-title">⚠ Implicação crítica de segurança</div>
+        <p>Com HTTP, qualquer pessoa na mesma rede consegue capturar e ler as senhas — inclusive a correta quando o login funciona.</p>
+        <p>Com <strong>HTTPS</strong>, esses dados estariam criptografados e ilegíveis no Wireshark. O bruteforce ainda seria possível, mas o tráfego não poderia ser espionado.</p>
+        <p>Isso é especialmente grave em redes Wi-Fi públicas sem HTTPS.</p></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">5</div>
+      <div class="sb">
+        <p>Ver estatísticas do ataque no Wireshark</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">menus do Wireshark</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre>Statistics → HTTP → Requests     (conta quantas requisições por URL)
+Statistics → IO Graphs           (gráfico de volume de tráfego ao longo do tempo)</pre></div>
+        <div class="box info"><div class="box-title">💡 O que o gráfico IO mostra</div>
+        <p>Um pico grande de tráfego exatamente durante o período do ataque. Esse é o padrão que sistemas IDS/IPS (como Snort e Suricata) identificam automaticamente como bruteforce.</p></div>
+      </div>
+    </li>
+  </ul>
+
+</div>
+</section>
+
+<!-- BLUE TEAM -->
+<section id="s-blue">
+<div class="container">
+  <div class="sec-label">// 03 · Defesa</div>
+  <h2>Fase 2 — Blue Team</h2>
+  <div class="pb2 bp">
+    <div class="ic">🛡️</div>
+    <div>
+      <h3>Você é o defensor</h3>
+      <p>Analise os rastros que o ataque deixou, ative cada contramedida e teste se o Hydra ainda consegue atacar depois.</p>
     </div>
-  </section>
+  </div>
 
-  <!-- ── BLUE TEAM ── -->
-  <section id="blueteam">
-    <div class="container">
-      <div class="section-label">// 04 · Defesa</div>
-      <h2>Fase 2 — Blue Team</h2>
+  <!-- LOGS -->
+  <h3>Etapa 1 — Análise dos Logs</h3>
+  <p>Todo ataque de força bruta deixa rastros evidentes nos logs. Identificar esses padrões é a habilidade principal de um analista de segurança (SOC Analyst).</p>
 
-      <div class="phase-banner blue-phase">
-        <div class="ph-icon">🛡️</div>
-        <div>
-          <h3>Você é o defensor</h3>
-          <p>Analise os logs, identifique o ataque e ative as contramedidas uma a uma. Depois, tente atacar novamente.</p>
-        </div>
+  <ul class="steps">
+    <li class="si">
+      <div class="sn">1</div>
+      <div class="sb">
+        <p>Ver os logs em tempo real enquanto o ataque acontece</p>
+        <p>Em uma janela, rode o Hydra. Na outra, acompanhe os logs ao vivo:</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">logs ao vivo do container</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">docker</span> logs app-brute <span class="f">--tail 50 --follow</span>
+<span class="cm"># Pressione Ctrl+C para parar</span></pre></div>
+        <div class="out-block"><div class="out-label">padrão de log durante ataque — repare na frequência absurda</div>
+        <pre><span class="o">127.0.0.1 - [10:15:01] "POST /login HTTP/1.1" 401 42</span>
+<span class="o">127.0.0.1 - [10:15:01] "POST /login HTTP/1.1" 401 42</span>
+<span class="o">127.0.0.1 - [10:15:01] "POST /login HTTP/1.1" 401 42</span>
+<span class="hi">127.0.0.1 - [10:15:02] "POST /login HTTP/1.1" 200 68  ← senha encontrada!</span></pre></div>
+        <div class="box info"><div class="box-title">💡 O que diferencia ataque de usuário legítimo no log?</div>
+        <p>Um usuário esquecendo a senha tenta no máximo 3-5 vezes com intervalo de segundos entre cada tentativa.</p>
+        <p>Um ataque gera <strong>dezenas ou centenas de tentativas do mesmo IP em menos de 1 segundo</strong>. Esse padrão é inconfundível.</p></div>
       </div>
+    </li>
 
-      <!-- Logs -->
-      <h3>1. Análise dos Logs</h3>
-      <p>O container registra todos os acessos em <code>/app/logs/access.log</code>, mapeado para <code>./logs/</code> no host.</p>
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-dots"><span></span><span></span><span></span></div>
-          <span class="code-title">analisando logs do container</span>
-          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
-        </div>
-        <pre><span class="cmt"># Visualizar logs em tempo real</span>
-<span class="cmd">docker</span> logs app-brute <span class="flag">--tail 100 --follow</span>
+    <li class="si">
+      <div class="sn">2</div>
+      <div class="sb">
+        <p>Salvar e analisar os logs com comandos Linux</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">análise de logs</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="cm"># 1. Salvar os logs em arquivo</span>
+<span class="c">docker</span> logs app-brute <span class="f">></span> /tmp/access.log 2>&1
 
-<span class="cmt"># Contar tentativas POST /login por IP</span>
-<span class="cmd">grep</span> <span class="arg">'POST /login'</span> ./logs/access.log \
-  | <span class="cmd">awk</span> <span class="arg">'{print $1}'</span> \
-  | <span class="cmd">sort</span> | <span class="cmd">uniq -c</span> | <span class="cmd">sort -rn</span>
+<span class="cm"># 2. Contar total de tentativas de login</span>
+<span class="c">grep</span> <span class="a">'POST /login'</span> /tmp/access.log | <span class="c">wc -l</span>
 
-<span class="cmt"># Ver User-Agents usados</span>
-<span class="cmd">grep</span> <span class="arg">'POST /login'</span> ./logs/access.log \
-  | <span class="cmd">awk -F'"'</span> <span class="arg">'{print $6}'</span> | <span class="cmd">sort -u</span></pre>
+<span class="cm"># 3. Contar por IP — revela o atacante</span>
+<span class="c">grep</span> <span class="a">'POST /login'</span> /tmp/access.log \
+  | <span class="c">awk</span> <span class="a">'{print $1}'</span> | <span class="c">sort</span> | <span class="c">uniq -c</span> | <span class="c">sort -rn</span>
+
+<span class="cm"># 4. Ver User-Agent (Hydra e ffuf têm UA identificável)</span>
+<span class="c">grep</span> <span class="a">'POST /login'</span> /tmp/access.log \
+  | <span class="c">awk</span> <span class="f">-F'"'</span> <span class="a">'{print $6}'</span> | <span class="c">sort -u</span>
+
+<span class="cm"># 5. Ver horário de início e fim do ataque</span>
+<span class="c">grep</span> <span class="a">'POST /login'</span> /tmp/access.log | <span class="c">awk</span> <span class="a">'{print $4}'</span> | <span class="c">head -1</span>
+<span class="c">grep</span> <span class="a">'POST /login'</span> /tmp/access.log | <span class="c">awk</span> <span class="a">'{print $4}'</span> | <span class="c">tail -1</span></pre></div>
       </div>
+    </li>
 
-      <!-- Rate Limiting -->
-      <h3>2. Ativando Rate Limiting</h3>
-      <p>Limite o número de requisições por IP em uma janela de tempo.</p>
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-dots"><span></span><span></span><span></span></div>
-          <span class="code-title">ativar rate limiting via API</span>
-          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
-        </div>
-        <pre><span class="cmt"># Ativar (máximo 20 req/minuto por IP)</span>
-<span class="cmd">curl</span> <span class="flag">-X POST</span> http://localhost:3000/config \
-  <span class="flag">-d</span> <span class="arg">'feature=rateLimit&value=true'</span>
-
-<span class="cmt"># Ajustar para apenas 5 req/minuto (mais restritivo)</span>
-<span class="cmd">curl</span> <span class="flag">-X POST</span> http://localhost:3000/config \
-  <span class="flag">-d</span> <span class="arg">'feature=maxReqs&value=5'</span>
-
-<span class="cmt"># Verificar configuração atual</span>
-<span class="cmd">curl</span> http://localhost:3000/status</pre>
+    <li class="si">
+      <div class="sn">3</div>
+      <div class="sb">
+        <p>Acessar o arquivo de log mapeado no host (via volume Docker)</p>
+        <p>O container salva os logs em arquivo dentro da pasta <code>logs/</code> do projeto, acessível diretamente no seu sistema:</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">log em arquivo — host</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">tail</span> <span class="f">-30</span> ~/lab-bruteforce/logs/access.log</pre></div>
       </div>
-      <div class="info-box">
-        <strong>💡 Teste:</strong>
-        <p>Rode o Hydra novamente após ativar o rate limiting. Ele vai começar a receber erros <code>429 Too Many Requests</code>. O ataque ainda funciona? Por quê?</p>
+    </li>
+  </ul>
+
+  <!-- RATE LIMITING -->
+  <h3>Etapa 2 — Contramedida 1: Rate Limiting</h3>
+  <p><strong>O que é:</strong> Limita quantas requisições um IP pode fazer em uma janela de tempo. Acima do limite, o servidor responde com erro <code>429 Too Many Requests</code> e ignora a requisição.</p>
+
+  <ul class="steps">
+    <li class="si">
+      <div class="sn">1</div>
+      <div class="sb">
+        <p>Verificar o estado atual — tudo desativado por padrão</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">consultar configuração</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">curl</span> http://localhost:3000/status</pre></div>
+        <div class="out-block"><div class="out-label">saída — defesas desligadas</div>
+        <pre>{"config":{"rateLimit":{"enabled":<span class="hit">false</span>},"lockout":{"enabled":<span class="hit">false</span>}}}</pre></div>
       </div>
+    </li>
 
-      <!-- Lockout -->
-      <h3>3. Ativando Account Lockout</h3>
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-dots"><span></span><span></span><span></span></div>
-          <span class="code-title">ativar lockout de conta</span>
-          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
-        </div>
-        <pre><span class="cmt"># Ativar (bloqueia após 5 falhas por 5 minutos)</span>
-<span class="cmd">curl</span> <span class="flag">-X POST</span> http://localhost:3000/config \
-  <span class="flag">-d</span> <span class="arg">'feature=lockout&value=true'</span>
-
-<span class="cmt"># Testar manualmente (6 tentativas seguidas)</span>
-<span class="cmd">for</span> i in 1 2 3 4 5 6; do
-  <span class="cmd">curl</span> <span class="flag">-s -X POST</span> http://localhost:3000/login \
-    <span class="flag">-d</span> <span class="arg">"username=admin&password=errada_$i"</span> \
-    <span class="flag">-w</span> <span class="arg">"Tentativa $i: HTTP %{http_code}\n"</span>
-<span class="cmd">done</span></pre>
+    <li class="si">
+      <div class="sn">2</div>
+      <div class="sb">
+        <p>Ativar o Rate Limiting</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">ativar</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">curl</span> <span class="f">-X POST</span> http://localhost:3000/config \
+  <span class="f">-d</span> <span class="a">'feature=rateLimit&value=true'</span></pre></div>
       </div>
-      <div class="warning" style="border-left-color:var(--yellow); background:rgba(234,179,8,0.07); border-color:rgba(234,179,8,0.25)">
-        <strong style="color:var(--yellow)">⚠ Tradeoff importante</strong>
-        <p style="color:#fde68a">O lockout pode ser usado em ataques de negação de serviço (DoS) — um atacante pode bloquear contas legítimas de propósito. Discuta como mitigar isso.</p>
+    </li>
+
+    <li class="si">
+      <div class="sn">3</div>
+      <div class="sb">
+        <p>Tornar o limite mais restritivo (5 req por minuto por IP)</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">ajustar limite</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">curl</span> <span class="f">-X POST</span> http://localhost:3000/config \
+  <span class="f">-d</span> <span class="a">'feature=maxReqs&value=5'</span></pre></div>
       </div>
+    </li>
 
-      <!-- Fail2Ban -->
-      <h3>4. Configurando Fail2Ban</h3>
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-dots"><span></span><span></span><span></span></div>
-          <span class="code-title">fail2ban — bloqueio automático de IP</span>
-          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
-        </div>
-        <pre><span class="cmt"># Criar filtro para a aplicação</span>
-<span class="cmd">sudo nano</span> /etc/fail2ban/filter.d/app-brute.conf
+    <li class="si">
+      <div class="sn">4</div>
+      <div class="sb">
+        <p>Rodar o Hydra novamente e observar o que acontece</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">testar Hydra com rate limiting ativo</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">hydra</span> <span class="f">-l</span> admin <span class="f">-P</span> /usr/share/wordlists/rockyou.txt localhost \
+  http-post-form <span class="a">'/login:username=^USER^&password=^PASS^:Credenciais inválidas.'</span> \
+  <span class="f">-t 4 -V -f</span></pre></div>
+        <div class="box ok"><div class="box-title">✓ O que você deve ver</div>
+        <p>O Hydra começa a receber erros HTTP <code>429</code>. A mensagem muda para: <code>"Muitas tentativas. Aguarde antes de tentar novamente."</code></p>
+        <p>O ataque fica muito mais lento ou falha completamente.</p></div>
+        <div class="box yellow"><div class="box-title">🤔 Reflexão</div>
+        <p>O rate limiting impediu completamente o ataque? Um atacante com paciência poderia esperar a janela de 1 minuto e continuar tentando? Como tornar o rate limiting ainda mais eficaz?</p></div>
+      </div>
+    </li>
+  </ul>
 
-<span class="out">[Definition]
-failregex = ^&lt;HOST&gt; .* POST /login .* 401
-ignoreregex =</span>
+  <!-- LOCKOUT -->
+  <h3>Etapa 3 — Contramedida 2: Account Lockout</h3>
+  <p><strong>O que é:</strong> Após N tentativas falhas, a conta é bloqueada temporariamente. O servidor recusa qualquer tentativa para aquela conta por um período definido, independente do IP de origem.</p>
 
-<span class="cmt"># Criar jail</span>
-<span class="cmd">sudo nano</span> /etc/fail2ban/jail.d/app-brute.conf
+  <ul class="steps">
+    <li class="si">
+      <div class="sn">1</div>
+      <div class="sb">
+        <p>Desativar o rate limiting e ativar o lockout</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">trocar de contramedida</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">curl</span> <span class="f">-X POST</span> http://localhost:3000/config <span class="f">-d</span> <span class="a">'feature=rateLimit&value=false'</span>
+<span class="c">curl</span> <span class="f">-X POST</span> http://localhost:3000/config <span class="f">-d</span> <span class="a">'feature=lockout&value=true'</span>
+<span class="c">curl</span> http://localhost:3000/status <span class="cm"># confirmar</span></pre></div>
+      </div>
+    </li>
 
-<span class="out">[app-brute]
+    <li class="si">
+      <div class="sn">2</div>
+      <div class="sb">
+        <p>Simular 6 tentativas seguidas para ver o bloqueio acontecer</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">loop de tentativas falhas</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">for</span> i in 1 2 3 4 5 6; do
+  echo <span class="a">"=== Tentativa $i ==="</span>
+  <span class="c">curl</span> <span class="f">-s -X POST</span> http://localhost:3000/login \
+    <span class="f">-d</span> <span class="a">"username=admin&password=errada_$i"</span>
+  echo
+<span class="c">done</span></pre></div>
+        <div class="out-block"><div class="out-label">saída esperada — repare que a 6ª tentativa recebe resposta diferente</div>
+        <pre>Tentativa 1: {"success":false,"message":"Credenciais inválidas."}
+Tentativa 2: {"success":false,"message":"Credenciais inválidas."}
+Tentativa 3: {"success":false,"message":"Credenciais inválidas."}
+Tentativa 4: {"success":false,"message":"Credenciais inválidas."}
+Tentativa 5: {"success":false,"message":"Credenciais inválidas."}
+Tentativa 6: {"success":false,"message":"<span class="hit">Conta bloqueada. Tente novamente em 300 segundos.</span>"}</pre></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">3</div>
+      <div class="sb">
+        <p>Resetar o estado e testar com o Hydra</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">resetar e atacar</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">curl</span> <span class="f">-X POST</span> http://localhost:3000/reset
+<span class="c">hydra</span> <span class="f">-l</span> admin <span class="f">-P</span> /usr/share/wordlists/rockyou.txt localhost \
+  http-post-form <span class="a">'/login:username=^USER^&password=^PASS^:Credenciais inválidas.'</span> \
+  <span class="f">-t 4 -V</span></pre></div>
+        <p>Observe: após 5 tentativas falhas, o admin é bloqueado e o Hydra passa a receber respostas de bloqueio.</p>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">4</div>
+      <div class="sb">
+        <p>Entender o tradeoff do account lockout</p>
+        <div class="box warn"><div class="box-title">⚠ O lockout pode ser usado como arma</div>
+        <p>Um atacante pode fazer 5 tentativas erradas intencionalmente para <strong>bloquear a conta do usuário legítimo</strong> — isso é um ataque de negação de serviço (DoS) por bloqueio de conta.</p>
+        <p>Como mitigar esse risco:</p>
+        <ul>
+          <li>CAPTCHA após 3 tentativas (humanos passam, bots não)</li>
+          <li>Notificar o usuário por e-mail quando a conta for bloqueada</li>
+          <li>Lockout progressivo (1min, 5min, 30min) em vez de fixo</li>
+          <li>Lockout por IP em vez de por conta</li>
+        </ul></div>
+      </div>
+    </li>
+  </ul>
+
+  <!-- FAIL2BAN -->
+  <h3>Etapa 4 — Contramedida 3: Fail2Ban</h3>
+  <p><strong>O que é:</strong> O Fail2Ban monitora arquivos de log em tempo real. Quando detecta um padrão suspeito (muitos erros 401 do mesmo IP), executa uma ação automática — normalmente adiciona uma regra no firewall (<code>iptables</code>) bloqueando o IP completamente.</p>
+
+  <ul class="steps">
+    <li class="si">
+      <div class="sn">1</div>
+      <div class="sb">
+        <p>Instalar e iniciar o Fail2Ban</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">instalação</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">sudo</span> apt install <span class="f">-y</span> fail2ban
+<span class="c">sudo</span> systemctl start fail2ban
+<span class="c">fail2ban-client</span> status <span class="cm"># confirma que está rodando</span></pre></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">2</div>
+      <div class="sb">
+        <p>Criar o filtro — define o padrão de log que indica ataque</p>
+        <p>O filtro usa uma expressão regular (regex) para identificar linhas de log que indicam tentativa de login falha:</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">abrir editor</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">sudo</span> nano /etc/fail2ban/filter.d/app-brute.conf</pre></div>
+        <p>Cole o conteúdo abaixo. Salve com <kbd>Ctrl+O</kbd> → Enter → <kbd>Ctrl+X</kbd>:</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">conteúdo do filtro</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre>[Definition]
+<span class="cm"># &lt;HOST&gt; captura o IP da linha de log automaticamente</span>
+<span class="cm"># A regex identifica: IP + POST /login + status 401</span>
+failregex = ^<span class="hi">&lt;HOST&gt;</span> .* POST /login .* 401
+ignoreregex =</pre></div>
+        <div class="box info"><div class="box-title">💡 O que é &lt;HOST&gt;?</div>
+        <p>É um placeholder especial do Fail2Ban que extrai automaticamente o endereço IP da linha de log. Cada vez que uma linha combinar com essa regex, o IP é registrado como uma tentativa falha.</p></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">3</div>
+      <div class="sb">
+        <p>Criar a "jail" — define ações e limites</p>
+        <p>A jail conecta o filtro ao arquivo de log e define quando e por quanto tempo banir:</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">abrir editor</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">sudo</span> nano /etc/fail2ban/jail.d/app-brute.conf</pre></div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">conteúdo da jail</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre>[app-brute]
 enabled  = true
 filter   = app-brute
-logpath  = /home/aluno/lab-bruteforce/logs/access.log
-maxretry = 10
-bantime  = 600
-findtime = 60</span>
-
-<span class="cmt"># Reiniciar e verificar</span>
-<span class="cmd">sudo</span> systemctl restart fail2ban
-<span class="cmd">fail2ban-client</span> status app-brute</pre>
+logpath  = /root/lab-bruteforce/logs/access.log
+maxretry = 10    <span class="cm">; bane após 10 falhas no período</span>
+bantime  = 600   <span class="cm">; ban dura 600s (10 minutos)</span>
+findtime = 60    <span class="cm">; conta falhas dentro de 60 segundos</span></pre></div>
+        <div class="box warn"><div class="box-title">⚠ Ajuste o logpath!</div>
+        <p>O caminho acima pode ser diferente na sua máquina. Verifique com:</p>
+        <p><code>echo ~/lab-bruteforce/logs/access.log</code></p>
+        <p>Use o caminho completo que aparecer no resultado.</p></div>
       </div>
-    </div>
-  </section>
+    </li>
 
-  <!-- ── PAINEL AO VIVO ── -->
-  <section id="painel">
-    <div class="container">
-      <div class="section-label">// 05 · Monitoramento</div>
-      <h2>Painel de Controle — Blue Team</h2>
-      <p>Este painel se conecta à aplicação rodando em <code>localhost:3000</code> e permite controlar as defesas em tempo real.</p>
-
-      <div class="connect-status">
-        <div class="dot-live" id="liveDot"></div>
-        <span id="liveStatus">verificando conexão...</span>
+    <li class="si">
+      <div class="sn">4</div>
+      <div class="sb">
+        <p>Reiniciar o Fail2Ban e verificar a jail</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">ativar e verificar</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">sudo</span> systemctl restart fail2ban
+<span class="c">fail2ban-client</span> status app-brute</pre></div>
+        <div class="out-block"><div class="out-label">saída esperada — jail ativa, nenhum ban ainda</div>
+        <pre>Status for the jail: app-brute
+|- Filter
+|  |- Currently failed: 0
+|  `- File list: /root/lab-bruteforce/logs/access.log
+`- Actions
+   |- Currently banned: 0
+   `- Banned IP list:</pre></div>
       </div>
+    </li>
 
-      <div class="monitor">
-        <h4>$ app-brute · status das defesas</h4>
-        <div class="monitor-row">
-          <span class="monitor-label">Rate Limiting</span>
-          <div style="display:flex;gap:12px;align-items:center">
-            <span class="monitor-value" id="rl-status">—</span>
-            <button class="toggle-btn off" id="rl-btn" onclick="toggleDefense('rateLimit')">ativar</button>
-          </div>
-        </div>
-        <div class="monitor-row">
-          <span class="monitor-label">Account Lockout</span>
-          <div style="display:flex;gap:12px;align-items:center">
-            <span class="monitor-value" id="lo-status">—</span>
-            <button class="toggle-btn off" id="lo-btn" onclick="toggleDefense('lockout')">ativar</button>
-          </div>
-        </div>
-        <div class="monitor-row">
-          <span class="monitor-label">Contas bloqueadas</span>
-          <span class="monitor-value" id="locked-users">—</span>
-        </div>
-        <div class="monitor-row">
-          <span class="monitor-label">Ações</span>
-          <div style="display:flex;gap:8px">
-            <button class="toggle-btn" style="border-color:var(--muted);color:var(--muted)" onclick="refreshStatus()">↻ atualizar</button>
-            <button class="toggle-btn" style="border-color:var(--red);color:var(--red)" onclick="resetState()">⟳ resetar estado</button>
-          </div>
-        </div>
+    <li class="si">
+      <div class="sn">5</div>
+      <div class="sb">
+        <p>Executar o Hydra e monitorar o Fail2Ban agir</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">dois terminais — ataque e monitoramento</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="cm"># Terminal 1 — ataque</span>
+<span class="c">curl</span> <span class="f">-X POST</span> http://localhost:3000/config <span class="f">-d</span> <span class="a">'feature=lockout&value=false'</span>
+<span class="c">curl</span> <span class="f">-X POST</span> http://localhost:3000/reset
+<span class="c">hydra</span> <span class="f">-l</span> admin <span class="f">-P</span> /usr/share/wordlists/rockyou.txt localhost \
+  http-post-form <span class="a">'/login:username=^USER^&password=^PASS^:Credenciais inválidas.'</span> \
+  <span class="f">-t 4</span> &
+
+<span class="cm"># Terminal 2 — monitoramento ao vivo</span>
+<span class="c">watch</span> <span class="f">-n 2</span> <span class="a">'fail2ban-client status app-brute'</span></pre></div>
+        <div class="out-block"><div class="out-label">após o ban — IP bloqueado automaticamente</div>
+        <pre>Status for the jail: app-brute
+`- Actions
+   |- Currently banned: <span class="hit">1</span>
+   `- Banned IP list:   <span class="hit">127.0.0.1</span></pre></div>
       </div>
+    </li>
 
-      <div class="info-box">
-        <strong>Como funciona</strong>
-        <p>O painel usa fetch() para chamar a API da aplicação em <code>localhost:3000</code>. Funciona apenas com o container rodando. Se aparecer erro, verifique com <code>docker ps</code>.</p>
+    <li class="si">
+      <div class="sn">6</div>
+      <div class="sb">
+        <p>Remover o ban manualmente para reiniciar os testes</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">desbanir IP</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="c">sudo</span> fail2ban-client set app-brute unbanip 127.0.0.1</pre></div>
       </div>
-    </div>
-  </section>
+    </li>
+  </ul>
 
-  <!-- ── CHECKLIST ── -->
-  <section id="checklist">
-    <div class="container">
-      <div class="section-label">// 06 · Conclusão</div>
-      <h2>Checklist de Progresso</h2>
-      <p>Marque cada etapa conforme você conclui. O progresso é salvo localmente no navegador.</p>
+</div>
+</section>
 
-      <ul class="checklist" id="checklistEl">
-        <li data-id="0"><div class="check-box" onclick="toggleCheck(0)"></div>Ambiente Docker iniciado e aplicação acessível em localhost:3000</li>
-        <li data-id="1"><div class="check-box" onclick="toggleCheck(1)"></div>Reconhecimento com curl: identifiquei o fail_string da aplicação</li>
-        <li data-id="2"><div class="check-box" onclick="toggleCheck(2)"></div>Hydra executado com sucesso: senha encontrada</li>
-        <li data-id="3"><div class="check-box" onclick="toggleCheck(3)"></div>Medusa executado e comparado com Hydra</li>
-        <li data-id="4"><div class="check-box" onclick="toggleCheck(4)"></div>Burp Suite Intruder configurado e ataque executado</li>
-        <li data-id="5"><div class="check-box" onclick="toggleCheck(5)"></div>ffuf executado e velocidade comparada</li>
-        <li data-id="6"><div class="check-box" onclick="toggleCheck(6)"></div>Wireshark: tráfego do ataque capturado e analisado</li>
-        <li data-id="7"><div class="check-box" onclick="toggleCheck(7)"></div>Logs do container analisados: padrão de ataque identificado</li>
-        <li data-id="8"><div class="check-box" onclick="toggleCheck(8)"></div>Rate Limiting ativado e testado com Hydra</li>
-        <li data-id="9"><div class="check-box" onclick="toggleCheck(9)"></div>Account Lockout ativado e testado</li>
-        <li data-id="10"><div class="check-box" onclick="toggleCheck(10)"></div>Fail2Ban configurado e bloqueio de IP verificado</li>
-        <li data-id="11"><div class="check-box" onclick="toggleCheck(11)"></div>Todas as questões de reflexão respondidas na folha de atividade</li>
-      </ul>
+<!-- PAINEL -->
+<section id="s-painel">
+<div class="container">
+  <div class="sec-label">// 04 · Monitoramento</div>
+  <h2>Painel de Controle — Blue Team</h2>
+  <p>Conecta diretamente à aplicação em <code>localhost:3000</code>. Use para controlar as defesas sem precisar digitar curl. Funciona apenas com o container rodando.</p>
 
-      <div style="margin-top:32px; font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--muted)">
-        Progresso: <span id="progressText" style="color:var(--green)">0 / 12</span>
-      </div>
-    </div>
-  </section>
+  <div style="display:flex;align-items:center;font-family:'JetBrains Mono',monospace;font-size:13px;margin-bottom:16px">
+    <span class="dlive" id="dlive"></span>
+    <span id="lstatus" style="color:var(--muted)">verificando conexão...</span>
+  </div>
 
-  <footer>
-    <p>UMC — Universidade de Mogi das Cruzes &nbsp;|&nbsp; Curso Técnico em Redes de Computadores</p>
-    <p style="margin-top:8px; color:#374151">Lab BruteForce · Uso estritamente educacional</p>
-  </footer>
+  <div class="mon">
+    <div class="mon-t">$ app-brute · controle de defesas em tempo real</div>
+    <div class="mr"><span class="ml">Rate Limiting</span><div style="display:flex;gap:12px;align-items:center"><span class="mv" id="rl-v">—</span><button class="tbtn off" id="rl-b" onclick="tog('rateLimit')">ativar</button></div></div>
+    <div class="mr"><span class="ml">Account Lockout</span><div style="display:flex;gap:12px;align-items:center"><span class="mv" id="lo-v">—</span><button class="tbtn off" id="lo-b" onclick="tog('lockout')">ativar</button></div></div>
+    <div class="mr"><span class="ml">Contas bloqueadas</span><span class="mv" id="lk-v">—</span></div>
+    <div class="mr"><span class="ml">Ações</span><div style="display:flex;gap:8px"><button class="tbtn" style="border-color:var(--muted);color:var(--muted)" onclick="loadS()">↻ atualizar</button><button class="tbtn off" onclick="resetA()">⟳ resetar estado</button></div></div>
+  </div>
 
-  <script>
-    // ── Progress bar ──
-    window.addEventListener('scroll', () => {
-      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
-      document.getElementById('progress').style.width = pct + '%';
+  <div class="box info"><div class="box-title">💡 Como usar o painel</div>
+  <p>Clique em <strong>"ativar"</strong> para ligar uma defesa, depois execute o Hydra no terminal e veja se o ataque muda. Clique <strong>"resetar estado"</strong> entre os testes para limpar contadores e contas bloqueadas.</p></div>
+</div>
+</section>
+
+<!-- CHECKLIST -->
+<section id="s-check">
+<div class="container">
+  <div class="sec-label">// 05 · Conclusão</div>
+  <h2>Checklist de Progresso</h2>
+  <p>Marque cada etapa conforme conclui. O progresso fica salvo no navegador.</p>
+  <ul class="cl" id="cl">
+    <li data-id="0"><div class="ck" onclick="chk(0)"></div><span>Container iniciado — aplicação acessível em http://localhost:3000</span></li>
+    <li data-id="1"><div class="ck" onclick="chk(1)"></div><span>curl: identifiquei o FAIL_STRING e a diferença entre login válido e inválido</span></li>
+    <li data-id="2"><div class="ck" onclick="chk(2)"></div><span>Hydra: executado com sucesso — senha encontrada</span></li>
+    <li data-id="3"><div class="ck" onclick="chk(3)"></div><span>Hydra: testei com diferentes threads e comparei velocidade</span></li>
+    <li data-id="4"><div class="ck" onclick="chk(4)"></div><span>Medusa: executado e comparado com Hydra</span></li>
+    <li data-id="5"><div class="ck" onclick="chk(5)"></div><span>Burp Suite: proxy configurado e requisição interceptada</span></li>
+    <li data-id="6"><div class="ck" onclick="chk(6)"></div><span>Burp Intruder: ataque executado e senha identificada pelo Length</span></li>
+    <li data-id="7"><div class="ck" onclick="chk(7)"></div><span>ffuf: executado e velocidade comparada com Hydra</span></li>
+    <li data-id="8"><div class="ck" onclick="chk(8)"></div><span>Wireshark: tráfego capturado e senhas lidas nos pacotes</span></li>
+    <li data-id="9"><div class="ck" onclick="chk(9)"></div><span>Logs analisados: IP atacante e padrão anormal identificados</span></li>
+    <li data-id="10"><div class="ck" onclick="chk(10)"></div><span>Rate Limiting ativado e testado — erro 429 observado no Hydra</span></li>
+    <li data-id="11"><div class="ck" onclick="chk(11)"></div><span>Account Lockout ativado — conta bloqueou após 5 falhas</span></li>
+    <li data-id="12"><div class="ck" onclick="chk(12)"></div><span>Fail2Ban configurado — IP banido automaticamente</span></li>
+    <li data-id="13"><div class="ck" onclick="chk(13)"></div><span>Questões de reflexão respondidas na folha de atividade</span></li>
+  </ul>
+  <div style="margin-top:28px;font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--muted)">
+    Progresso: <span id="prog" style="color:var(--green);font-weight:700">0 / 14</span>
+  </div>
+</div>
+</section>
+
+<footer>
+  <p>UMC — Universidade de Mogi das Cruzes &nbsp;|&nbsp; Curso Técnico em Redes de Computadores</p>
+  <p style="margin-top:8px;color:#374151">Lab BruteForce · Uso estritamente educacional · <a href="http://localhost:3000" target="_blank" style="color:#3b82f6">localhost:3000</a></p>
+</footer>
+
+<script>
+  // Progress bar
+  window.addEventListener('scroll',()=>{
+    const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+    document.getElementById('pbar').style.width=p+'%';
+  });
+
+  function goTo(id){document.getElementById(id).scrollIntoView({behavior:'smooth'})}
+
+  // Copy
+  function cp(btn){
+    const pre=btn.closest('.cb').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(()=>{
+      btn.textContent='✓ copiado'; btn.classList.add('copied');
+      setTimeout(()=>{btn.textContent='copiar';btn.classList.remove('copied')},2000);
     });
+  }
 
-    // ── Nav ──
-    function scrollTo(id) {
-      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  // Checklist
+  const C=JSON.parse(localStorage.getItem('lab-bf')||'{}');
+  function chk(id){C[id]=!C[id];localStorage.setItem('lab-bf',JSON.stringify(C));render();}
+  function render(){
+    document.querySelectorAll('#cl li').forEach(li=>{
+      const id=+li.dataset.id, bx=li.querySelector('.ck');
+      if(C[id]){bx.classList.add('on');bx.textContent='✓';li.classList.add('done');}
+      else{bx.classList.remove('on');bx.textContent='';li.classList.remove('done');}
+    });
+    document.getElementById('prog').textContent=Object.values(C).filter(Boolean).length+' / 14';
+  }
+  render();
+
+  // Painel
+  let cfg={};
+  async function loadS(){
+    try{
+      const d=await(await fetch('http://localhost:3000/status',{signal:AbortSignal.timeout(2000)})).json();
+      cfg=d.config;
+      document.getElementById('dlive').classList.add('on');
+      document.getElementById('lstatus').textContent='● conectado · localhost:3000';
+      const rl=d.config.rateLimit.enabled;
+      document.getElementById('rl-v').textContent=rl?'✓ ativo':'✗ inativo';
+      document.getElementById('rl-v').style.color=rl?'var(--green)':'var(--red)';
+      const rb=document.getElementById('rl-b');
+      rb.textContent=rl?'desativar':'ativar'; rb.className='tbtn '+(rl?'on':'off');
+      const lo=d.config.lockout.enabled;
+      document.getElementById('lo-v').textContent=lo?'✓ ativo':'✗ inativo';
+      document.getElementById('lo-v').style.color=lo?'var(--green)':'var(--red)';
+      const lb=document.getElementById('lo-b');
+      lb.textContent=lo?'desativar':'ativar'; lb.className='tbtn '+(lo?'on':'off');
+      const lk=d.lockedUsers||[];
+      document.getElementById('lk-v').textContent=lk.length?lk.join(', '):'nenhuma';
+    }catch{
+      document.getElementById('dlive').classList.remove('on');
+      document.getElementById('lstatus').textContent='○ offline · execute: docker compose up -d';
     }
-
-    // ── Copy ──
-    function copyCode(btn) {
-      const pre = btn.closest('.code-block').querySelector('pre');
-      navigator.clipboard.writeText(pre.innerText).then(() => {
-        btn.textContent = '✓ copiado';
-        btn.classList.add('copied');
-        setTimeout(() => { btn.textContent = 'copiar'; btn.classList.remove('copied'); }, 2000);
-      });
-    }
-
-    // ── Checklist ──
-    const checks = JSON.parse(localStorage.getItem('lab-checks') || '{}');
-    function renderChecklist() {
-      document.querySelectorAll('#checklistEl li').forEach(li => {
-        const id = +li.dataset.id;
-        const box = li.querySelector('.check-box');
-        if (checks[id]) { box.classList.add('checked'); box.textContent = '✓'; li.classList.add('done'); }
-        else             { box.classList.remove('checked'); box.textContent = ''; li.classList.remove('done'); }
-      });
-      const done = Object.values(checks).filter(Boolean).length;
-      document.getElementById('progressText').textContent = `${done} / 12`;
-    }
-    function toggleCheck(id) {
-      checks[id] = !checks[id];
-      localStorage.setItem('lab-checks', JSON.stringify(checks));
-      renderChecklist();
-    }
-    renderChecklist();
-
-    // ── Painel ──
-    let currentConfig = {};
-
-    async function refreshStatus() {
-      try {
-        const r = await fetch('http://localhost:3000/status', { signal: AbortSignal.timeout(2000) });
-        const d = await r.json();
-        currentConfig = d.config;
-
-        document.getElementById('liveDot').classList.add('online');
-        document.getElementById('liveStatus').textContent = 'conectado · localhost:3000';
-
-        const rlOn = d.config.rateLimit.enabled;
-        document.getElementById('rl-status').textContent = rlOn ? '✓ ativo' : '✗ inativo';
-        document.getElementById('rl-status').style.color  = rlOn ? 'var(--green)' : 'var(--red)';
-        const rlBtn = document.getElementById('rl-btn');
-        rlBtn.textContent  = rlOn ? 'desativar' : 'ativar';
-        rlBtn.className    = 'toggle-btn ' + (rlOn ? 'on' : 'off');
-
-        const loOn = d.config.lockout.enabled;
-        document.getElementById('lo-status').textContent = loOn ? '✓ ativo' : '✗ inativo';
-        document.getElementById('lo-status').style.color  = loOn ? 'var(--green)' : 'var(--red)';
-        const loBtn = document.getElementById('lo-btn');
-        loBtn.textContent = loOn ? 'desativar' : 'ativar';
-        loBtn.className   = 'toggle-btn ' + (loOn ? 'on' : 'off');
-
-        const locked = d.lockedUsers || [];
-        document.getElementById('locked-users').textContent =
-          locked.length ? locked.join(', ') : 'nenhuma';
-      } catch {
-        document.getElementById('liveDot').classList.remove('online');
-        document.getElementById('liveStatus').textContent = 'container offline · rode: docker compose up -d';
-      }
-    }
-
-    async function toggleDefense(feature) {
-      const current = feature === 'rateLimit'
-        ? currentConfig?.rateLimit?.enabled
-        : currentConfig?.lockout?.enabled;
-      try {
-        await fetch('http://localhost:3000/config', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: `feature=${feature}&value=${!current}`
-        });
-        refreshStatus();
-      } catch { alert('Container offline. Inicie com: docker compose up -d'); }
-    }
-
-    async function resetState() {
-      try {
-        await fetch('http://localhost:3000/reset', { method: 'POST' });
-        refreshStatus();
-      } catch { alert('Container offline.'); }
-    }
-
-    refreshStatus();
-    setInterval(refreshStatus, 5000);
-  </script>
+  }
+  async function tog(f){
+    const cur=f==='rateLimit'?cfg?.rateLimit?.enabled:cfg?.lockout?.enabled;
+    try{
+      await fetch('http://localhost:3000/config',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:`feature=${f}&value=${!cur}`});
+      loadS();
+    }catch{alert('Container offline. Execute: docker compose up -d');}
+  }
+  async function resetA(){
+    try{await fetch('http://localhost:3000/reset',{method:'POST'});loadS();}
+    catch{alert('Container offline.');}
+  }
+  loadS();
+  setInterval(loadS,5000);
+</script>
 </body>
 </html>
