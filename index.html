@@ -382,10 +382,18 @@ ffuf - Fuzz Faster U Fool</pre></div>
     <li class="si">
       <div class="sn">1</div>
       <div class="sb">
-        <p>Verificar todas as ferramentas de uma vez</p>
+        <p>Verificar cada ferramenta separadamente</p>
         <div class="os-tag win">🪟 PowerShell</div>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="ps-cmd">docker</span> exec kali-tools bash <span class="ps-flag">-c</span> <span class="ps-str">"echo '=== Hydra ===' && hydra -h 2>&1 | head -2 && echo '=== ffuf ===' && ffuf -h 2>&1 | head -2 && echo '=== Medusa ===' && medusa -h 2>&1 | head -2 && echo '=== tshark ===' && tshark --version 2>&1 | head -1 && echo '=== mitmproxy ===' && mitmproxy --version 2>&1 | head -1"</span></pre></div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — verificar Hydra</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools hydra <span class="ps-flag">--version</span></pre></div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — verificar ffuf</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools ffuf <span class="ps-flag">-V</span></pre></div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — verificar Medusa</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools medusa <span class="ps-flag">--version</span></pre></div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — verificar tshark</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools tshark <span class="ps-flag">--version</span> 2>&1 | <span class="ps-cmd">Select-String</span> <span class="ps-str">"TShark"</span></pre></div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — verificar mitmproxy</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools mitmproxy <span class="ps-flag">--version</span></pre></div>
         <div class="out-block"><div class="out-label">saída esperada</div>
         <pre>=== Hydra ===
 Hydra v9.6
