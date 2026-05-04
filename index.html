@@ -6,35 +6,30 @@
   <title>Lab BruteForce – UMC Redes</title>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg:#0a0c10; --surface:#111318; --border:#1e2130;
-      --red:#ef4444; --green:#22c55e; --blue:#3b82f6; --yellow:#eab308;
-      --text:#e2e8f0; --muted:#64748b; --code-bg:#080a0e;
-    }
+    :root{--bg:#0a0c10;--surface:#111318;--border:#1e2130;--red:#ef4444;--green:#22c55e;--blue:#3b82f6;--yellow:#eab308;--text:#e2e8f0;--muted:#64748b;--code-bg:#080a0e}
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;line-height:1.7;overflow-x:hidden}
     body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,.01) 2px,rgba(255,255,255,.01) 4px);pointer-events:none;z-index:9999}
 
-    /* Hero */
     .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 24px;overflow:hidden}
     .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(59,130,246,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.06) 1px,transparent 1px);background-size:40px 40px;mask-image:radial-gradient(ellipse 80% 60% at 50% 50%,black 30%,transparent 100%)}
     .hero-glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(239,68,68,.1) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
     .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:999px;padding:6px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--red);text-transform:uppercase;letter-spacing:2px;margin-bottom:32px;animation:pb 2s infinite}
     @keyframes pb{0%,100%{border-color:rgba(239,68,68,.3)}50%{border-color:rgba(239,68,68,.7)}}
     .hero h1{font-size:clamp(40px,7vw,80px);font-weight:800;letter-spacing:-2px;line-height:1.05;margin-bottom:20px}
-    .hero h1 .r{color:var(--red)} .hero h1 .b{color:var(--blue)}
-    .hero-sub{font-size:16px;color:var(--muted);max-width:560px;margin-bottom:48px}
+    .hero h1 .r{color:var(--red)}.hero h1 .b{color:var(--blue)}
+    .hero-sub{font-size:16px;color:var(--muted);max-width:580px;margin-bottom:48px}
     .pills{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:56px}
     .pill{padding:10px 20px;border-radius:999px;border:1px solid;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
     .pill.r{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3);color:var(--red)}
     .pill.b{background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.3);color:var(--blue)}
     .pill.g{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.3);color:var(--green)}
+    .pill.y{background:rgba(234,179,8,.08);border-color:rgba(234,179,8,.3);color:var(--yellow)}
     .scroll-hint{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);animation:bounce 2s infinite}
     @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 
-    /* Layout */
-    .container{max-width:860px;margin:0 auto;padding:0 24px}
+    .container{max-width:880px;margin:0 auto;padding:0 24px}
     section{padding:80px 0;border-top:1px solid var(--border)}
     .sec-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:3px;color:var(--muted);margin-bottom:10px}
     h2{font-size:clamp(26px,4vw,40px);font-weight:800;letter-spacing:-1px;margin-bottom:28px;line-height:1.2}
@@ -43,33 +38,39 @@
     p strong{color:var(--text)}
     code{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--yellow);background:rgba(234,179,8,.08);padding:2px 6px;border-radius:4px}
 
-    /* Boxes */
     .box{border-radius:10px;padding:18px 22px;margin:16px 0;border:1px solid}
     .box-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
     .box p,.box li{font-size:14px;margin-bottom:5px}
     .box ul,.box ol{padding-left:20px}
     .box.warn{background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.2);border-left:4px solid var(--red)}
-    .box.warn .box-title{color:var(--red)} .box.warn p,.box.warn li{color:#fca5a5}
+    .box.warn .box-title{color:var(--red)}.box.warn p,.box.warn li{color:#fca5a5}
     .box.info{background:rgba(59,130,246,.06);border-color:rgba(59,130,246,.2);border-left:4px solid var(--blue)}
-    .box.info .box-title{color:var(--blue)} .box.info p,.box.info li{color:#93c5fd}
+    .box.info .box-title{color:var(--blue)}.box.info p,.box.info li{color:#93c5fd}
     .box.ok{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.2);border-left:4px solid var(--green)}
-    .box.ok .box-title{color:var(--green)} .box.ok p,.box.ok li{color:#86efac}
+    .box.ok .box-title{color:var(--green)}.box.ok p,.box.ok li{color:#86efac}
     .box.yellow{background:rgba(234,179,8,.06);border-color:rgba(234,179,8,.2);border-left:4px solid var(--yellow)}
-    .box.yellow .box-title{color:var(--yellow)} .box.yellow p,.box.yellow li{color:#fde68a}
+    .box.yellow .box-title{color:var(--yellow)}.box.yellow p,.box.yellow li{color:#fde68a}
     .box.dark{background:var(--code-bg);border-color:var(--border)}
     .box.dark p,.box.dark li,.box.dark .box-title{color:#94a3b8}
 
-    /* Código */
+    /* OS tag */
+    .os-tag{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 10px;border-radius:4px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+    .os-tag.win{background:rgba(59,130,246,.12);color:#60a5fa;border:1px solid rgba(59,130,246,.25)}
+    .os-tag.ps{background:rgba(59,130,246,.12);color:#818cf8;border:1px solid rgba(99,102,241,.25)}
+
+    /* Code block */
     .cb{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:14px 0;font-family:'JetBrains Mono',monospace}
     .ch{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;background:#0d0f14;border-bottom:1px solid var(--border)}
     .dots{display:flex;gap:5px}
     .dots span{width:10px;height:10px;border-radius:50%}
-    .dots span:nth-child(1){background:#ef4444} .dots span:nth-child(2){background:#eab308} .dots span:nth-child(3){background:#22c55e}
+    .dots span:nth-child(1){background:#ef4444}.dots span:nth-child(2){background:#eab308}.dots span:nth-child(3){background:#22c55e}
     .ct{font-size:11px;color:var(--muted)}
     .cpb{background:none;border:1px solid var(--border);color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 10px;border-radius:4px;cursor:pointer;transition:all .2s}
-    .cpb:hover{color:var(--text);border-color:var(--muted)} .cpb.copied{color:var(--green);border-color:var(--green)}
+    .cpb:hover{color:var(--text);border-color:var(--muted)}.cpb.copied{color:var(--green);border-color:var(--green)}
     pre{padding:18px 20px;font-size:13px;line-height:1.9;overflow-x:auto;color:#a5f3a0}
-    .c{color:#60a5fa} .f{color:#f9a8d4} .a{color:#fde68a} .cm{color:#4b5563;font-style:italic} .o{color:#6b7280} .hi{color:#fff;font-weight:700}
+    .c{color:#60a5fa}.f{color:#f9a8d4}.a{color:#fde68a}.cm{color:#4b5563;font-style:italic}.o{color:#6b7280}.hi{color:#fff;font-weight:700}
+    /* PowerShell colors */
+    .ps-cmd{color:#818cf8}.ps-flag{color:#f9a8d4}.ps-str{color:#fde68a}.ps-var{color:#34d399}
 
     /* Steps */
     .steps{counter-reset:s;list-style:none}
@@ -78,7 +79,7 @@
     .sb{flex:1}
     .sb>p:first-child{color:var(--text);font-weight:700;font-size:16px;margin-bottom:8px}
 
-    /* Output */
+    /* Output block */
     .out-block{background:#050608;border:1px solid #1a1e2a;border-radius:8px;padding:14px 18px;margin:10px 0}
     .out-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
     .out-label::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green)}
@@ -101,7 +102,19 @@
     .pb2 .ic{font-size:40px;flex-shrink:0}
     .pb2 h3{font-size:20px;margin:0 0 4px}
     .pb2 p{margin:0;font-size:14px}
-    .pb2.rp h3{color:var(--red)} .pb2.bp h3{color:var(--blue)}
+    .pb2.rp h3{color:var(--red)}.pb2.bp h3{color:var(--blue)}
+
+    /* Arquitetura Docker */
+    .arch{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}
+    .arch-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+    .arch-card.win-card{border-left:3px solid var(--blue)}
+    .arch-card.docker-card{border-left:3px solid var(--green)}
+    .arch-card h4{font-size:14px;font-weight:700;margin-bottom:8px}
+    .arch-card.win-card h4{color:var(--blue)}
+    .arch-card.docker-card h4{color:var(--green)}
+    .arch-card ul{padding-left:18px}
+    .arch-card li{font-size:13px;color:#94a3b8;margin-bottom:4px}
+    .arch-arrow{display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--muted)}
 
     /* Tool divider */
     .tdiv{display:flex;align-items:center;gap:16px;margin:52px 0 28px}
@@ -115,7 +128,7 @@
     .tidx{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin:24px 0 40px}
     .tic{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;text-decoration:none;transition:border-color .2s}
     .tic:hover{border-color:#2d3554}
-    .tic.tr{border-left:3px solid var(--red)} .tic.tb{border-left:3px solid var(--blue)} .tic.ty{border-left:3px solid var(--yellow)}
+    .tic.tr{border-left:3px solid var(--red)}.tic.tb{border-left:3px solid var(--blue)}.tic.ty{border-left:3px solid var(--yellow)}
     .tic .tii{font-size:22px}
     .tic h5{font-size:14px;font-weight:700;color:var(--text);margin:0 0 2px}
     .tic span{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace}
@@ -127,7 +140,6 @@
     .nd::after{content:attr(data-label);position:absolute;left:16px;top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
     .nd:hover::after{opacity:1}
 
-    /* Misc */
     .pbar{position:fixed;top:0;left:0;height:2px;background:var(--red);z-index:1000;transition:width .1s}
 
     /* Checklist */
@@ -143,14 +155,14 @@
     .mon-t{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green);margin-bottom:20px}
     .mr{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:13px}
     .mr:last-child{border-bottom:none}
-    .ml{color:var(--muted)} .mv{color:var(--text)}
+    .ml{color:var(--muted)}.mv{color:var(--text)}
     .tbtn{background:none;border:1px solid;border-radius:6px;padding:4px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;transition:all .2s}
-    .tbtn.off{border-color:var(--red);color:var(--red)} .tbtn.on{border-color:var(--green);color:var(--green)}
+    .tbtn.off{border-color:var(--red);color:var(--red)}.tbtn.on{border-color:var(--green);color:var(--green)}
     .dlive{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;margin-right:6px}
     .dlive.on{background:var(--green);animation:blink 1.5s infinite}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
-    @media(max-width:768px){.snav{display:none}}
+    @media(max-width:768px){.snav{display:none}.arch{grid-template-columns:1fr}}
     footer{border-top:1px solid var(--border);padding:40px 24px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
   </style>
 </head>
@@ -160,6 +172,7 @@
 
 <nav class="snav">
   <div class="nd" data-label="Início"      onclick="goTo('hero')"></div>
+  <div class="nd" data-label="Arquitetura" onclick="goTo('s-arch')"></div>
   <div class="nd" data-label="Ambiente"    onclick="goTo('s-amb')"></div>
   <div class="nd" data-label="Red Team"    onclick="goTo('s-red')"></div>
   <div class="nd" data-label="curl"        onclick="goTo('t-curl')"></div>
@@ -179,13 +192,55 @@
   <div class="hero-glow"></div>
   <div class="badge">⚠ ambiente controlado · uso educacional</div>
   <h1><span class="r">Brute</span><span class="b">Force</span><br>Lab</h1>
-  <p class="hero-sub">Laboratório de segurança ofensiva e defensiva — ataque e defesa de força bruta em aplicações web.<br>UMC · Curso Técnico em Redes de Computadores · 2º Ano</p>
+  <p class="hero-sub">Laboratório de segurança ofensiva e defensiva.<br>UMC · Curso Técnico em Redes de Computadores · 2º Ano</p>
   <div class="pills">
     <div class="pill r">⚔ Fase 1 · Red Team</div>
     <div class="pill b">🛡 Fase 2 · Blue Team</div>
-    <div class="pill g">6 ferramentas</div>
+    <div class="pill y">🪟 Windows + PowerShell</div>
+    <div class="pill g">🐳 100% Docker</div>
   </div>
   <div class="scroll-hint">↓ role para começar</div>
+</section>
+
+<!-- ARQUITETURA -->
+<section id="s-arch">
+<div class="container">
+  <div class="sec-label">// 00 · Como funciona</div>
+  <h2>Arquitetura da Atividade</h2>
+  <p>Esta atividade roda <strong>100% via Docker no Windows</strong>. Não existe <code>sudo</code> nem <code>apt install</code> aqui — todos os comandos são PowerShell ou <code>docker</code>. Entenda o que roda onde:</p>
+
+  <div class="arch">
+    <div class="arch-card win-card">
+      <h4>🪟 Windows (sua máquina)</h4>
+      <ul>
+        <li>PowerShell — seu terminal</li>
+        <li>Docker Desktop — motor dos containers</li>
+        <li>Navegador Firefox/Chrome</li>
+        <li>Burp Suite (instalado no Windows)</li>
+        <li>Wireshark (instalado no Windows)</li>
+      </ul>
+    </div>
+    <div class="arch-card docker-card">
+      <h4>🐳 Dentro do Docker</h4>
+      <ul>
+        <li><strong>app-brute</strong> — aplicação alvo (Node.js)</li>
+        <li><strong>kali-tools</strong> — Hydra, Medusa, ffuf, curl</li>
+        <li>Ambos na mesma rede interna Docker</li>
+        <li>app-brute exposta em localhost:3000</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="box info">
+    <div class="box-title">💡 Por que as ferramentas rodam dentro do Docker?</div>
+    <p>Hydra, Medusa e ffuf são ferramentas Linux. No Windows, ao invés de instalar WSL2 ou máquina virtual, vamos usar um container Kali Linux que já tem tudo pronto. Você executa os comandos de ataque <em>dentro</em> desse container, direto do PowerShell.</p>
+  </div>
+
+  <div class="box warn">
+    <div class="box-title">⚠ Aviso ético</div>
+    <p>Esta atividade é realizada em ambiente isolado (Docker local). É proibido usar estas técnicas em sistemas reais sem autorização. Isso é crime — <strong>Lei nº 12.737/2012</strong>.</p>
+  </div>
+</div>
 </section>
 
 <!-- AMBIENTE -->
@@ -193,124 +248,157 @@
 <div class="container">
   <div class="sec-label">// 01 · Preparação</div>
   <h2>Configurando o Ambiente</h2>
+  <p>Todo o setup é feito no <strong>PowerShell do Windows</strong>. Abra o PowerShell como administrador antes de começar.</p>
 
-  <div class="box warn">
-    <div class="box-title">⚠ Aviso ético — leia antes de começar</div>
-    <p>Esta atividade é realizada em ambiente isolado e controlado (Docker local, na sua própria máquina). É <strong>proibido</strong> usar estas técnicas em sistemas reais sem autorização. Acesso não autorizado a sistemas é crime — <strong>Lei nº 12.737/2012</strong>.</p>
+  <div class="box yellow">
+    <div class="box-title">📌 Como abrir o PowerShell como Administrador</div>
+    <p>Pressione <kbd>Win + X</kbd> → clique em <strong>"Windows PowerShell (Admin)"</strong> ou <strong>"Terminal (Admin)"</strong>. Confirme o UAC se aparecer.</p>
   </div>
 
-  <h3>Passo 1 — Verificar os pré-requisitos</h3>
-  <p>Abra o terminal (<kbd>Ctrl+Alt+T</kbd>) e execute cada comando abaixo para confirmar que a ferramenta está instalada:</p>
+  <h3>Passo 1 — Verificar o Docker Desktop</h3>
 
   <ul class="steps">
     <li class="si">
       <div class="sn">1</div>
       <div class="sb">
-        <p>Verificar o Docker</p>
-        <p>O Docker cria e isola o container da aplicação alvo. Sem ele a atividade não funciona.</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">docker</span> --version</pre></div>
-        <div class="out-block"><div class="out-label">saída esperada</div><pre>Docker version 24.0.5, build ced0996</pre></div>
-        <div class="box info"><div class="box-title">💡 Não apareceu a versão?</div>
-        <p>Instale: <code>sudo apt update && sudo apt install docker.io -y</code></p>
-        <p>Adicione seu usuário ao grupo docker (evita usar sudo toda hora):<br><code>sudo usermod -aG docker $USER</code> — feche e reabra o terminal após isso.</p></div>
-      </div>
-    </li>
-
-    <li class="si">
-      <div class="sn">2</div>
-      <div class="sb">
-        <p>Verificar o Docker Compose</p>
-        <p>O Compose lê o arquivo <code>docker-compose.yml</code> e sobe o container com um único comando.</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">docker</span> compose version</pre></div>
-        <div class="out-block"><div class="out-label">saída esperada</div><pre>Docker Compose version v2.20.2</pre></div>
-      </div>
-    </li>
-
-    <li class="si">
-      <div class="sn">3</div>
-      <div class="sb">
-        <p>Instalar as ferramentas de ataque e análise</p>
-        <p>Hydra, Medusa, ffuf, Wireshark e curl — todas de uma vez:</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">sudo</span> apt update
-<span class="c">sudo</span> apt install <span class="f">-y</span> hydra medusa ffuf wireshark curl</pre></div>
-        <div class="box info"><div class="box-title">💡 Janela do Wireshark durante a instalação</div>
-        <p>Vai aparecer uma janela perguntando se usuários não-root podem capturar pacotes. Use as setas para selecionar <strong>Sim</strong> e pressione Enter.</p></div>
-      </div>
-    </li>
-
-    <li class="si">
-      <div class="sn">4</div>
-      <div class="sb">
-        <p>Verificar a wordlist rockyou.txt</p>
-        <p>É a lista de senhas do ataque — contém milhões de senhas reais vazadas em ataques históricos.</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">ls</span> /usr/share/wordlists/rockyou.txt</pre></div>
-        <div class="out-block"><div class="out-label">saída esperada</div><pre>/usr/share/wordlists/rockyou.txt</pre></div>
-        <div class="box info"><div class="box-title">💡 Arquivo não encontrado?</div>
-        <p><code>sudo apt install wordlists -y</code></p>
-        <p><code>sudo gunzip /usr/share/wordlists/rockyou.txt.gz</code></p></div>
+        <p>Verificar se o Docker está rodando</p>
+        <p>Se o Docker Desktop não estiver aberto, abra pelo menu Iniciar primeiro. Depois verifique no PowerShell:</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> --version
+<span class="ps-cmd">docker</span> compose version</pre></div>
+        <div class="out-block"><div class="out-label">saída esperada</div>
+        <pre>Docker version 29.3.1, build c2be9cc
+Docker Compose version v5.1.0</pre></div>
+        <div class="box warn"><div class="box-title">⚠ Erro "docker não é reconhecido"?</div>
+        <p>O Docker Desktop não está instalado ou não está no PATH. Baixe em: <strong>https://www.docker.com/products/docker-desktop</strong></p>
+        <p>Após instalar, feche e reabra o PowerShell.</p></div>
+        <div class="box info"><div class="box-title">💡 Docker Desktop precisa estar ABERTO</div>
+        <p>Diferente do Linux, no Windows o Docker Desktop precisa estar rodando em segundo plano (ícone na bandeja do sistema) para os comandos docker funcionarem. Verifique antes de continuar.</p></div>
       </div>
     </li>
   </ul>
 
-  <h3>Passo 2 — Iniciar o Container da Aplicação Alvo</h3>
-  <p>A aplicação alvo simula um sistema corporativo com página de login. Ela roda isolada na sua máquina, na porta 3000.</p>
+  <h3>Passo 2 — Estrutura de arquivos do projeto</h3>
+  <p>O repositório precisa ter esta estrutura. O arquivo <code>docker-compose.yml</code> define <strong>dois containers</strong>: a aplicação alvo e o container de ataque com Kali Linux.</p>
+
+  <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">estrutura do repositório</span></div>
+  <pre><span class="o">lab-bruteforce/
+├── docker-compose.yml       ← orquestra os 2 containers
+├── index.html               ← este guia
+├── logs/                    ← logs da aplicação (gerados em execução)
+└── app/
+    ├── Dockerfile
+    ├── package.json
+    ├── server.js
+    └── public/
+        └── login.html</span></pre></div>
+
+  <h3>Passo 3 — Subir os containers</h3>
 
   <ul class="steps">
     <li class="si">
       <div class="sn">1</div>
       <div class="sb">
-        <p>Navegue até a pasta do repositório</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">cd</span> ~/lab-bruteforce</pre></div>
-        <div class="box info"><div class="box-title">💡 Ainda não clonou o repositório?</div>
-        <p><code>git clone https://github.com/SEU_USUARIO/lab-bruteforce.git</code></p>
-        <p><code>cd lab-bruteforce</code></p></div>
+        <p>Navegar até a pasta do projeto no PowerShell</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="cm"># Substitua pelo caminho real onde você clonou o repositório</span>
+<span class="ps-cmd">cd</span> <span class="ps-str">C:\Users\Oscar\lab-bruteforce</span>
+
+<span class="cm"># Confirme que está na pasta certa</span>
+<span class="ps-cmd">ls</span></pre></div>
+        <div class="out-block"><div class="out-label">saída esperada do ls</div>
+        <pre>    Directory: C:\Users\Oscar\lab-bruteforce
+
+Mode    Name
+----    ----
+d----   app
+d----   logs
+-a---   docker-compose.yml
+-a---   index.html</pre></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">2</div>
       <div class="sb">
-        <p>Construir a imagem e subir o container</p>
-        <p>Na primeira vez o Docker baixa a imagem base (Node.js) e instala dependências — pode levar 1-2 minutos.</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">docker</span> compose up <span class="f">-d</span>
-<span class="cm"># O -d significa "detached" — roda em segundo plano</span></pre></div>
-        <div class="out-block"><div class="out-label">saída esperada</div><pre>✔ Container app-brute  Started</pre></div>
+        <p>Subir os containers em segundo plano</p>
+        <p>O Docker vai baixar as imagens (Node.js e Kali Linux) e construir os containers. Na primeira vez pode demorar 2–5 minutos.</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> compose up <span class="ps-flag">-d</span></pre></div>
+        <div class="out-block"><div class="out-label">saída esperada</div>
+        <pre>✔ Container app-brute    Started
+✔ Container kali-tools   Started</pre></div>
+        <div class="box warn"><div class="box-title">⚠ Erro de build?</div>
+        <p>Veja os logs de erro: <code>docker compose logs</code></p>
+        <p>Porta 3000 ocupada: <code>netstat -ano | findstr :3000</code></p></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">3</div>
       <div class="sb">
-        <p>Confirmar que o container está ativo</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">docker</span> ps</pre></div>
-        <div class="out-block"><div class="out-label">saída esperada — a coluna PORTS é o que importa</div>
-        <pre>CONTAINER ID   IMAGE      PORTS                    NAMES
-a3f9b1c2       app-alvo   <span class="hit">0.0.0.0:3000->3000/tcp</span>   app-brute</pre></div>
-        <div class="box warn"><div class="box-title">⚠ Não apareceu nada?</div>
-        <p>Veja os erros: <code>docker compose logs</code></p>
-        <p>Porta 3000 em uso: <code>sudo lsof -i :3000</code> para ver qual processo está ocupando.</p></div>
+        <p>Confirmar que os dois containers estão ativos</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> ps</pre></div>
+        <div class="out-block"><div class="out-label">saída esperada — dois containers rodando</div>
+        <pre>CONTAINER ID   IMAGE         PORTS                    NAMES
+a3f9b1c2       app-alvo      <span class="hit">0.0.0.0:3000->3000/tcp</span>   app-brute
+b8e2d4f1       kalilinux/..  -                        kali-tools</pre></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">4</div>
       <div class="sb">
-        <p>Acessar a aplicação no navegador</p>
-        <div class="box ok"><div class="box-title">🌐 URL da Aplicação Alvo</div>
+        <p>Acessar a aplicação alvo no navegador</p>
+        <div class="box ok"><div class="box-title">🌐 URL da aplicação alvo</div>
         <p><strong>http://localhost:3000</strong></p>
         <p>Você verá a tela de login da "CorpNet — Sistema Corporativo Interno".</p>
         <p>Usuário-alvo: <code>admin</code> — você precisa descobrir a senha!</p>
         <p>A senha está nas primeiras 200 linhas do rockyou.txt.</p></div>
       </div>
     </li>
+
+    <li class="si">
+      <div class="sn">5</div>
+      <div class="sb">
+        <p>Verificar que o container de ataque tem as ferramentas</p>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — entrar no container Kali</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec <span class="ps-flag">-it</span> kali-tools bash <span class="ps-flag">-c</span> <span class="ps-str">"hydra -h 2>&1 | head -3 && echo '---' && ffuf -h 2>&1 | head -3"</span></pre></div>
+        <div class="out-block"><div class="out-label">saída esperada</div>
+        <pre>Hydra v9.5 (c) 2023 by van Hauser/THC
+---
+ffuf - Fuzz Faster U Fool</pre></div>
+        <div class="box info"><div class="box-title">💡 O que acabou de acontecer?</div>
+        <p><code>docker exec -it kali-tools bash -c "comando"</code> executa um comando dentro do container Kali direto do PowerShell. Você vai usar isso em todas as etapas de ataque — sem precisar instalar nada no Windows.</p></div>
+      </div>
+    </li>
   </ul>
+
+  <h3>Passo 4 — Instalar Burp Suite e Wireshark no Windows</h3>
+  <p>Essas duas ferramentas precisam de interface gráfica, então rodam diretamente no Windows (não em container).</p>
+
+  <ul class="steps">
+    <li class="si">
+      <div class="sn">1</div>
+      <div class="sb">
+        <p>Baixar e instalar o Burp Suite Community</p>
+        <div class="box dark"><div class="box-title">🔗 Download</div>
+        <p>Acesse: <strong>https://portswigger.net/burp/communitydownload</strong></p>
+        <p>Baixe a versão <strong>Windows</strong> → execute o instalador → próximo, próximo, instalar.</p></div>
+      </div>
+    </li>
+    <li class="si">
+      <div class="sn">2</div>
+      <div class="sb">
+        <p>Baixar e instalar o Wireshark</p>
+        <div class="box dark"><div class="box-title">🔗 Download</div>
+        <p>Acesse: <strong>https://www.wireshark.org/download.html</strong></p>
+        <p>Baixe <strong>Windows x64 Installer</strong> → execute → aceite instalar o <strong>Npcap</strong> quando perguntado (necessário para captura).</p></div>
+      </div>
+    </li>
+  </ul>
+
 </div>
 </section>
 
@@ -323,41 +411,43 @@ a3f9b1c2       app-alvo   <span class="hit">0.0.0.0:3000->3000/tcp</span>   app-
     <div class="ic">⚔️</div>
     <div>
       <h3>Você é o atacante</h3>
-      <p>Execute as ferramentas na ordem abaixo. Cada uma usa uma abordagem diferente. Anote os resultados — você vai usá-los na Fase 2.</p>
+      <p>Todos os comandos de ataque são executados no PowerShell. As ferramentas Hydra, Medusa e ffuf rodam <strong>dentro do container kali-tools</strong> via <code>docker exec</code>.</p>
     </div>
   </div>
   <div class="tidx">
-    <a class="tic tr" href="#t-curl">    <div class="tii">💻</div><div><h5>curl</h5><span>reconhecimento</span></div></a>
-    <a class="tic tr" href="#t-hydra">   <div class="tii">🔱</div><div><h5>Hydra</h5><span>bruteforce</span></div></a>
-    <a class="tic tr" href="#t-medusa">  <div class="tii">🐍</div><div><h5>Medusa</h5><span>bruteforce</span></div></a>
-    <a class="tic tb" href="#t-burp">    <div class="tii">🔍</div><div><h5>Burp Suite</h5><span>intruder</span></div></a>
-    <a class="tic tr" href="#t-ffuf">    <div class="tii">⚡</div><div><h5>ffuf</h5><span>fuzzing</span></div></a>
-    <a class="tic ty" href="#t-wire">    <div class="tii">🦈</div><div><h5>Wireshark</h5><span>tráfego</span></div></a>
+    <a class="tic tr" href="#t-curl">  <div class="tii">💻</div><div><h5>curl</h5><span>reconhecimento</span></div></a>
+    <a class="tic tr" href="#t-hydra"> <div class="tii">🔱</div><div><h5>Hydra</h5><span>bruteforce</span></div></a>
+    <a class="tic tr" href="#t-medusa"><div class="tii">🐍</div><div><h5>Medusa</h5><span>bruteforce</span></div></a>
+    <a class="tic tb" href="#t-burp">  <div class="tii">🔍</div><div><h5>Burp Suite</h5><span>intruder</span></div></a>
+    <a class="tic tr" href="#t-ffuf">  <div class="tii">⚡</div><div><h5>ffuf</h5><span>fuzzing</span></div></a>
+    <a class="tic ty" href="#t-wire">  <div class="tii">🦈</div><div><h5>Wireshark</h5><span>tráfego</span></div></a>
   </div>
 
   <!-- CURL -->
   <div class="tdiv" id="t-curl">
     <div class="tbadge"><span class="ti">💻</span><div><div class="tn">curl</div><div class="tt">reconhecimento manual</div></div></div><hr>
   </div>
-  <p><strong>O que é e por que usar primeiro:</strong> O curl faz requisições HTTP pelo terminal. Antes de qualquer ataque automatizado, precisamos entender como a aplicação responde — qual texto ela retorna quando a senha está errada. Esse texto é chamado de <strong>FAIL_STRING</strong> e todas as ferramentas de bruteforce precisam dele para diferenciar um login falho de um bem-sucedido.</p>
+  <p><strong>O que é e por que usar primeiro:</strong> O curl faz requisições HTTP. Antes de qualquer ataque automatizado, precisamos saber o que a aplicação responde quando a senha está errada. Esse texto — o <strong>FAIL_STRING</strong> — é exigido por todas as outras ferramentas.</p>
+  <p>O curl já vem instalado no Windows 10/11. Use direto no PowerShell — sem precisar do container.</p>
 
   <ul class="steps">
     <li class="si">
       <div class="sn">1</div>
       <div class="sb">
-        <p>Testar com senha errada e observar a resposta</p>
-        <p>Execute o comando abaixo. O <code>-s</code> suprime a barra de progresso, <code>-X POST</code> define o método, <code>-d</code> é o corpo da requisição e <code>-w</code> imprime o status HTTP no final.</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">curl — senha errada</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">curl</span> <span class="f">-s -X POST</span> http://localhost:3000/login \
-  <span class="f">-d</span> <span class="a">'username=admin&password=senhaerrada'</span> \
-  <span class="f">-w</span> <span class="a">'\nStatus HTTP: %{http_code}\n'</span></pre></div>
+        <p>Testar com senha errada e anotar a resposta</p>
+        <div class="os-tag win">🪟 PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — senha errada</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">curl</span> <span class="ps-flag">-s -X POST</span> http://localhost:3000/login `
+  <span class="ps-flag">-d</span> <span class="ps-str">"username=admin&password=senhaerrada"</span> `
+  <span class="ps-flag">-w</span> <span class="ps-str">"\nStatus HTTP: %{http_code}\n"</span></pre></div>
+        <div class="box info"><div class="box-title">💡 Backtick (`) no PowerShell</div>
+        <p>No PowerShell, a continuação de linha é feita com <code>`</code> (backtick / crase), não com <code>\</code> como no Linux. Se preferir, pode digitar tudo em uma linha só.</p></div>
         <div class="out-block"><div class="out-label">saída esperada</div>
         <pre>{"success":false,"message":"<span class="hit">Credenciais inválidas.</span>"}
 Status HTTP: 401</pre></div>
         <div class="box yellow"><div class="box-title">📌 Anote agora — você vai usar nas próximas ferramentas!</div>
-        <p>O texto <code>Credenciais inválidas.</code> é o seu <strong>FAIL_STRING</strong>.</p>
-        <p>O HTTP <code>401</code> = "não autorizado" — confirma que o login falhou.</p>
-        <p>Nas próximas ferramentas (Hydra, Medusa, ffuf), você vai informar esse texto para que elas saibam identificar quando a senha está errada.</p></div>
+        <p>O texto <code>Credenciais inválidas.</code> é o seu <strong>FAIL_STRING</strong>. Toda ferramenta de bruteforce precisa desse texto para saber o que é uma senha errada.</p>
+        <p>HTTP <code>401</code> = não autorizado = senha errada.</p></div>
       </div>
     </li>
 
@@ -365,68 +455,56 @@ Status HTTP: 401</pre></div>
       <div class="sn">2</div>
       <div class="sb">
         <p>Comparar com a resposta de login correto</p>
-        <p>O professor vai informar a senha para fins de comparação apenas neste momento:</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">curl — senha correta</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">curl</span> <span class="f">-s -X POST</span> http://localhost:3000/login \
-  <span class="f">-d</span> <span class="a">'username=admin&password=SENHA_CORRETA'</span> \
-  <span class="f">-w</span> <span class="a">'\nStatus HTTP: %{http_code}\n'</span></pre></div>
+        <div class="os-tag win">🪟 PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — senha correta</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">curl</span> <span class="ps-flag">-s -X POST</span> http://localhost:3000/login `
+  <span class="ps-flag">-d</span> <span class="ps-str">"username=admin&password=SENHA_CORRETA"</span> `
+  <span class="ps-flag">-w</span> <span class="ps-str">"\nStatus HTTP: %{http_code}\n"</span></pre></div>
         <div class="out-block"><div class="out-label">saída quando o login funciona</div>
         <pre>{"success":true,"message":"Login realizado com sucesso! Bem-vindo, admin."}
 Status HTTP: <span class="hit">200</span></pre></div>
         <div class="box info"><div class="box-title">💡 O que muda entre falha e sucesso?</div>
-        <p>Status muda de <code>401</code> para <code>200</code>.</p>
-        <p>O corpo da resposta não contém o FAIL_STRING.</p>
-        <p>Essas são as duas formas que as ferramentas de bruteforce usam para detectar que a senha foi encontrada.</p></div>
-      </div>
-    </li>
-
-    <li class="si">
-      <div class="sn">3</div>
-      <div class="sb">
-        <p>Ver os cabeçalhos completos da requisição (opcional — revela tecnologia do servidor)</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">curl — cabeçalhos HTTP</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">curl</span> <span class="f">-v -X POST</span> http://localhost:3000/login \
-  <span class="f">-d</span> <span class="a">'username=admin&password=teste'</span> 2>&1 | grep <span class="f">-E</span> <span class="a">'&lt; |&gt; '</span></pre></div>
-        <div class="out-block"><div class="out-label">parte da saída — &gt; = enviado pelo cliente, &lt; = recebido do servidor</div>
-        <pre>&gt; POST /login HTTP/1.1
-&gt; Content-Type: application/x-www-form-urlencoded
-&lt; HTTP/1.1 401 Unauthorized
-&lt; X-Powered-By: Express</pre></div>
+        <p>Status muda de <code>401</code> para <code>200</code>. O corpo não contém o FAIL_STRING. Essas são as duas formas que as ferramentas usam para detectar sucesso.</p></div>
       </div>
     </li>
   </ul>
 
   <!-- HYDRA -->
   <div class="tdiv" id="t-hydra">
-    <div class="tbadge"><span class="ti">🔱</span><div><div class="tn">Hydra</div><div class="tt">bruteforce principal</div></div></div><hr>
+    <div class="tbadge"><span class="ti">🔱</span><div><div class="tn">Hydra</div><div class="tt">bruteforce — via container kali</div></div></div><hr>
   </div>
-  <p><strong>O que é:</strong> Uma das ferramentas de força bruta mais usadas em pentests. Testa automaticamente cada senha da wordlist contra o formulário de login, usando múltiplas conexões paralelas (threads) para ser mais rápido.</p>
+  <p><strong>O que é:</strong> Ferramenta de bruteforce que testa automaticamente cada senha da wordlist. Roda <strong>dentro do container kali-tools</strong> via <code>docker exec</code> no PowerShell. A wordlist rockyou.txt já está disponível dentro do container.</p>
 
   <ul class="steps">
     <li class="si">
       <div class="sn">1</div>
       <div class="sb">
-        <p>Executar o Hydra contra o login da aplicação</p>
-        <p>Substitua <code>Credenciais inválidas.</code> pelo texto exato que você anotou no passo do curl. Esse é o FAIL_STRING.</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">hydra — ataque HTTP POST</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">hydra</span> \
-  <span class="f">-l</span> <span class="a">admin</span> \
-  <span class="f">-P</span> <span class="a">/usr/share/wordlists/rockyou.txt</span> \
-  localhost \
-  http-post-form \
-  <span class="a">'/login:username=^USER^&password=^PASS^:Credenciais inválidas.'</span> \
-  <span class="f">-t 4 -V -f</span></pre></div>
+        <p>Executar o Hydra via docker exec no PowerShell</p>
+        <p>O Hydra ataca o endereço <code>app-brute</code> — que é o nome interno do container alvo na rede Docker (os containers se enxergam pelo nome).</p>
+        <div class="os-tag win">🪟 PowerShell → 🐳 container kali-tools</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools hydra `
+  <span class="ps-flag">-l</span> admin `
+  <span class="ps-flag">-P</span> /usr/share/wordlists/rockyou.txt `
+  app-brute `
+  http-post-form `
+  <span class="ps-str">"/login:username=^USER^&password=^PASS^:Credenciais inválidas."</span> `
+  <span class="ps-flag">-t 4 -V -f</span></pre></div>
+        <div class="box info"><div class="box-title">💡 Por que "app-brute" e não "localhost"?</div>
+        <p>Dentro da rede Docker, os containers se comunicam pelo <strong>nome do serviço</strong>. O container kali-tools enxerga a aplicação como <code>app-brute</code>. Se você usasse <code>localhost</code>, o Hydra estaria apontando para dentro do próprio container kali — o que não funciona.</p></div>
         <table class="pt">
-          <tr><th>Parâmetro</th><th>O que faz — em detalhe</th></tr>
-          <tr><td>-l admin</td><td>Usuário fixo para testar. Já sabemos que o login é "admin", então fixamos ele e deixamos o Hydra variar só a senha.</td></tr>
-          <tr><td>-P rockyou.txt</td><td>Arquivo com a lista de senhas. O Hydra vai testar cada linha como senha, em sequência.</td></tr>
-          <tr><td>localhost</td><td>Endereço IP ou hostname do alvo. Poderia ser um IP como 192.168.1.10.</td></tr>
-          <tr><td>http-post-form</td><td>Módulo do Hydra para formulários web que usam método POST. Existe também http-get-form para formulários GET.</td></tr>
-          <tr><td>'/login:...:FAIL'</td><td>Três partes separadas por <code>:</code> — (1) path do endpoint, (2) corpo da requisição com placeholders, (3) texto que indica falha.</td></tr>
-          <tr><td>^USER^ / ^PASS^</td><td>Marcadores que o Hydra substitui automaticamente pelo usuário e senha atual a cada tentativa.</td></tr>
-          <tr><td>-t 4</td><td>4 threads paralelas (4 tentativas simultâneas). Aumentar pode acelerar, mas também pode causar erros ou disparar alertas.</td></tr>
-          <tr><td>-V</td><td>Verbose: mostra cada tentativa na tela. Retire para rodar mais rápido sem exibir tudo.</td></tr>
-          <tr><td>-f</td><td>Para imediatamente ao encontrar a primeira senha válida.</td></tr>
+          <tr><th>Parte do comando</th><th>O que faz</th></tr>
+          <tr><td>docker exec kali-tools</td><td>Executa o que vem depois dentro do container kali-tools</td></tr>
+          <tr><td>hydra</td><td>A ferramenta de bruteforce (já instalada no Kali)</td></tr>
+          <tr><td>-l admin</td><td>Usuário fixo a testar</td></tr>
+          <tr><td>-P rockyou.txt</td><td>Wordlist de senhas dentro do container</td></tr>
+          <tr><td>app-brute</td><td>Nome interno do container alvo na rede Docker</td></tr>
+          <tr><td>http-post-form</td><td>Módulo para formulários HTTP POST</td></tr>
+          <tr><td>"/login:...:FAIL"</td><td>Endpoint, parâmetros e FAIL_STRING separados por <code>:</code></td></tr>
+          <tr><td>^USER^ / ^PASS^</td><td>Placeholders substituídos pelo Hydra a cada tentativa</td></tr>
+          <tr><td>-t 4</td><td>4 threads paralelas</td></tr>
+          <tr><td>-V</td><td>Verbose — mostra cada tentativa</td></tr>
+          <tr><td>-f</td><td>Para ao encontrar a primeira senha válida</td></tr>
         </table>
       </div>
     </li>
@@ -435,68 +513,73 @@ Status HTTP: <span class="hit">200</span></pre></div>
       <div class="sn">2</div>
       <div class="sb">
         <p>Aguardar e identificar o resultado</p>
-        <p>Você verá tentativas passando na tela. Quando a senha for encontrada, o Hydra destaca em verde:</p>
         <div class="out-block"><div class="out-label">saída quando a senha é encontrada</div>
-        <pre>[80][http-post-form] host: localhost   login: admin   password: <span class="hit">dragon</span>
+        <pre>[80][http-post-form] host: app-brute   login: admin   password: <span class="hit">dragon</span>
 1 of 1 target successfully completed, 1 valid password found</pre></div>
-        <div class="box ok"><div class="box-title">✓ O que anotar agora</div>
-        <p>A senha encontrada, o tempo total e a quantidade aproximada de tentativas. Você vai comparar isso com as outras ferramentas.</p></div>
+        <div class="box ok"><div class="box-title">✓ Anote: senha encontrada, tempo e nº de tentativas</div>
+        <p>Você vai comparar esses valores com Medusa e ffuf.</p></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">3</div>
       <div class="sb">
-        <p>Experimentar com mais threads para comparar velocidade</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">hydra — 16 threads</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">hydra</span> <span class="f">-l</span> admin <span class="f">-P</span> /usr/share/wordlists/rockyou.txt localhost \
-  http-post-form <span class="a">'/login:username=^USER^&password=^PASS^:Credenciais inválidas.'</span> \
-  <span class="f">-t 16 -f</span> <span class="cm"># sem -V para rodar mais rápido</span></pre></div>
+        <p>Testar com mais threads para comparar velocidade</p>
+        <div class="os-tag win">🪟 PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — 16 threads</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools hydra `
+  <span class="ps-flag">-l</span> admin `
+  <span class="ps-flag">-P</span> /usr/share/wordlists/rockyou.txt `
+  app-brute `
+  http-post-form `
+  <span class="ps-str">"/login:username=^USER^&password=^PASS^:Credenciais inválidas."</span> `
+  <span class="ps-flag">-t 16 -f</span></pre></div>
         <div class="box yellow"><div class="box-title">🤔 Reflexão</div>
-        <p>Ficou mais rápido com 16 threads? Houve erros de conexão? Por que um número muito alto de threads pode ser contraproducente em um ataque real?</p></div>
+        <p>Ficou mais rápido com 16 threads? Houve erros? Por que aumentar threads indefinidamente pode ser contraproducente?</p></div>
       </div>
     </li>
   </ul>
 
   <!-- MEDUSA -->
   <div class="tdiv" id="t-medusa">
-    <div class="tbadge"><span class="ti">🐍</span><div><div class="tn">Medusa</div><div class="tt">bruteforce alternativo</div></div></div><hr>
+    <div class="tbadge"><span class="ti">🐍</span><div><div class="tn">Medusa</div><div class="tt">bruteforce alternativo — via container kali</div></div></div><hr>
   </div>
-  <p><strong>O que é:</strong> Ferramenta de bruteforce com foco em paralelismo e suporte a dezenas de protocolos. O objetivo aqui é comparar com o Hydra — na prática um profissional de segurança conhece múltiplas ferramentas para o mesmo fim.</p>
+  <p><strong>O que é:</strong> Alternativa ao Hydra com foco em paralelismo. O objetivo é comparar as duas ferramentas e entender que diferentes ferramentas existem para o mesmo fim.</p>
 
   <ul class="steps">
     <li class="si">
       <div class="sn">1</div>
       <div class="sb">
         <p>Resetar o estado da aplicação antes de testar</p>
-        <p>Isso limpa contadores internos que possam ter sido gerados pelo Hydra:</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">curl</span> <span class="f">-X POST</span> http://localhost:3000/reset</pre></div>
+        <div class="os-tag win">🪟 PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">curl</span> <span class="ps-flag">-X POST</span> http://localhost:3000/reset</pre></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">2</div>
       <div class="sb">
-        <p>Executar o Medusa</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">medusa — ataque HTTP</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">medusa</span> \
-  <span class="f">-h</span> localhost \
-  <span class="f">-u</span> admin \
-  <span class="f">-P</span> /usr/share/wordlists/rockyou.txt \
-  <span class="f">-M</span> web-form \
-  <span class="f">-m</span> <span class="a">'FORM:/login:username=^USER^&password=^PASS^:Credenciais inválidas.'</span> \
-  <span class="f">-t 2 -v 6 -f</span></pre></div>
+        <p>Executar o Medusa via docker exec</p>
+        <div class="os-tag win">🪟 PowerShell → 🐳 container kali-tools</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools medusa `
+  <span class="ps-flag">-h</span> app-brute `
+  <span class="ps-flag">-u</span> admin `
+  <span class="ps-flag">-P</span> /usr/share/wordlists/rockyou.txt `
+  <span class="ps-flag">-M</span> web-form `
+  <span class="ps-flag">-m</span> <span class="ps-str">"FORM:/login:username=^USER^&password=^PASS^:Credenciais inválidas."</span> `
+  <span class="ps-flag">-t 2 -v 6 -f</span></pre></div>
         <table class="pt">
           <tr><th>Parâmetro</th><th>O que faz</th></tr>
-          <tr><td>-h localhost</td><td>Host alvo</td></tr>
+          <tr><td>-h app-brute</td><td>Host alvo (nome interno do container na rede Docker)</td></tr>
           <tr><td>-u admin</td><td>Usuário fixo</td></tr>
           <tr><td>-P rockyou.txt</td><td>Wordlist de senhas</td></tr>
           <tr><td>-M web-form</td><td>Módulo para formulários web</td></tr>
-          <tr><td>-m 'FORM:...'</td><td>Configuração do módulo: path, parâmetros e fail string. Mesmo conceito do Hydra, sintaxe diferente.</td></tr>
+          <tr><td>-m "FORM:..."</td><td>Configuração do módulo: path, parâmetros e FAIL_STRING</td></tr>
           <tr><td>-t 2</td><td>2 threads paralelas</td></tr>
-          <tr><td>-v 6</td><td>Nível de verbosidade máximo — mostra tudo</td></tr>
-          <tr><td>-f</td><td>Para ao encontrar a primeira senha válida</td></tr>
+          <tr><td>-v 6</td><td>Verbosidade máxima</td></tr>
+          <tr><td>-f</td><td>Para ao encontrar a primeira senha</td></tr>
         </table>
       </div>
     </li>
@@ -504,28 +587,28 @@ Status HTTP: <span class="hit">200</span></pre></div>
     <li class="si">
       <div class="sn">3</div>
       <div class="sb">
-        <p>Comparar Hydra vs Medusa e preencher a tabela</p>
-        <div class="box dark"><div class="box-title">📋 Tabela de comparação</div>
-        <p>Velocidade percebida (rápido / lento / similar): _______________</p>
-        <p>Facilidade de configurar (1 a 5): Hydra ___ / Medusa ___</p>
-        <p>Clareza da saída (qual foi mais fácil de ler): _______________</p>
-        <p>Ambas encontraram a mesma senha: _______________</p></div>
+        <p>Comparar Hydra vs Medusa</p>
+        <div class="box dark"><div class="box-title">📋 Preencha enquanto testa</div>
+        <p>Velocidade percebida: Hydra ___ / Medusa ___</p>
+        <p>Facilidade de configurar (1-5): Hydra ___ / Medusa ___</p>
+        <p>Clareza da saída: _______________</p>
+        <p>Mesma senha encontrada: _______________</p></div>
       </div>
     </li>
   </ul>
 
   <!-- BURP SUITE -->
   <div class="tdiv" id="t-burp">
-    <div class="tbadge"><span class="ti">🔍</span><div><div class="tn">Burp Suite</div><div class="tt">intercepção + intruder</div></div></div><hr>
+    <div class="tbadge"><span class="ti">🔍</span><div><div class="tn">Burp Suite</div><div class="tt">intercepção + intruder — roda no Windows</div></div></div><hr>
   </div>
-  <p><strong>O que é:</strong> Suíte completa de segurança web usada por pentesters profissionais. Funciona como um proxy entre o navegador e o servidor — intercepta, exibe e permite modificar cada requisição. O módulo <strong>Intruder</strong> automatiza ataques em requisições capturadas.</p>
+  <p><strong>O que é:</strong> Suíte de segurança web com proxy e módulo Intruder para automatizar ataques. Roda diretamente no Windows — não precisa de container.</p>
 
   <ul class="steps">
     <li class="si">
       <div class="sn">1</div>
       <div class="sb">
         <p>Abrir o Burp Suite</p>
-        <p>Ao abrir clique em <strong>"Temporary project"</strong> → <strong>"Use Burp defaults"</strong> → <strong>"Start Burp"</strong>. Aguarde carregar.</p>
+        <p>Clique em <strong>"Temporary project"</strong> → <strong>"Use Burp defaults"</strong> → <strong>"Start Burp"</strong>.</p>
       </div>
     </li>
 
@@ -533,34 +616,32 @@ Status HTTP: <span class="hit">200</span></pre></div>
       <div class="sn">2</div>
       <div class="sb">
         <p>Configurar o Firefox para usar o proxy do Burp</p>
-        <p>O Burp escuta na porta 8080 por padrão. Você precisa dizer ao navegador para enviar o tráfego por lá.</p>
-        <p>No Firefox: Menu (≡) → Configurações → busque "proxy" na barra de busca → Configurações de Conexão → marque <strong>"Configuração manual de proxy"</strong>:</p>
+        <p>Menu (≡) → Configurações → busque "proxy" → Configurações de Conexão → <strong>Configuração manual de proxy</strong>:</p>
         <div class="box dark"><div class="box-title">⚙ Dados do proxy</div>
-        <p>Proxy HTTP: <code>127.0.0.1</code> &nbsp; Porta: <code>8080</code></p>
-        <p>Marque: <strong>"Usar este proxy para todos os protocolos"</strong></p>
-        <p>Clique OK para salvar.</p></div>
-        <div class="box warn"><div class="box-title">⚠ Lembrete importante</div>
-        <p>Após terminar a atividade no Burp, volte nessa tela e selecione <strong>"Sem proxy"</strong>. Caso contrário o Firefox vai parar de funcionar com a internet normal.</p></div>
+        <p>Proxy HTTP: <code>127.0.0.1</code> &nbsp;&nbsp; Porta: <code>8080</code></p>
+        <p>Marque: <strong>"Usar este proxy para todos os protocolos"</strong> → OK</p></div>
+        <div class="box warn"><div class="box-title">⚠ Lembrete</div>
+        <p>Após terminar, volte e selecione <strong>"Sem proxy"</strong> para restaurar a internet normal.</p></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">3</div>
       <div class="sb">
-        <p>Ativar a interceptação no Burp e capturar o login</p>
-        <p>No Burp Suite → aba <strong>Proxy</strong> → clique em <strong>"Intercept is off"</strong> para ativar (fica escrito "Intercept is on" quando ativo).</p>
-        <p>No Firefox, acesse <strong>http://localhost:3000</strong> e tente fazer login com qualquer credencial (ex: admin / teste). O navegador vai "travar" — é normal, a requisição está segura no Burp.</p>
-        <div class="box info"><div class="box-title">💡 Por que o navegador travou?</div>
-        <p>O Burp segurou a requisição para você analisar. Você precisa clicar em <strong>"Forward"</strong> para liberar e o navegador continua. Isso é útil para modificar dados em tempo real antes de enviar.</p></div>
+        <p>Ativar a interceptação e fazer um login de teste</p>
+        <p>No Burp → aba <strong>Proxy</strong> → clique <strong>"Intercept is off"</strong> para ativar.</p>
+        <p>No Firefox acesse <strong>http://localhost:3000</strong> e tente fazer login com qualquer credencial. O navegador vai "travar" — a requisição está no Burp.</p>
+        <div class="box info"><div class="box-title">💡 Por que travou?</div>
+        <p>O Burp segurou a requisição para você analisar. Clique em <strong>"Forward"</strong> para liberar. Isso é usado para modificar dados em tempo real antes de enviar.</p></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">4</div>
       <div class="sb">
-        <p>Enviar a requisição capturada para o Intruder</p>
-        <p>No painel do Burp, você verá a requisição capturada. Clique com o botão direito nela → <strong>"Send to Intruder"</strong>. Depois clique em <strong>"Forward"</strong> para liberar o navegador.</p>
-        <div class="out-block"><div class="out-label">requisição que você verá no Burp</div>
+        <p>Enviar para o Intruder</p>
+        <p>Clique com botão direito na requisição → <strong>"Send to Intruder"</strong> → clique em <strong>"Forward"</strong>.</p>
+        <div class="out-block"><div class="out-label">requisição capturada no Burp</div>
         <pre>POST /login HTTP/1.1
 Host: localhost:3000
 Content-Type: application/x-www-form-urlencoded
@@ -573,80 +654,86 @@ Content-Type: application/x-www-form-urlencoded
       <div class="sn">5</div>
       <div class="sb">
         <p>Configurar os Positions no Intruder</p>
-        <p>Vá na aba <strong>Intruder</strong> (topo) → sub-aba <strong>Positions</strong>.</p>
-        <p>Clique em <strong>"Clear §"</strong> para remover todos os marcadores automáticos. Depois selecione com o mouse apenas o valor da senha (o texto <code>teste</code>) e clique em <strong>"Add §"</strong>. O resultado deve ficar assim:</p>
-        <div class="out-block"><div class="out-label">corpo da requisição com marcador correto</div>
+        <p>Aba <strong>Intruder → Positions</strong> → clique <strong>"Clear §"</strong> → selecione o valor da senha → clique <strong>"Add §"</strong>:</p>
+        <div class="out-block"><div class="out-label">resultado esperado</div>
         <pre>username=admin&password=<span class="hit">§teste§</span></pre></div>
-        <div class="box info"><div class="box-title">💡 O que são esses § §?</div>
-        <p>São marcadores de posição. O Intruder vai substituir o que estiver entre eles por cada payload (senha) da lista. É o equivalente ao <code>^PASS^</code> do Hydra.</p>
-        <p>Verifique que o <strong>Attack type</strong> está em <strong>"Sniper"</strong> — é o modo que usa uma wordlist em uma posição.</p></div>
+        <div class="box info"><div class="box-title">💡 O que são os § §?</div>
+        <p>São marcadores de posição. O Intruder substitui o que estiver entre eles por cada senha da lista — equivalente ao <code>^PASS^</code> do Hydra.</p></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">6</div>
       <div class="sb">
-        <p>Carregar a wordlist na aba Payloads</p>
-        <p>Aba <strong>Payloads</strong> → Payload type: <strong>Simple list</strong> → botão <strong>Load...</strong></p>
-        <div class="box info"><div class="box-title">💡 Use uma mini wordlist para o Burp rodar rápido</div>
-        <p>O rockyou.txt completo tem 14 milhões de senhas — o Burp Community (versão gratuita) é mais lento. Crie uma lista menor:</p>
-        <div class="cb" style="margin-top:8px"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">criar mini wordlist com as 200 primeiras senhas</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">head</span> <span class="f">-200</span> /usr/share/wordlists/rockyou.txt <span class="f">></span> /tmp/mini.txt</pre></div>
-        <p>Depois carregue o arquivo <code>/tmp/mini.txt</code> no Burp.</p></div>
+        <p>Criar uma mini wordlist no Windows para o Burp</p>
+        <p>O rockyou.txt está dentro do container kali-tools. Precisamos extrair as primeiras 200 linhas para o Windows:</p>
+        <div class="os-tag win">🪟 PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — exportar mini wordlist do container para o Windows</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="cm"># Copiar as primeiras 200 linhas do rockyou.txt para o desktop</span>
+<span class="ps-cmd">docker</span> exec kali-tools bash <span class="ps-flag">-c</span> <span class="ps-str">"head -200 /usr/share/wordlists/rockyou.txt"</span> `
+  | <span class="ps-cmd">Out-File</span> <span class="ps-flag">-Encoding</span> utf8 <span class="ps-str">"$env:USERPROFILE\Desktop\mini.txt"</span>
+
+<span class="cm"># Verificar se foi criado</span>
+<span class="ps-cmd">Get-Content</span> <span class="ps-str">"$env:USERPROFILE\Desktop\mini.txt"</span> | <span class="ps-cmd">Measure-Object</span> <span class="ps-flag">-Line</span></pre></div>
+        <div class="out-block"><div class="out-label">saída esperada</div>
+        <pre>Lines Words Characters Property
+----- ----- ---------- --------
+  200</pre></div>
+        <p>Agora no Burp, aba <strong>Payloads</strong> → Payload type: <strong>Simple list</strong> → <strong>Load...</strong> → selecione o arquivo <code>mini.txt</code> do Desktop.</p>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">7</div>
       <div class="sb">
-        <p>Iniciar o ataque e analisar os resultados</p>
-        <p>Clique em <strong>"Start attack"</strong> (botão no canto superior direito). Uma janela nova vai abrir mostrando cada tentativa com status e tamanho da resposta.</p>
-        <p>Quando o ataque terminar, clique na coluna <strong>"Length"</strong> para ordenar. A linha com tamanho diferente das outras é o login bem-sucedido:</p>
-        <div class="out-block"><div class="out-label">resultado — ordene pela coluna Length para encontrar a senha</div>
+        <p>Iniciar o ataque e analisar pelos Length</p>
+        <p>Clique em <strong>"Start attack"</strong>. Quando terminar, ordene pela coluna <strong>Length</strong> — a linha com tamanho diferente é onde a senha foi encontrada.</p>
+        <div class="out-block"><div class="out-label">exemplo de resultado</div>
         <pre>Req   Payload     Status  Length
 1     123456      401     42
 2     password    401     42
 3     <span class="hit">dragon      200     68</span>  ← tamanho diferente = login ok!
 4     12345       401     42</pre></div>
         <div class="box ok"><div class="box-title">✓ Por que o Length é diferente?</div>
-        <p>Login falho → resposta: <code>{"success":false,"message":"Credenciais inválidas."}</code> — sempre o mesmo tamanho (42 bytes).</p>
-        <p>Login ok → resposta: <code>{"success":true,"message":"Login realizado com sucesso! Bem-vindo, admin."}</code> — mensagem maior (68 bytes).</p>
-        <p>Essa diferença de tamanho é a assinatura visual do sucesso no Intruder.</p></div>
+        <p>Login falho → resposta sempre igual → mesmo tamanho (42 bytes).</p>
+        <p>Login ok → mensagem de boas-vindas maior → tamanho diferente (68 bytes).</p></div>
       </div>
     </li>
   </ul>
 
   <!-- FFUF -->
   <div class="tdiv" id="t-ffuf">
-    <div class="tbadge"><span class="ti">⚡</span><div><div class="tn">ffuf</div><div class="tt">fuzzing ultrarrápido</div></div></div><hr>
+    <div class="tbadge"><span class="ti">⚡</span><div><div class="tn">ffuf</div><div class="tt">fuzzing rápido — via container kali</div></div></div><hr>
   </div>
-  <p><strong>O que é:</strong> O ffuf (Fuzz Faster U Fool) é uma das ferramentas mais rápidas para fuzzing web. Muito usado para descoberta de diretórios ocultos e parâmetros, mas também eficaz para bruteforce de senhas. O objetivo principal aqui é comparar a velocidade com o Hydra.</p>
+  <p><strong>O que é:</strong> Ferramenta de fuzzing web ultrarrápida. Objetivo: comparar a velocidade com o Hydra.</p>
 
   <ul class="steps">
     <li class="si">
       <div class="sn">1</div>
       <div class="sb">
-        <p>Executar o ffuf para bruteforce de senha</p>
-        <p>No ffuf, a wordlist é passada com <code>:FUZZ</code> no final, e o marcador <code>FUZZ</code> é colocado exatamente onde a senha deve ser substituída na requisição.</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">ffuf — bruteforce HTTP POST</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">ffuf</span> \
-  <span class="f">-w</span> <span class="a">/usr/share/wordlists/rockyou.txt:FUZZ</span> \
-  <span class="f">-u</span> http://localhost:3000/login \
-  <span class="f">-X</span> POST \
-  <span class="f">-d</span> <span class="a">'username=admin&password=FUZZ'</span> \
-  <span class="f">-H</span> <span class="a">'Content-Type: application/x-www-form-urlencoded'</span> \
-  <span class="f">-fr</span> <span class="a">'Credenciais inválidas.'</span> \
-  <span class="f">-t 10 -mc all</span></pre></div>
+        <p>Executar o ffuf via docker exec</p>
+        <div class="os-tag win">🪟 PowerShell → 🐳 container kali-tools</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools ffuf `
+  <span class="ps-flag">-w</span> /usr/share/wordlists/rockyou.txt:FUZZ `
+  <span class="ps-flag">-u</span> http://app-brute:3000/login `
+  <span class="ps-flag">-X</span> POST `
+  <span class="ps-flag">-d</span> <span class="ps-str">"username=admin&password=FUZZ"</span> `
+  <span class="ps-flag">-H</span> <span class="ps-str">"Content-Type: application/x-www-form-urlencoded"</span> `
+  <span class="ps-flag">-fr</span> <span class="ps-str">"Credenciais invalidas"</span> `
+  <span class="ps-flag">-t 10 -mc all</span></pre></div>
+        <div class="box info"><div class="box-title">💡 "app-brute:3000" e não "localhost:3000"</div>
+        <p>Dentro do container kali-tools, <code>localhost</code> seria o próprio container. Para acessar a aplicação alvo, use o nome do container na rede Docker: <code>app-brute:3000</code>.</p></div>
         <table class="pt">
           <tr><th>Parâmetro</th><th>O que faz</th></tr>
-          <tr><td>-w arquivo:FUZZ</td><td>Define a wordlist e o nome do marcador. Onde FUZZ aparecer na requisição, será substituído pela senha atual.</td></tr>
-          <tr><td>-u</td><td>URL alvo completa</td></tr>
-          <tr><td>-X POST</td><td>Método HTTP da requisição</td></tr>
-          <tr><td>-d '...FUZZ'</td><td>Corpo da requisição. FUZZ aqui é substituído pela senha a cada tentativa.</td></tr>
-          <tr><td>-H 'Content-Type'</td><td>Cabeçalho HTTP necessário para enviar dados de formulário corretamente.</td></tr>
-          <tr><td>-fr 'texto'</td><td>Filter Regexp — remove da exibição respostas que contenham esse texto. Só aparecem as respostas que NÃO contêm o FAIL_STRING, ou seja: apenas o login bem-sucedido.</td></tr>
+          <tr><td>-w arquivo:FUZZ</td><td>Wordlist com nome do marcador. Onde FUZZ aparecer na requisição, será substituído pela senha atual.</td></tr>
+          <tr><td>-u http://app-brute:3000/login</td><td>URL alvo — nome interno Docker, não localhost</td></tr>
+          <tr><td>-X POST</td><td>Método HTTP</td></tr>
+          <tr><td>-d "...FUZZ"</td><td>Corpo da requisição com o marcador no lugar da senha</td></tr>
+          <tr><td>-H "Content-Type"</td><td>Cabeçalho necessário para formulário web</td></tr>
+          <tr><td>-fr "texto"</td><td>Filtra respostas que contêm esse texto — só mostra o login bem-sucedido</td></tr>
           <tr><td>-t 10</td><td>10 threads paralelas</td></tr>
-          <tr><td>-mc all</td><td>Mostra todos os status codes, sem filtrar nenhum</td></tr>
+          <tr><td>-mc all</td><td>Mostra todos os status codes</td></tr>
         </table>
       </div>
     </li>
@@ -654,86 +741,67 @@ Content-Type: application/x-www-form-urlencoded
     <li class="si">
       <div class="sn">2</div>
       <div class="sb">
-        <p>Observar o relatório de velocidade</p>
-        <p>O ffuf exibe no topo quantas requisições por segundo está fazendo. Compare com o Hydra visualmente.</p>
-        <div class="out-block"><div class="out-label">parte do cabeçalho de execução — observe req/sec</div>
+        <p>Observar o número de requisições por segundo</p>
+        <div class="out-block"><div class="out-label">trecho do cabeçalho do ffuf</div>
         <pre>:: Threads          : 10
-:: Matcher          : Response status: all
-:: Filter           : Regexp: Credenciais inválidas.
-<span class="hi">Progress: [200/14344391] :: Job [1/1] :: 843 req/sec ::</span></pre></div>
+:: Filter           : Regexp: Credenciais invalidas
+<span class="hi">Progress: [200/14344391] :: 843 req/sec</span></pre></div>
         <div class="box yellow"><div class="box-title">🤔 Reflexão</div>
-        <p>O ffuf foi mais rápido que o Hydra? Por quê mais threads não são sempre melhores? O que acontece se o servidor tiver limite de conexões simultâneas?</p></div>
+        <p>O ffuf foi mais rápido que o Hydra? Por que mais threads nem sempre é melhor?</p></div>
       </div>
     </li>
   </ul>
 
   <!-- WIRESHARK -->
   <div class="tdiv" id="t-wire">
-    <div class="tbadge"><span class="ti">🦈</span><div><div class="tn">Wireshark</div><div class="tt">análise de tráfego</div></div></div><hr>
+    <div class="tbadge"><span class="ti">🦈</span><div><div class="tn">Wireshark</div><div class="tt">análise de tráfego — roda no Windows</div></div></div><hr>
   </div>
-  <p><strong>O que é:</strong> O Wireshark captura todos os pacotes de rede da interface selecionada e permite inspecionar o conteúdo de cada um. Vamos usá-lo para visualizar o tráfego gerado pelo ataque e entender a diferença crítica entre HTTP e HTTPS.</p>
+  <p><strong>O que é:</strong> Captura e inspeciona pacotes de rede. Vamos usá-lo para ver o tráfego gerado pelo ataque e entender a diferença crítica entre HTTP e HTTPS.</p>
 
   <ul class="steps">
     <li class="si">
       <div class="sn">1</div>
       <div class="sb">
-        <p>Abrir o Wireshark e selecionar a interface loopback</p>
-        <p>Ao abrir, você verá uma lista de interfaces de rede com gráficos de atividade. Como a aplicação está no localhost, selecione a interface <strong>lo</strong> (loopback) — ela captura tráfego local.</p>
-        <div class="box info"><div class="box-title">💡 Não achou a interface lo?</div>
-        <p>Tente <strong>Loopback: lo</strong> ou a interface com menor atividade listada no início. Clique duas vezes para começar a capturar.</p></div>
+        <p>Abrir o Wireshark e selecionar a interface correta</p>
+        <p>Como a aplicação está rodando em localhost via Docker, selecione a interface <strong>Loopback: lo0</strong> ou <strong>Adapter for loopback traffic capture</strong>.</p>
+        <div class="box info"><div class="box-title">💡 Não aparece interface loopback?</div>
+        <p>O Npcap precisa estar instalado com a opção "Loopback" marcada. Se não instalou, reinstale o Npcap de <strong>https://npcap.com</strong> e marque "Support loopback traffic" durante a instalação.</p></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">2</div>
       <div class="sb">
-        <p>Aplicar filtro para ver só o tráfego da aplicação</p>
-        <p>Na barra de filtro no topo, digite o filtro abaixo e pressione Enter:</p>
+        <p>Aplicar filtro para ver só tráfego da aplicação</p>
         <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">filtro Wireshark</span><button class="cpb" onclick="cp(this)">copiar</button></div>
         <pre>tcp.port == 3000 && http</pre></div>
-        <div class="box info"><div class="box-title">💡 O que esse filtro significa</div>
-        <p><code>tcp.port == 3000</code> → só pacotes na porta da nossa aplicação</p>
-        <p><code>http</code> → só pacotes do protocolo HTTP (descarta TCP puro)</p>
-        <p><code>&&</code> → as duas condições precisam ser verdadeiras ao mesmo tempo</p></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">3</div>
       <div class="sb">
-        <p>Rodar o Hydra em outra janela enquanto observa o Wireshark</p>
-        <p>Abra um segundo terminal e execute o Hydra. Observe o tráfego aparecendo no Wireshark em tempo real:</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">segundo terminal — Hydra</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">hydra</span> <span class="f">-l</span> admin <span class="f">-P</span> /usr/share/wordlists/rockyou.txt localhost \
-  http-post-form <span class="a">'/login:username=^USER^&password=^PASS^:Credenciais inválidas.'</span> \
-  <span class="f">-t 4</span></pre></div>
-        <p>Após 20-30 segundos, pare o Hydra com <kbd>Ctrl+C</kbd> e pare a captura clicando no botão vermelho no Wireshark.</p>
+        <p>Rodar o Hydra em outro PowerShell enquanto captura</p>
+        <p>Abra uma segunda janela do PowerShell e execute o Hydra. Observe os pacotes aparecendo em tempo real no Wireshark.</p>
+        <div class="os-tag win">🪟 PowerShell (segunda janela)</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — segundo terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools hydra `
+  <span class="ps-flag">-l</span> admin <span class="ps-flag">-P</span> /usr/share/wordlists/rockyou.txt app-brute `
+  http-post-form <span class="ps-str">"/login:username=^USER^&password=^PASS^:Credenciais inválidas."</span> `
+  <span class="ps-flag">-t 4</span></pre></div>
+        <p>Após 20 segundos pressione <kbd>Ctrl+C</kbd> no PowerShell e pare a captura no Wireshark.</p>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">4</div>
       <div class="sb">
-        <p>Inspecionar um pacote POST e ler a senha testada</p>
-        <p>Clique em qualquer linha <code>POST /login</code> na lista de pacotes. No painel inferior, expanda <strong>"HTML Form URL Encoded"</strong>. Você consegue ver a senha em texto claro?</p>
-        <div class="out-block"><div class="out-label">conteúdo visível dentro do pacote HTTP</div>
+        <p>Inspecionar um pacote POST — ler a senha em texto claro</p>
+        <p>Clique em qualquer linha <code>POST /login</code> → expanda <strong>"HTML Form URL Encoded"</strong> no painel inferior.</p>
+        <div class="out-block"><div class="out-label">conteúdo visível dentro do pacote</div>
         <pre>username=admin&<span class="hit">password=dragon</span></pre></div>
-        <div class="box warn"><div class="box-title">⚠ Implicação crítica de segurança</div>
-        <p>Com HTTP, qualquer pessoa na mesma rede consegue capturar e ler as senhas — inclusive a correta quando o login funciona.</p>
-        <p>Com <strong>HTTPS</strong>, esses dados estariam criptografados e ilegíveis no Wireshark. O bruteforce ainda seria possível, mas o tráfego não poderia ser espionado.</p>
-        <p>Isso é especialmente grave em redes Wi-Fi públicas sem HTTPS.</p></div>
-      </div>
-    </li>
-
-    <li class="si">
-      <div class="sn">5</div>
-      <div class="sb">
-        <p>Ver estatísticas do ataque no Wireshark</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">menus do Wireshark</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre>Statistics → HTTP → Requests     (conta quantas requisições por URL)
-Statistics → IO Graphs           (gráfico de volume de tráfego ao longo do tempo)</pre></div>
-        <div class="box info"><div class="box-title">💡 O que o gráfico IO mostra</div>
-        <p>Um pico grande de tráfego exatamente durante o período do ataque. Esse é o padrão que sistemas IDS/IPS (como Snort e Suricata) identificam automaticamente como bruteforce.</p></div>
+        <div class="box warn"><div class="box-title">⚠ Implicação crítica</div>
+        <p>Com HTTP, qualquer pessoa na rede captura e lê as senhas em texto puro — inclusive a correta. Com <strong>HTTPS</strong>, esses dados ficam criptografados e ilegíveis no Wireshark.</p></div>
       </div>
     </li>
   </ul>
@@ -750,82 +818,70 @@ Statistics → IO Graphs           (gráfico de volume de tráfego ao longo do t
     <div class="ic">🛡️</div>
     <div>
       <h3>Você é o defensor</h3>
-      <p>Analise os rastros que o ataque deixou, ative cada contramedida e teste se o Hydra ainda consegue atacar depois.</p>
+      <p>Analise os rastros do ataque, ative as contramedidas via PowerShell e teste se o Hydra ainda funciona depois de cada defesa.</p>
     </div>
   </div>
 
   <!-- LOGS -->
   <h3>Etapa 1 — Análise dos Logs</h3>
-  <p>Todo ataque de força bruta deixa rastros evidentes nos logs. Identificar esses padrões é a habilidade principal de um analista de segurança (SOC Analyst).</p>
+  <p>O container registra cada acesso. Vamos analisar os rastros que o ataque deixou.</p>
 
   <ul class="steps">
     <li class="si">
       <div class="sn">1</div>
       <div class="sb">
-        <p>Ver os logs em tempo real enquanto o ataque acontece</p>
-        <p>Em uma janela, rode o Hydra. Na outra, acompanhe os logs ao vivo:</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">logs ao vivo do container</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">docker</span> logs app-brute <span class="f">--tail 50 --follow</span>
-<span class="cm"># Pressione Ctrl+C para parar</span></pre></div>
-        <div class="out-block"><div class="out-label">padrão de log durante ataque — repare na frequência absurda</div>
+        <p>Ver os logs ao vivo do container</p>
+        <div class="os-tag win">🪟 PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> logs app-brute <span class="ps-flag">--tail 50 --follow</span>
+<span class="cm"># Ctrl+C para parar</span></pre></div>
+        <div class="out-block"><div class="out-label">padrão de log durante ataque</div>
         <pre><span class="o">127.0.0.1 - [10:15:01] "POST /login HTTP/1.1" 401 42</span>
 <span class="o">127.0.0.1 - [10:15:01] "POST /login HTTP/1.1" 401 42</span>
 <span class="o">127.0.0.1 - [10:15:01] "POST /login HTTP/1.1" 401 42</span>
 <span class="hi">127.0.0.1 - [10:15:02] "POST /login HTTP/1.1" 200 68  ← senha encontrada!</span></pre></div>
-        <div class="box info"><div class="box-title">💡 O que diferencia ataque de usuário legítimo no log?</div>
-        <p>Um usuário esquecendo a senha tenta no máximo 3-5 vezes com intervalo de segundos entre cada tentativa.</p>
-        <p>Um ataque gera <strong>dezenas ou centenas de tentativas do mesmo IP em menos de 1 segundo</strong>. Esse padrão é inconfundível.</p></div>
+        <div class="box info"><div class="box-title">💡 Como distinguir ataque de usuário legítimo</div>
+        <p>Usuário esquecendo a senha → 3-5 tentativas com intervalos de segundos.</p>
+        <p>Ataque → centenas de tentativas do mesmo IP em menos de 1 segundo.</p></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">2</div>
       <div class="sb">
-        <p>Salvar e analisar os logs com comandos Linux</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">análise de logs</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="cm"># 1. Salvar os logs em arquivo</span>
-<span class="c">docker</span> logs app-brute <span class="f">></span> /tmp/access.log 2>&1
+        <p>Analisar os logs com PowerShell</p>
+        <div class="os-tag win">🪟 PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — análise de logs</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="cm"># 1. Salvar os logs</span>
+<span class="ps-cmd">docker</span> logs app-brute 2>&1 | <span class="ps-cmd">Out-File</span> <span class="ps-flag">-Encoding</span> utf8 <span class="ps-str">"$env:TEMP\access.log"</span>
 
 <span class="cm"># 2. Contar total de tentativas de login</span>
-<span class="c">grep</span> <span class="a">'POST /login'</span> /tmp/access.log | <span class="c">wc -l</span>
+<span class="ps-cmd">Select-String</span> <span class="ps-flag">-Path</span> <span class="ps-str">"$env:TEMP\access.log"</span> <span class="ps-flag">-Pattern</span> <span class="ps-str">"POST /login"</span> | <span class="ps-cmd">Measure-Object</span> | <span class="ps-cmd">Select-Object</span> Count
 
-<span class="cm"># 3. Contar por IP — revela o atacante</span>
-<span class="c">grep</span> <span class="a">'POST /login'</span> /tmp/access.log \
-  | <span class="c">awk</span> <span class="a">'{print $1}'</span> | <span class="c">sort</span> | <span class="c">uniq -c</span> | <span class="c">sort -rn</span>
+<span class="cm"># 3. Ver IPs mais frequentes (quem atacou)</span>
+<span class="ps-cmd">Select-String</span> <span class="ps-flag">-Path</span> <span class="ps-str">"$env:TEMP\access.log"</span> <span class="ps-flag">-Pattern</span> <span class="ps-str">"POST /login"</span> |
+  <span class="ps-cmd">ForEach-Object</span> { ($_.Line -split ' ')[0] } |
+  <span class="ps-cmd">Group-Object</span> | <span class="ps-cmd">Sort-Object</span> Count <span class="ps-flag">-Descending</span>
 
-<span class="cm"># 4. Ver User-Agent (Hydra e ffuf têm UA identificável)</span>
-<span class="c">grep</span> <span class="a">'POST /login'</span> /tmp/access.log \
-  | <span class="c">awk</span> <span class="f">-F'"'</span> <span class="a">'{print $6}'</span> | <span class="c">sort -u</span>
-
-<span class="cm"># 5. Ver horário de início e fim do ataque</span>
-<span class="c">grep</span> <span class="a">'POST /login'</span> /tmp/access.log | <span class="c">awk</span> <span class="a">'{print $4}'</span> | <span class="c">head -1</span>
-<span class="c">grep</span> <span class="a">'POST /login'</span> /tmp/access.log | <span class="c">awk</span> <span class="a">'{print $4}'</span> | <span class="c">tail -1</span></pre></div>
-      </div>
-    </li>
-
-    <li class="si">
-      <div class="sn">3</div>
-      <div class="sb">
-        <p>Acessar o arquivo de log mapeado no host (via volume Docker)</p>
-        <p>O container salva os logs em arquivo dentro da pasta <code>logs/</code> do projeto, acessível diretamente no seu sistema:</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">log em arquivo — host</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">tail</span> <span class="f">-30</span> ~/lab-bruteforce/logs/access.log</pre></div>
+<span class="cm"># 4. Ver o arquivo de log mapeado via volume Docker</span>
+<span class="ps-cmd">Get-Content</span> <span class="ps-str">.\logs\access.log</span> <span class="ps-flag">-Tail</span> 20</pre></div>
       </div>
     </li>
   </ul>
 
   <!-- RATE LIMITING -->
   <h3>Etapa 2 — Contramedida 1: Rate Limiting</h3>
-  <p><strong>O que é:</strong> Limita quantas requisições um IP pode fazer em uma janela de tempo. Acima do limite, o servidor responde com erro <code>429 Too Many Requests</code> e ignora a requisição.</p>
+  <p><strong>O que é:</strong> Limita quantas requisições um IP pode fazer por minuto. Acima do limite → erro <code>429 Too Many Requests</code>.</p>
 
   <ul class="steps">
     <li class="si">
       <div class="sn">1</div>
       <div class="sb">
-        <p>Verificar o estado atual — tudo desativado por padrão</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">consultar configuração</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">curl</span> http://localhost:3000/status</pre></div>
-        <div class="out-block"><div class="out-label">saída — defesas desligadas</div>
+        <p>Verificar o estado atual das defesas</p>
+        <div class="os-tag win">🪟 PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">curl</span> http://localhost:3000/status</pre></div>
+        <div class="out-block"><div class="out-label">defesas desligadas por padrão</div>
         <pre>{"config":{"rateLimit":{"enabled":<span class="hit">false</span>},"lockout":{"enabled":<span class="hit">false</span>}}}</pre></div>
       </div>
     </li>
@@ -834,213 +890,198 @@ Statistics → IO Graphs           (gráfico de volume de tráfego ao longo do t
       <div class="sn">2</div>
       <div class="sb">
         <p>Ativar o Rate Limiting</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">ativar</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">curl</span> <span class="f">-X POST</span> http://localhost:3000/config \
-  <span class="f">-d</span> <span class="a">'feature=rateLimit&value=true'</span></pre></div>
+        <div class="os-tag win">🪟 PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">curl</span> <span class="ps-flag">-X POST</span> http://localhost:3000/config `
+  <span class="ps-flag">-d</span> <span class="ps-str">"feature=rateLimit&value=true"</span>
+
+<span class="cm"># Tornar mais restritivo: máx 5 req/minuto</span>
+<span class="ps-cmd">curl</span> <span class="ps-flag">-X POST</span> http://localhost:3000/config `
+  <span class="ps-flag">-d</span> <span class="ps-str">"feature=maxReqs&value=5"</span></pre></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">3</div>
       <div class="sb">
-        <p>Tornar o limite mais restritivo (5 req por minuto por IP)</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">ajustar limite</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">curl</span> <span class="f">-X POST</span> http://localhost:3000/config \
-  <span class="f">-d</span> <span class="a">'feature=maxReqs&value=5'</span></pre></div>
-      </div>
-    </li>
-
-    <li class="si">
-      <div class="sn">4</div>
-      <div class="sb">
-        <p>Rodar o Hydra novamente e observar o que acontece</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">testar Hydra com rate limiting ativo</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">hydra</span> <span class="f">-l</span> admin <span class="f">-P</span> /usr/share/wordlists/rockyou.txt localhost \
-  http-post-form <span class="a">'/login:username=^USER^&password=^PASS^:Credenciais inválidas.'</span> \
-  <span class="f">-t 4 -V -f</span></pre></div>
-        <div class="box ok"><div class="box-title">✓ O que você deve ver</div>
-        <p>O Hydra começa a receber erros HTTP <code>429</code>. A mensagem muda para: <code>"Muitas tentativas. Aguarde antes de tentar novamente."</code></p>
-        <p>O ataque fica muito mais lento ou falha completamente.</p></div>
+        <p>Rodar o Hydra novamente e observar o erro 429</p>
+        <div class="os-tag win">🪟 PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools hydra `
+  <span class="ps-flag">-l</span> admin <span class="ps-flag">-P</span> /usr/share/wordlists/rockyou.txt app-brute `
+  http-post-form <span class="ps-str">"/login:username=^USER^&password=^PASS^:Credenciais inválidas."</span> `
+  <span class="ps-flag">-t 4 -V -f</span></pre></div>
+        <div class="box ok"><div class="box-title">✓ O que observar</div>
+        <p>O Hydra passa a receber erros <code>429</code> e a mensagem <code>"Muitas tentativas."</code> O ataque fica muito mais lento ou para.</p></div>
         <div class="box yellow"><div class="box-title">🤔 Reflexão</div>
-        <p>O rate limiting impediu completamente o ataque? Um atacante com paciência poderia esperar a janela de 1 minuto e continuar tentando? Como tornar o rate limiting ainda mais eficaz?</p></div>
+        <p>O rate limiting completamente impediu o ataque? Um atacante com paciência poderia esperar a janela de 1 minuto e continuar?</p></div>
       </div>
     </li>
   </ul>
 
   <!-- LOCKOUT -->
   <h3>Etapa 3 — Contramedida 2: Account Lockout</h3>
-  <p><strong>O que é:</strong> Após N tentativas falhas, a conta é bloqueada temporariamente. O servidor recusa qualquer tentativa para aquela conta por um período definido, independente do IP de origem.</p>
+  <p><strong>O que é:</strong> Após N tentativas falhas, a conta é bloqueada por um tempo definido. Independente do IP de origem.</p>
 
   <ul class="steps">
     <li class="si">
       <div class="sn">1</div>
       <div class="sb">
-        <p>Desativar o rate limiting e ativar o lockout</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">trocar de contramedida</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">curl</span> <span class="f">-X POST</span> http://localhost:3000/config <span class="f">-d</span> <span class="a">'feature=rateLimit&value=false'</span>
-<span class="c">curl</span> <span class="f">-X POST</span> http://localhost:3000/config <span class="f">-d</span> <span class="a">'feature=lockout&value=true'</span>
-<span class="c">curl</span> http://localhost:3000/status <span class="cm"># confirmar</span></pre></div>
+        <p>Trocar de contramedida</p>
+        <div class="os-tag win">🪟 PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">curl</span> <span class="ps-flag">-X POST</span> http://localhost:3000/config <span class="ps-flag">-d</span> <span class="ps-str">"feature=rateLimit&value=false"</span>
+<span class="ps-cmd">curl</span> <span class="ps-flag">-X POST</span> http://localhost:3000/config <span class="ps-flag">-d</span> <span class="ps-str">"feature=lockout&value=true"</span>
+<span class="ps-cmd">curl</span> http://localhost:3000/status</pre></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">2</div>
       <div class="sb">
-        <p>Simular 6 tentativas seguidas para ver o bloqueio acontecer</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">loop de tentativas falhas</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">for</span> i in 1 2 3 4 5 6; do
-  echo <span class="a">"=== Tentativa $i ==="</span>
-  <span class="c">curl</span> <span class="f">-s -X POST</span> http://localhost:3000/login \
-    <span class="f">-d</span> <span class="a">"username=admin&password=errada_$i"</span>
-  echo
-<span class="c">done</span></pre></div>
-        <div class="out-block"><div class="out-label">saída esperada — repare que a 6ª tentativa recebe resposta diferente</div>
-        <pre>Tentativa 1: {"success":false,"message":"Credenciais inválidas."}
-Tentativa 2: {"success":false,"message":"Credenciais inválidas."}
-Tentativa 3: {"success":false,"message":"Credenciais inválidas."}
-Tentativa 4: {"success":false,"message":"Credenciais inválidas."}
-Tentativa 5: {"success":false,"message":"Credenciais inválidas."}
-Tentativa 6: {"success":false,"message":"<span class="hit">Conta bloqueada. Tente novamente em 300 segundos.</span>"}</pre></div>
+        <p>Simular 6 tentativas seguidas para ver o bloqueio</p>
+        <div class="os-tag win">🪟 PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — loop de tentativas</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">for</span> (<span class="ps-var">$i</span>=1; <span class="ps-var">$i</span> <span class="ps-flag">-le</span> 6; <span class="ps-var">$i</span>++) {
+  <span class="ps-cmd">Write-Host</span> <span class="ps-str">"=== Tentativa $i ==="</span>
+  <span class="ps-cmd">curl</span> <span class="ps-flag">-s -X POST</span> http://localhost:3000/login `
+    <span class="ps-flag">-d</span> <span class="ps-str">"username=admin&password=errada_$i"</span>
+  <span class="ps-cmd">Write-Host</span> <span class="ps-str">""</span>
+}</pre></div>
+        <div class="out-block"><div class="out-label">resultado esperado</div>
+        <pre>Tentativa 1: {"message":"Credenciais inválidas."}
+Tentativa 2: {"message":"Credenciais inválidas."}
+Tentativa 3: {"message":"Credenciais inválidas."}
+Tentativa 4: {"message":"Credenciais inválidas."}
+Tentativa 5: {"message":"Credenciais inválidas."}
+Tentativa 6: {"message":"<span class="hit">Conta bloqueada. Tente novamente em 300 segundos.</span>"}</pre></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">3</div>
       <div class="sb">
-        <p>Resetar o estado e testar com o Hydra</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">resetar e atacar</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">curl</span> <span class="f">-X POST</span> http://localhost:3000/reset
-<span class="c">hydra</span> <span class="f">-l</span> admin <span class="f">-P</span> /usr/share/wordlists/rockyou.txt localhost \
-  http-post-form <span class="a">'/login:username=^USER^&password=^PASS^:Credenciais inválidas.'</span> \
-  <span class="f">-t 4 -V</span></pre></div>
-        <p>Observe: após 5 tentativas falhas, o admin é bloqueado e o Hydra passa a receber respostas de bloqueio.</p>
+        <p>Resetar e testar com Hydra</p>
+        <div class="os-tag win">🪟 PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">curl</span> <span class="ps-flag">-X POST</span> http://localhost:3000/reset
+<span class="ps-cmd">docker</span> exec kali-tools hydra <span class="ps-flag">-l</span> admin <span class="ps-flag">-P</span> /usr/share/wordlists/rockyou.txt app-brute `
+  http-post-form <span class="ps-str">"/login:username=^USER^&password=^PASS^:Credenciais inválidas."</span> <span class="ps-flag">-t 4 -V</span></pre></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">4</div>
       <div class="sb">
-        <p>Entender o tradeoff do account lockout</p>
-        <div class="box warn"><div class="box-title">⚠ O lockout pode ser usado como arma</div>
-        <p>Um atacante pode fazer 5 tentativas erradas intencionalmente para <strong>bloquear a conta do usuário legítimo</strong> — isso é um ataque de negação de serviço (DoS) por bloqueio de conta.</p>
-        <p>Como mitigar esse risco:</p>
-        <ul>
-          <li>CAPTCHA após 3 tentativas (humanos passam, bots não)</li>
-          <li>Notificar o usuário por e-mail quando a conta for bloqueada</li>
-          <li>Lockout progressivo (1min, 5min, 30min) em vez de fixo</li>
-          <li>Lockout por IP em vez de por conta</li>
-        </ul></div>
+        <p>O tradeoff do lockout</p>
+        <div class="box warn"><div class="box-title">⚠ O lockout pode ser usado como arma de DoS</div>
+        <p>Um atacante pode fazer 5 tentativas erradas propositalmente para <strong>bloquear a conta de um usuário legítimo</strong>.</p>
+        <p>Como mitigar: CAPTCHA após 3 tentativas, notificação por e-mail, lockout progressivo (1min → 5min → 30min), lockout por IP ao invés de por conta.</p></div>
       </div>
     </li>
   </ul>
 
   <!-- FAIL2BAN -->
-  <h3>Etapa 4 — Contramedida 3: Fail2Ban</h3>
-  <p><strong>O que é:</strong> O Fail2Ban monitora arquivos de log em tempo real. Quando detecta um padrão suspeito (muitos erros 401 do mesmo IP), executa uma ação automática — normalmente adiciona uma regra no firewall (<code>iptables</code>) bloqueando o IP completamente.</p>
+  <h3>Etapa 4 — Contramedida 3: Fail2Ban (via container)</h3>
+  <p><strong>O que é:</strong> Monitora logs e bane automaticamente IPs suspeitos via iptables. No Windows puro não existe iptables — então vamos rodar o Fail2Ban <strong>dentro de um container</strong> que monitora o log mapeado via volume.</p>
 
   <ul class="steps">
     <li class="si">
       <div class="sn">1</div>
       <div class="sb">
-        <p>Instalar e iniciar o Fail2Ban</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">instalação</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">sudo</span> apt install <span class="f">-y</span> fail2ban
-<span class="c">sudo</span> systemctl start fail2ban
-<span class="c">fail2ban-client</span> status <span class="cm"># confirma que está rodando</span></pre></div>
+        <p>Entrar no container kali-tools para configurar o Fail2Ban</p>
+        <div class="os-tag win">🪟 PowerShell → 🐳 dentro do container</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — entrar no container</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec <span class="ps-flag">-it</span> kali-tools bash</pre></div>
+        <div class="box info"><div class="box-title">💡 Agora você está dentro do Linux (Kali)</div>
+        <p>Quando aparecer o prompt <code>root@...:#</code>, você está dentro do container. Os comandos a partir daqui são Linux — não PowerShell.</p>
+        <p>Para sair do container: digite <code>exit</code></p></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">2</div>
       <div class="sb">
-        <p>Criar o filtro — define o padrão de log que indica ataque</p>
-        <p>O filtro usa uma expressão regular (regex) para identificar linhas de log que indicam tentativa de login falha:</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">abrir editor</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">sudo</span> nano /etc/fail2ban/filter.d/app-brute.conf</pre></div>
-        <p>Cole o conteúdo abaixo. Salve com <kbd>Ctrl+O</kbd> → Enter → <kbd>Ctrl+X</kbd>:</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">conteúdo do filtro</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre>[Definition]
-<span class="cm"># &lt;HOST&gt; captura o IP da linha de log automaticamente</span>
-<span class="cm"># A regex identifica: IP + POST /login + status 401</span>
+        <p>Criar o filtro do Fail2Ban (dentro do container)</p>
+        <div class="os-tag ps">🐧 Dentro do container (bash)</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">bash — dentro do container kali-tools</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="cm"># Instalar fail2ban dentro do container</span>
+apt-get install <span class="f">-y</span> fail2ban <span class="f">-qq</span>
+
+<span class="cm"># Criar o filtro</span>
+cat > /etc/fail2ban/filter.d/app-brute.conf << 'EOF'
+[Definition]
 failregex = ^<span class="hi">&lt;HOST&gt;</span> .* POST /login .* 401
-ignoreregex =</pre></div>
-        <div class="box info"><div class="box-title">💡 O que é &lt;HOST&gt;?</div>
-        <p>É um placeholder especial do Fail2Ban que extrai automaticamente o endereço IP da linha de log. Cada vez que uma linha combinar com essa regex, o IP é registrado como uma tentativa falha.</p></div>
+ignoreregex =
+EOF</pre></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">3</div>
       <div class="sb">
-        <p>Criar a "jail" — define ações e limites</p>
-        <p>A jail conecta o filtro ao arquivo de log e define quando e por quanto tempo banir:</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">abrir editor</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">sudo</span> nano /etc/fail2ban/jail.d/app-brute.conf</pre></div>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">conteúdo da jail</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre>[app-brute]
+        <p>Criar a jail e iniciar o Fail2Ban (dentro do container)</p>
+        <div class="os-tag ps">🐧 Dentro do container (bash)</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">bash — dentro do container</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="cm"># Criar a jail (o log está mapeado via volume em /app/logs/access.log)</span>
+cat > /etc/fail2ban/jail.d/app-brute.conf << 'EOF'
+[app-brute]
 enabled  = true
 filter   = app-brute
-logpath  = /root/lab-bruteforce/logs/access.log
-maxretry = 10    <span class="cm">; bane após 10 falhas no período</span>
-bantime  = 600   <span class="cm">; ban dura 600s (10 minutos)</span>
-findtime = 60    <span class="cm">; conta falhas dentro de 60 segundos</span></pre></div>
-        <div class="box warn"><div class="box-title">⚠ Ajuste o logpath!</div>
-        <p>O caminho acima pode ser diferente na sua máquina. Verifique com:</p>
-        <p><code>echo ~/lab-bruteforce/logs/access.log</code></p>
-        <p>Use o caminho completo que aparecer no resultado.</p></div>
+logpath  = /app/logs/access.log
+maxretry = 10
+bantime  = 600
+findtime = 60
+EOF
+
+<span class="cm"># Iniciar o Fail2Ban</span>
+service fail2ban start
+fail2ban-client status app-brute</pre></div>
+        <div class="out-block"><div class="out-label">saída esperada</div>
+        <pre>Status for the jail: app-brute
+|- Filter
+|  |- Currently failed: 0
+|  `- File list: /app/logs/access.log
+`- Actions
+   |- Currently banned: 0</pre></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">4</div>
       <div class="sb">
-        <p>Reiniciar o Fail2Ban e verificar a jail</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">ativar e verificar</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">sudo</span> systemctl restart fail2ban
-<span class="c">fail2ban-client</span> status app-brute</pre></div>
-        <div class="out-block"><div class="out-label">saída esperada — jail ativa, nenhum ban ainda</div>
+        <p>Abrir um segundo PowerShell e executar o Hydra enquanto monitora o Fail2Ban</p>
+        <div class="box dark"><div class="box-title">📋 Dois terminais lado a lado</div>
+        <p><strong>Terminal 1</strong> (dentro do container — já aberto): monitorar o Fail2Ban</p>
+        <p><strong>Terminal 2</strong> (novo PowerShell): executar o Hydra</p></div>
+        <div class="os-tag ps">🐧 Terminal 1 — dentro do container</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">monitorar fail2ban</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre>watch -n 2 'fail2ban-client status app-brute'</pre></div>
+        <div class="os-tag win">🪟 Terminal 2 — novo PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">novo PowerShell — executar ataque</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">curl</span> <span class="ps-flag">-X POST</span> http://localhost:3000/config <span class="ps-flag">-d</span> <span class="ps-str">"feature=lockout&value=false"</span>
+<span class="ps-cmd">curl</span> <span class="ps-flag">-X POST</span> http://localhost:3000/reset
+<span class="ps-cmd">docker</span> exec kali-tools hydra <span class="ps-flag">-l</span> admin <span class="ps-flag">-P</span> /usr/share/wordlists/rockyou.txt app-brute `
+  http-post-form <span class="ps-str">"/login:username=^USER^&password=^PASS^:Credenciais inválidas."</span> <span class="ps-flag">-t 4</span></pre></div>
+        <div class="out-block"><div class="out-label">resultado esperado no Terminal 1 após o ban</div>
         <pre>Status for the jail: app-brute
-|- Filter
-|  |- Currently failed: 0
-|  `- File list: /root/lab-bruteforce/logs/access.log
 `- Actions
-   |- Currently banned: 0
-   `- Banned IP list:</pre></div>
+   |- Currently banned: <span class="hit">1</span>
+   `- Banned IP list:   <span class="hit">172.18.0.3</span></pre></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">5</div>
       <div class="sb">
-        <p>Executar o Hydra e monitorar o Fail2Ban agir</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">dois terminais — ataque e monitoramento</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="cm"># Terminal 1 — ataque</span>
-<span class="c">curl</span> <span class="f">-X POST</span> http://localhost:3000/config <span class="f">-d</span> <span class="a">'feature=lockout&value=false'</span>
-<span class="c">curl</span> <span class="f">-X POST</span> http://localhost:3000/reset
-<span class="c">hydra</span> <span class="f">-l</span> admin <span class="f">-P</span> /usr/share/wordlists/rockyou.txt localhost \
-  http-post-form <span class="a">'/login:username=^USER^&password=^PASS^:Credenciais inválidas.'</span> \
-  <span class="f">-t 4</span> &
-
-<span class="cm"># Terminal 2 — monitoramento ao vivo</span>
-<span class="c">watch</span> <span class="f">-n 2</span> <span class="a">'fail2ban-client status app-brute'</span></pre></div>
-        <div class="out-block"><div class="out-label">após o ban — IP bloqueado automaticamente</div>
-        <pre>Status for the jail: app-brute
-`- Actions
-   |- Currently banned: <span class="hit">1</span>
-   `- Banned IP list:   <span class="hit">127.0.0.1</span></pre></div>
-      </div>
-    </li>
-
-    <li class="si">
-      <div class="sn">6</div>
-      <div class="sb">
-        <p>Remover o ban manualmente para reiniciar os testes</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">desbanir IP</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre><span class="c">sudo</span> fail2ban-client set app-brute unbanip 127.0.0.1</pre></div>
+        <p>Remover o ban e sair do container</p>
+        <div class="os-tag ps">🐧 Dentro do container</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">desbanir e sair</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre>fail2ban-client set app-brute unbanip 172.18.0.3
+exit</pre></div>
       </div>
     </li>
   </ul>
-
 </div>
 </section>
 
@@ -1049,13 +1090,11 @@ findtime = 60    <span class="cm">; conta falhas dentro de 60 segundos</span></p
 <div class="container">
   <div class="sec-label">// 04 · Monitoramento</div>
   <h2>Painel de Controle — Blue Team</h2>
-  <p>Conecta diretamente à aplicação em <code>localhost:3000</code>. Use para controlar as defesas sem precisar digitar curl. Funciona apenas com o container rodando.</p>
-
+  <p>Conecta diretamente à aplicação em <code>localhost:3000</code>. Funciona apenas com o container rodando.</p>
   <div style="display:flex;align-items:center;font-family:'JetBrains Mono',monospace;font-size:13px;margin-bottom:16px">
     <span class="dlive" id="dlive"></span>
     <span id="lstatus" style="color:var(--muted)">verificando conexão...</span>
   </div>
-
   <div class="mon">
     <div class="mon-t">$ app-brute · controle de defesas em tempo real</div>
     <div class="mr"><span class="ml">Rate Limiting</span><div style="display:flex;gap:12px;align-items:center"><span class="mv" id="rl-v">—</span><button class="tbtn off" id="rl-b" onclick="tog('rateLimit')">ativar</button></div></div>
@@ -1063,9 +1102,8 @@ findtime = 60    <span class="cm">; conta falhas dentro de 60 segundos</span></p
     <div class="mr"><span class="ml">Contas bloqueadas</span><span class="mv" id="lk-v">—</span></div>
     <div class="mr"><span class="ml">Ações</span><div style="display:flex;gap:8px"><button class="tbtn" style="border-color:var(--muted);color:var(--muted)" onclick="loadS()">↻ atualizar</button><button class="tbtn off" onclick="resetA()">⟳ resetar estado</button></div></div>
   </div>
-
-  <div class="box info"><div class="box-title">💡 Como usar o painel</div>
-  <p>Clique em <strong>"ativar"</strong> para ligar uma defesa, depois execute o Hydra no terminal e veja se o ataque muda. Clique <strong>"resetar estado"</strong> entre os testes para limpar contadores e contas bloqueadas.</p></div>
+  <div class="box info"><div class="box-title">💡 Como usar</div>
+  <p>Ative uma defesa aqui, execute o Hydra no PowerShell e observe o comportamento mudar. Use <strong>"resetar estado"</strong> entre os testes.</p></div>
 </div>
 </section>
 
@@ -1074,66 +1112,59 @@ findtime = 60    <span class="cm">; conta falhas dentro de 60 segundos</span></p
 <div class="container">
   <div class="sec-label">// 05 · Conclusão</div>
   <h2>Checklist de Progresso</h2>
-  <p>Marque cada etapa conforme conclui. O progresso fica salvo no navegador.</p>
+  <p>Marque cada etapa conforme conclui. Progresso salvo no navegador.</p>
   <ul class="cl" id="cl">
-    <li data-id="0"><div class="ck" onclick="chk(0)"></div><span>Container iniciado — aplicação acessível em http://localhost:3000</span></li>
-    <li data-id="1"><div class="ck" onclick="chk(1)"></div><span>curl: identifiquei o FAIL_STRING e a diferença entre login válido e inválido</span></li>
-    <li data-id="2"><div class="ck" onclick="chk(2)"></div><span>Hydra: executado com sucesso — senha encontrada</span></li>
-    <li data-id="3"><div class="ck" onclick="chk(3)"></div><span>Hydra: testei com diferentes threads e comparei velocidade</span></li>
-    <li data-id="4"><div class="ck" onclick="chk(4)"></div><span>Medusa: executado e comparado com Hydra</span></li>
-    <li data-id="5"><div class="ck" onclick="chk(5)"></div><span>Burp Suite: proxy configurado e requisição interceptada</span></li>
-    <li data-id="6"><div class="ck" onclick="chk(6)"></div><span>Burp Intruder: ataque executado e senha identificada pelo Length</span></li>
-    <li data-id="7"><div class="ck" onclick="chk(7)"></div><span>ffuf: executado e velocidade comparada com Hydra</span></li>
-    <li data-id="8"><div class="ck" onclick="chk(8)"></div><span>Wireshark: tráfego capturado e senhas lidas nos pacotes</span></li>
-    <li data-id="9"><div class="ck" onclick="chk(9)"></div><span>Logs analisados: IP atacante e padrão anormal identificados</span></li>
-    <li data-id="10"><div class="ck" onclick="chk(10)"></div><span>Rate Limiting ativado e testado — erro 429 observado no Hydra</span></li>
-    <li data-id="11"><div class="ck" onclick="chk(11)"></div><span>Account Lockout ativado — conta bloqueou após 5 falhas</span></li>
-    <li data-id="12"><div class="ck" onclick="chk(12)"></div><span>Fail2Ban configurado — IP banido automaticamente</span></li>
-    <li data-id="13"><div class="ck" onclick="chk(13)"></div><span>Questões de reflexão respondidas na folha de atividade</span></li>
+    <li data-id="0"><div class="ck" onclick="chk(0)"></div><span>Docker Desktop aberto e dois containers ativos (docker ps)</span></li>
+    <li data-id="1"><div class="ck" onclick="chk(1)"></div><span>Aplicação acessível em http://localhost:3000</span></li>
+    <li data-id="2"><div class="ck" onclick="chk(2)"></div><span>curl (PowerShell): identifiquei o FAIL_STRING</span></li>
+    <li data-id="3"><div class="ck" onclick="chk(3)"></div><span>Hydra (docker exec): senha encontrada</span></li>
+    <li data-id="4"><div class="ck" onclick="chk(4)"></div><span>Hydra: testei threads diferentes e comparei velocidade</span></li>
+    <li data-id="5"><div class="ck" onclick="chk(5)"></div><span>Medusa (docker exec): executado e comparado com Hydra</span></li>
+    <li data-id="6"><div class="ck" onclick="chk(6)"></div><span>Mini wordlist exportada do container para o Windows</span></li>
+    <li data-id="7"><div class="ck" onclick="chk(7)"></div><span>Burp Suite: proxy configurado e requisição interceptada</span></li>
+    <li data-id="8"><div class="ck" onclick="chk(8)"></div><span>Burp Intruder: senha encontrada pelo Length diferente</span></li>
+    <li data-id="9"><div class="ck" onclick="chk(9)"></div><span>ffuf (docker exec): executado, velocidade comparada</span></li>
+    <li data-id="10"><div class="ck" onclick="chk(10)"></div><span>Wireshark: tráfego capturado e senha lida em texto claro</span></li>
+    <li data-id="11"><div class="ck" onclick="chk(11)"></div><span>Logs analisados com PowerShell: padrão de ataque identificado</span></li>
+    <li data-id="12"><div class="ck" onclick="chk(12)"></div><span>Rate Limiting ativado — erro 429 observado no Hydra</span></li>
+    <li data-id="13"><div class="ck" onclick="chk(13)"></div><span>Account Lockout ativado — conta bloqueou após 5 falhas</span></li>
+    <li data-id="14"><div class="ck" onclick="chk(14)"></div><span>Fail2Ban configurado dentro do container — IP banido</span></li>
+    <li data-id="15"><div class="ck" onclick="chk(15)"></div><span>Questões de reflexão respondidas na folha de atividade</span></li>
   </ul>
   <div style="margin-top:28px;font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--muted)">
-    Progresso: <span id="prog" style="color:var(--green);font-weight:700">0 / 14</span>
+    Progresso: <span id="prog" style="color:var(--green);font-weight:700">0 / 16</span>
   </div>
 </div>
 </section>
 
 <footer>
   <p>UMC — Universidade de Mogi das Cruzes &nbsp;|&nbsp; Curso Técnico em Redes de Computadores</p>
-  <p style="margin-top:8px;color:#374151">Lab BruteForce · Uso estritamente educacional · <a href="http://localhost:3000" target="_blank" style="color:#3b82f6">localhost:3000</a></p>
+  <p style="margin-top:8px;color:#374151">Lab BruteForce · Windows + Docker · Uso estritamente educacional · <a href="http://localhost:3000" target="_blank" style="color:#3b82f6">localhost:3000</a></p>
 </footer>
 
 <script>
-  // Progress bar
   window.addEventListener('scroll',()=>{
-    const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
-    document.getElementById('pbar').style.width=p+'%';
+    document.getElementById('pbar').style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';
   });
-
   function goTo(id){document.getElementById(id).scrollIntoView({behavior:'smooth'})}
-
-  // Copy
   function cp(btn){
     const pre=btn.closest('.cb').querySelector('pre');
     navigator.clipboard.writeText(pre.innerText).then(()=>{
-      btn.textContent='✓ copiado'; btn.classList.add('copied');
+      btn.textContent='✓ copiado';btn.classList.add('copied');
       setTimeout(()=>{btn.textContent='copiar';btn.classList.remove('copied')},2000);
     });
   }
-
-  // Checklist
-  const C=JSON.parse(localStorage.getItem('lab-bf')||'{}');
-  function chk(id){C[id]=!C[id];localStorage.setItem('lab-bf',JSON.stringify(C));render();}
+  const C=JSON.parse(localStorage.getItem('lab-bf-win')||'{}');
+  function chk(id){C[id]=!C[id];localStorage.setItem('lab-bf-win',JSON.stringify(C));render();}
   function render(){
     document.querySelectorAll('#cl li').forEach(li=>{
-      const id=+li.dataset.id, bx=li.querySelector('.ck');
+      const id=+li.dataset.id,bx=li.querySelector('.ck');
       if(C[id]){bx.classList.add('on');bx.textContent='✓';li.classList.add('done');}
       else{bx.classList.remove('on');bx.textContent='';li.classList.remove('done');}
     });
-    document.getElementById('prog').textContent=Object.values(C).filter(Boolean).length+' / 14';
+    document.getElementById('prog').textContent=Object.values(C).filter(Boolean).length+' / 16';
   }
   render();
-
-  // Painel
   let cfg={};
   async function loadS(){
     try{
@@ -1144,13 +1175,11 @@ findtime = 60    <span class="cm">; conta falhas dentro de 60 segundos</span></p
       const rl=d.config.rateLimit.enabled;
       document.getElementById('rl-v').textContent=rl?'✓ ativo':'✗ inativo';
       document.getElementById('rl-v').style.color=rl?'var(--green)':'var(--red)';
-      const rb=document.getElementById('rl-b');
-      rb.textContent=rl?'desativar':'ativar'; rb.className='tbtn '+(rl?'on':'off');
+      const rb=document.getElementById('rl-b');rb.textContent=rl?'desativar':'ativar';rb.className='tbtn '+(rl?'on':'off');
       const lo=d.config.lockout.enabled;
       document.getElementById('lo-v').textContent=lo?'✓ ativo':'✗ inativo';
       document.getElementById('lo-v').style.color=lo?'var(--green)':'var(--red)';
-      const lb=document.getElementById('lo-b');
-      lb.textContent=lo?'desativar':'ativar'; lb.className='tbtn '+(lo?'on':'off');
+      const lb=document.getElementById('lo-b');lb.textContent=lo?'desativar':'ativar';lb.className='tbtn '+(lo?'on':'off');
       const lk=d.lockedUsers||[];
       document.getElementById('lk-v').textContent=lk.length?lk.join(', '):'nenhuma';
     }catch{
@@ -1169,8 +1198,7 @@ findtime = 60    <span class="cm">; conta falhas dentro de 60 segundos</span></p
     try{await fetch('http://localhost:3000/reset',{method:'POST'});loadS();}
     catch{alert('Container offline.');}
   }
-  loadS();
-  setInterval(loadS,5000);
+  loadS();setInterval(loadS,5000);
 </script>
 </body>
 </html>
