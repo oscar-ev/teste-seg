@@ -192,7 +192,7 @@
   <div class="hero-glow"></div>
   <div class="badge">⚠ ambiente controlado · uso educacional</div>
   <h1><span class="r">Brute</span><span class="b">Force</span><br>Lab</h1>
-  <p class="hero-sub">Laboratório de segurança ofensiva e defensiva.<br>UMC · Redes de Computadores · 1º Ano</p>
+  <p class="hero-sub">Laboratório de segurança ofensiva e defensiva.<br>UMC · Curso Técnico em Redes de Computadores · 2º Ano</p>
   <div class="pills">
     <div class="pill r">⚔ Fase 1 · Red Team</div>
     <div class="pill b">🛡 Fase 2 · Blue Team</div>
@@ -217,14 +217,14 @@
         <li>Docker Desktop — motor dos containers</li>
         <li>Navegador Firefox/Chrome</li>
         <li>Burp Suite (instalado no Windows)</li>
-        <li>Wireshark (instalado no Windows)</li>
+        <li>Wireshark (instalado no Windows) — opcional</li>
       </ul>
     </div>
     <div class="arch-card docker-card">
       <h4>🐳 Dentro do Docker</h4>
       <ul>
         <li><strong>app-brute</strong> — aplicação alvo (Node.js)</li>
-        <li><strong>kali-tools</strong> — Hydra, Medusa, ffuf, curl</li>
+        <li><strong>kali-tools</strong> — Hydra, Medusa, ffuf, curl, tshark, fail2ban</li>
         <li>Ambos na mesma rede interna Docker</li>
         <li>app-brute exposta em localhost:3000</li>
       </ul>
@@ -375,8 +375,8 @@ ffuf - Fuzz Faster U Fool</pre></div>
     </li>
   </ul>
 
-  <h3>Passo 4 — Instalar Burp Suite e Wireshark no Windows</h3>
-  <p>Essas duas ferramentas precisam de interface gráfica, então rodam diretamente no Windows (não em container).</p>
+  <h3>Passo 4 — Instalar o Burp Suite no Windows</h3>
+  <p>O Burp Suite precisa de interface gráfica, então roda diretamente no Windows. O <strong>Wireshark</strong> não precisa ser instalado — usaremos o <strong>tshark</strong> (versão CLI) que já está dentro do container kali-tools.</p>
 
   <ul class="steps">
     <li class="si">
@@ -391,10 +391,15 @@ ffuf - Fuzz Faster U Fool</pre></div>
     <li class="si">
       <div class="sn">2</div>
       <div class="sb">
-        <p>Baixar e instalar o Wireshark</p>
-        <div class="box dark"><div class="box-title">🔗 Download</div>
-        <p>Acesse: <strong>https://www.wireshark.org/download.html</strong></p>
-        <p>Baixe <strong>Windows x64 Installer</strong> → execute → aceite instalar o <strong>Npcap</strong> quando perguntado (necessário para captura).</p></div>
+        <p>Confirmar que o tshark está disponível no container</p>
+        <p>O tshark é o Wireshark em modo linha de comando — captura e analisa pacotes direto no terminal, sem precisar de interface gráfica.</p>
+        <div class="os-tag win">🪟 PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools tshark <span class="ps-flag">--version</span> 2>&1 | <span class="ps-cmd">Select-String</span> <span class="ps-str">"TShark"</span></pre></div>
+        <div class="out-block"><div class="out-label">saída esperada</div>
+        <pre>TShark (Wireshark) 4.x.x</pre></div>
+        <div class="box ok"><div class="box-title">✓ tshark disponível — sem precisar instalar nada no Windows</div>
+        <p>Você vai usar o tshark na etapa de análise de tráfego, tudo via <code>docker exec</code> no PowerShell.</p></div>
       </div>
     </li>
   </ul>
@@ -752,56 +757,103 @@ Content-Type: application/x-www-form-urlencoded
     </li>
   </ul>
 
-  <!-- WIRESHARK -->
+  <!-- TSHARK -->
   <div class="tdiv" id="t-wire">
-    <div class="tbadge"><span class="ti">🦈</span><div><div class="tn">Wireshark</div><div class="tt">análise de tráfego — roda no Windows</div></div></div><hr>
+    <div class="tbadge"><span class="ti">🦈</span><div><div class="tn">tshark</div><div class="tt">análise de tráfego — via container kali</div></div></div><hr>
   </div>
-  <p><strong>O que é:</strong> Captura e inspeciona pacotes de rede. Vamos usá-lo para ver o tráfego gerado pelo ataque e entender a diferença crítica entre HTTP e HTTPS.</p>
+  <p><strong>O que é:</strong> O tshark é o Wireshark em modo linha de comando — captura e analisa pacotes de rede sem precisar de interface gráfica. Roda dentro do container kali-tools, sem instalar nada no Windows.</p>
 
   <ul class="steps">
     <li class="si">
       <div class="sn">1</div>
       <div class="sb">
-        <p>Abrir o Wireshark e selecionar a interface correta</p>
-        <p>Como a aplicação está rodando em localhost via Docker, selecione a interface <strong>Loopback: lo0</strong> ou <strong>Adapter for loopback traffic capture</strong>.</p>
-        <div class="box info"><div class="box-title">💡 Não aparece interface loopback?</div>
-        <p>O Npcap precisa estar instalado com a opção "Loopback" marcada. Se não instalou, reinstale o Npcap de <strong>https://npcap.com</strong> e marque "Support loopback traffic" durante a instalação.</p></div>
+        <p>Listar as interfaces de rede disponíveis no container</p>
+        <p>Primeiro precisamos saber o nome da interface que conecta o container kali-tools ao container app-brute:</p>
+        <div class="os-tag win">🪟 PowerShell → 🐳 container kali-tools</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools tshark <span class="ps-flag">-D</span></pre></div>
+        <div class="out-block"><div class="out-label">saída esperada — anote o nome da interface eth0</div>
+        <pre>1. eth0
+2. lo (Loopback)
+3. any</pre></div>
+        <div class="box info"><div class="box-title">💡 Qual interface usar?</div>
+        <p>Use <code>eth0</code> — é a interface de rede interna do container, pela qual o tráfego entre kali-tools e app-brute passa. O número à esquerda (1, 2, 3) também funciona no lugar do nome.</p></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">2</div>
       <div class="sb">
-        <p>Aplicar filtro para ver só tráfego da aplicação</p>
-        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">filtro Wireshark</span><button class="cpb" onclick="cp(this)">copiar</button></div>
-        <pre>tcp.port == 3000 && http</pre></div>
+        <p>Iniciar a captura de tráfego com tshark</p>
+        <p>Execute o tshark em uma janela do PowerShell. Ele ficará capturando até você pressionar <kbd>Ctrl+C</kbd>:</p>
+        <div class="os-tag win">🪟 PowerShell — janela 1 (captura)</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — iniciar captura</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools tshark `
+  <span class="ps-flag">-i</span> eth0 `
+  <span class="ps-flag">-Y</span> <span class="ps-str">"http && tcp.port == 3000"</span> `
+  <span class="ps-flag">-T</span> fields `
+  <span class="ps-flag">-e</span> http.request.method `
+  <span class="ps-flag">-e</span> http.request.uri `
+  <span class="ps-flag">-e</span> http.file_data `
+  <span class="ps-flag">-E</span> header=y 2>/dev/null</pre></div>
+        <div class="box info"><div class="box-title">💡 O que cada parâmetro faz</div>
+        <p><code>-i eth0</code> → interface a capturar</p>
+        <p><code>-Y "filtro"</code> → exibe só pacotes HTTP na porta 3000</p>
+        <p><code>-T fields -e campo</code> → exibe campos específicos em vez do pacote inteiro</p>
+        <p><code>http.file_data</code> → o corpo da requisição — onde a senha aparece!</p></div>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">3</div>
       <div class="sb">
-        <p>Rodar o Hydra em outro PowerShell enquanto captura</p>
-        <p>Abra uma segunda janela do PowerShell e execute o Hydra. Observe os pacotes aparecendo em tempo real no Wireshark.</p>
-        <div class="os-tag win">🪟 PowerShell (segunda janela)</div>
+        <p>Executar o Hydra em outra janela do PowerShell</p>
+        <div class="os-tag win">🪟 PowerShell — janela 2 (ataque)</div>
         <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — segundo terminal</span><button class="cpb" onclick="cp(this)">copiar</button></div>
         <pre><span class="ps-cmd">docker</span> exec kali-tools hydra `
   <span class="ps-flag">-l</span> admin <span class="ps-flag">-P</span> /usr/share/wordlists/rockyou.txt app-brute `
   http-post-form <span class="ps-str">"/login:username=^USER^&password=^PASS^:Credenciais inválidas."</span> `
   <span class="ps-flag">-t 4</span></pre></div>
-        <p>Após 20 segundos pressione <kbd>Ctrl+C</kbd> no PowerShell e pare a captura no Wireshark.</p>
+        <p>Observe a janela 1 — as senhas testadas aparecem em tempo real no tshark.</p>
       </div>
     </li>
 
     <li class="si">
       <div class="sn">4</div>
       <div class="sb">
-        <p>Inspecionar um pacote POST — ler a senha em texto claro</p>
-        <p>Clique em qualquer linha <code>POST /login</code> → expanda <strong>"HTML Form URL Encoded"</strong> no painel inferior.</p>
-        <div class="out-block"><div class="out-label">conteúdo visível dentro do pacote</div>
-        <pre>username=admin&<span class="hit">password=dragon</span></pre></div>
-        <div class="box warn"><div class="box-title">⚠ Implicação crítica</div>
-        <p>Com HTTP, qualquer pessoa na rede captura e lê as senhas em texto puro — inclusive a correta. Com <strong>HTTPS</strong>, esses dados ficam criptografados e ilegíveis no Wireshark.</p></div>
+        <p>Salvar a captura em arquivo para análise posterior</p>
+        <p>Para capturar e salvar em arquivo <code>.pcap</code> (abrível no Wireshark se instalado):</p>
+        <div class="os-tag win">🪟 PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — capturar e salvar</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="cm"># Capturar por 30 segundos e salvar no volume compartilhado</span>
+<span class="ps-cmd">docker</span> exec kali-tools tshark `
+  <span class="ps-flag">-i</span> eth0 `
+  <span class="ps-flag">-a</span> duration:30 `
+  <span class="ps-flag">-w</span> /app/logs/captura.pcap 2>/dev/null
+
+<span class="cm"># O arquivo ficará em .\logs\captura.pcap na sua máquina Windows</span>
+<span class="ps-cmd">ls</span> .\logs\</pre></div>
+      </div>
+    </li>
+
+    <li class="si">
+      <div class="sn">5</div>
+      <div class="sb">
+        <p>Ler as senhas testadas diretamente da captura</p>
+        <div class="os-tag win">🪟 PowerShell</div>
+        <div class="cb"><div class="ch"><div class="dots"><span></span><span></span><span></span></div><span class="ct">PowerShell — extrair senhas do pcap</span><button class="cpb" onclick="cp(this)">copiar</button></div>
+        <pre><span class="ps-cmd">docker</span> exec kali-tools tshark `
+  <span class="ps-flag">-r</span> /app/logs/captura.pcap `
+  <span class="ps-flag">-Y</span> <span class="ps-str">"http.request.method == POST"</span> `
+  <span class="ps-flag">-T</span> fields <span class="ps-flag">-e</span> http.file_data 2>/dev/null</pre></div>
+        <div class="out-block"><div class="out-label">saída — senhas testadas visíveis em texto claro</div>
+        <pre>username=admin&password=123456
+username=admin&password=password
+username=admin&<span class="hit">password=dragon</span>
+username=admin&password=12345</pre></div>
+        <div class="box warn"><div class="box-title">⚠ Implicação crítica de segurança</div>
+        <p>Com HTTP, qualquer pessoa na rede captura e lê as senhas em texto puro — inclusive a senha correta quando o login funciona.</p>
+        <p>Com <strong>HTTPS</strong>, esse campo estaria criptografado e apareceria como bytes ilegíveis no tshark.</p></div>
       </div>
     </li>
   </ul>
@@ -1124,7 +1176,7 @@ exit</pre></div>
     <li data-id="7"><div class="ck" onclick="chk(7)"></div><span>Burp Suite: proxy configurado e requisição interceptada</span></li>
     <li data-id="8"><div class="ck" onclick="chk(8)"></div><span>Burp Intruder: senha encontrada pelo Length diferente</span></li>
     <li data-id="9"><div class="ck" onclick="chk(9)"></div><span>ffuf (docker exec): executado, velocidade comparada</span></li>
-    <li data-id="10"><div class="ck" onclick="chk(10)"></div><span>Wireshark: tráfego capturado e senha lida em texto claro</span></li>
+    <li data-id="10"><div class="ck" onclick="chk(10)"></div><span>tshark (docker exec): tráfego capturado e senhas lidas em texto claro</span></li>
     <li data-id="11"><div class="ck" onclick="chk(11)"></div><span>Logs analisados com PowerShell: padrão de ataque identificado</span></li>
     <li data-id="12"><div class="ck" onclick="chk(12)"></div><span>Rate Limiting ativado — erro 429 observado no Hydra</span></li>
     <li data-id="13"><div class="ck" onclick="chk(13)"></div><span>Account Lockout ativado — conta bloqueou após 5 falhas</span></li>
@@ -1138,7 +1190,7 @@ exit</pre></div>
 </section>
 
 <footer>
-  <p>UMC — Universidade de Mogi das Cruzes &nbsp;|&nbsp; Redes de Computadores</p>
+  <p>UMC — Universidade de Mogi das Cruzes &nbsp;|&nbsp; Curso Técnico em Redes de Computadores</p>
   <p style="margin-top:8px;color:#374151">Lab BruteForce · Windows + Docker · Uso estritamente educacional · <a href="http://localhost:3000" target="_blank" style="color:#3b82f6">localhost:3000</a></p>
 </footer>
 
